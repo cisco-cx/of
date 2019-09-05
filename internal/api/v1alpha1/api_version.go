@@ -17,7 +17,7 @@ package v1alpha1
 import "github.com/cisco-cx/of"
 
 // String implements the of.APIVersionStringer interface.
-func (v APIVersion) String() string {
+func (v of.APIVersion) String() string {
 	return fmt.Sprintf("%v", v)
 }
 
