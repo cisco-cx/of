@@ -72,7 +72,7 @@ func (v APIVersion) String() string {
 
 #### `/wrap/$dependency_name`
 
-Each directory in `/wrap` MUST contain Go code in named-version packages that wrap **one** external or standard library depdency (see below).
+Each directory in `/wrap` MUST contain Go code in named-version packages that wrap **one** external or standard library dependency (see below).
 
 #### `/wrap/$dependency_name/$named_version`
 
