@@ -59,6 +59,10 @@ type SecretsConfigAPICCluster struct {
 	Name string `yaml:"name,omitempty"`
 }
 
-type Loader interface {
-	Load(io.Reader) error
+type Decoder interface {
+	Decode(io.Reader) error
+}
+
+type Encoder interface {
+	Encode(io.Writer) error
 }
