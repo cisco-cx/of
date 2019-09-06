@@ -16,8 +16,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Ian Coleman
-// Copyright (c) 2018 Ma_124, <github.com/Ma124>
+// Copyright (c) 2013 Mitchell Hashimoto
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,29 +38,12 @@
 
 package v1alpha1
 
-import (
-	"fmt"
-
-	"github.com/iancoleman/strcase"
-	of "github.com/cisco-cx/of/lib/v1alpha1"
-)
-
-// CaseString implements the of.CaseConverter interface.
-type CaseString string
-
-// Confirm that CaseString implements the of.CaseConverter interface.
-var c CaseString = ""
-var _ of.CaseConverter = c
-
-// ToSnake converts a CaseString to `snake_case`.
+// MapDecoder is the implemented by an object that can decode arbitrary
+// map[string]interface{} into a native Go structure and return the result.
 //
-// ToSnake is based on ToSnake in
-// `github.com/iancoleman/strcase`
-func (c CaseString) ToSnake() string {
-	return strcase.ToSnake(string(c))
-}
-
-// String implements the fmt.Stringer interface.
-func (c CaseString) String() string {
-	return fmt.Sprintf("%s", string(c))
+// DecodeMap must copy the output data if it wishes to retain its data.
+//
+// MapDecoder is based on: "github.com/mitchellh/mapstructure"
+type MapDecoder interface {
+	DecodeMap(output interface{}) error
 }

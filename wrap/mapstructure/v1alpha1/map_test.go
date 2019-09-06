@@ -16,8 +16,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Ian Coleman
-// Copyright (c) 2018 Ma_124, <github.com/Ma124>
+// Copyright (c) 2013 Mitchell Hashimoto
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,31 +36,55 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package v1alpha1
+package v1alpha1_test
 
 import (
-	"fmt"
+	"testing"
 
-	"github.com/iancoleman/strcase"
-	of "github.com/cisco-cx/of/lib/v1alpha1"
+	"github.com/stretchr/testify/assert"
+
+	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1alpha1"
 )
 
-// CaseString implements the of.CaseConverter interface.
-type CaseString string
-
-// Confirm that CaseString implements the of.CaseConverter interface.
-var c CaseString = ""
-var _ of.CaseConverter = c
-
-// ToSnake converts a CaseString to `snake_case`.
-//
-// ToSnake is based on ToSnake in
-// `github.com/iancoleman/strcase`
-func (c CaseString) ToSnake() string {
-	return strcase.ToSnake(string(c))
+type TestPerson struct {
+	Name   string
+	Age    int
+	Emails []string
+	Extra  map[string]string
 }
 
-// String implements the fmt.Stringer interface.
-func (c CaseString) String() string {
-	return fmt.Sprintf("%s", string(c))
+// Ensure a simple Map is decoded as expected.
+//
+// TestMap_DecodeSimple is based on:
+// https://godoc.org/github.com/mitchellh/mapstructure#ex-Decode
+func TestMap_DecodeSimple(t *testing.T) {
+	// Prepare to assert multiple times.
+	assert := assert.New(t)
+
+	// Create a simple Map without type-inference.
+	input := map[string]interface{}{
+		"name":   "Mitchell",
+		"age":    91,
+		"emails": []string{"one", "two", "three"},
+		"extra": map[string]string{
+			"twitter": "mitchellh",
+		},
+	}
+	m := mapstructure.NewMap(input)
+
+	// Declare expected outcome.
+	var expect TestPerson = TestPerson{
+		Name:   "Mitchell",
+		Age:    91,
+		Emails: []string{"one", "two", "three"},
+		Extra: map[string]string{
+			"twitter": "mitchellh",
+		},
+	}
+
+	// Confirm the decode went as planned.
+	var result TestPerson
+	err := m.DecodeMap(&result)
+	assert.Equal(err, nil, "mapstructure.Decode() returned non-nil error")
+	assert.Equal(expect, result, "Did not obtain expected result.")
 }

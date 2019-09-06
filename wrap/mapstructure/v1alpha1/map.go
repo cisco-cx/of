@@ -16,8 +16,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Ian Coleman
-// Copyright (c) 2018 Ma_124, <github.com/Ma124>
+// Copyright (c) 2013 Mitchell Hashimoto
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,28 +39,31 @@
 package v1alpha1
 
 import (
-	"fmt"
+	"github.com/mitchellh/mapstructure"
 
-	"github.com/iancoleman/strcase"
 	of "github.com/cisco-cx/of/lib/v1alpha1"
 )
 
-// CaseString implements the of.CaseConverter interface.
-type CaseString string
+// Map represents an arbitrary map[string]interface{} data that will be decoded
+// into a native Go structure.
+type Map map[string]interface{}
 
-// Confirm that CaseString implements the of.CaseConverter interface.
-var c CaseString = ""
-var _ of.CaseConverter = c
+// Confirm that Map implements the of.MapDecoder interface.
+var emptyMap Map = NewMap(map[string]interface{}{"": ""})
+var _ of.MapDecoder = emptyMap
 
-// ToSnake converts a CaseString to `snake_case`.
-//
-// ToSnake is based on ToSnake in
-// `github.com/iancoleman/strcase`
-func (c CaseString) ToSnake() string {
-	return strcase.ToSnake(string(c))
+// NewMap returns a new instance of Map.
+func NewMap(input map[string]interface{}) Map {
+	return Map(input)
 }
 
-// String implements the fmt.Stringer interface.
-func (c CaseString) String() string {
-	return fmt.Sprintf("%s", string(c))
+// Decode decodes a raw interface into structured data.
+//
+// Decode is based on Decode in "github.com/mitchellh/mapstructure".
+func (m Map) DecodeMap(output interface{}) error {
+	// Case m to an interface{} var.
+	var input interface{} = m
+	// Call out to mapstructure to decode into output.
+	err := mapstructure.Decode(input, output)
+	return err
 }

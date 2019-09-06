@@ -3,6 +3,9 @@ Copyright 2019 Cisco Systems, Inc.
 
 This work incorporates works covered by the following notices:
 ---
+Go library for decoding generic map values into native Go structures.
+Copyright (c) 2013 Mitchell Hashimoto
+---
 A golang package for converting to snake_case or CamelCase
 Copyright (c) 2015 Ian Coleman
 Copyright (c) 2018 Ma_124, <github.com/Ma124>
