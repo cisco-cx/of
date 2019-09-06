@@ -1,4 +1,4 @@
-package v1alpha1
+package v1alpha1_test
 
 import (
 	"io/ioutil"
@@ -8,11 +8,12 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stretchr/testify/require"
+	prometheusv1alpha1 "github.com/cisco-cx/of/wrap/prometheus/v1alpha1"
 )
 
 // Ensure Counter can be created.
 func TestCounter_Create(t *testing.T) {
-	cntr := Counter{Namespace: "TestApp", Name: "test_counter_create", Help: "This is a test counter."}
+	cntr := prometheusv1alpha1.Counter{Namespace: "TestApp", Name: "test_counter_create", Help: "This is a test counter."}
 	err := cntr.Create()
 	require.NoError(t, err)
 	defer cntr.Destroy()
@@ -23,7 +24,7 @@ func TestCounter_Create(t *testing.T) {
 
 // Ensure Counter can be incremented.
 func TestCounter_Incr(t *testing.T) {
-	cntr := Counter{Namespace: "TestApp", Name: "test_counter_incr", Help: "This is a test counter."}
+	cntr := prometheusv1alpha1.Counter{Namespace: "TestApp", Name: "test_counter_incr", Help: "This is a test counter."}
 	err := cntr.Create()
 	require.NoError(t, err)
 	defer cntr.Destroy()
@@ -37,7 +38,7 @@ func TestCounter_Incr(t *testing.T) {
 }
 
 func TestCounter_Destroy(t *testing.T) {
-	cntr := Counter{Namespace: "TestApp", Name: "test_counter_destroy", Help: "This is a test counter."}
+	cntr := prometheusv1alpha1.Counter{Namespace: "TestApp", Name: "test_counter_destroy", Help: "This is a test counter."}
 	err := cntr.Create()
 	require.NoError(t, err)
 	err = cntr.Destroy()
