@@ -1,3 +1,20 @@
+// Copyright 2019 Cisco Systems, Inc.
+//
+// This work incorporates works covered by the following notice:
+//
+// Copyright 2018 The Prometheus Authors
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package v1alpha1_test
 
 import (
@@ -8,12 +25,12 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stretchr/testify/require"
-	prometheusv1alpha1 "github.com/cisco-cx/of/wrap/prometheus/v1alpha1"
+	prometheus "github.com/cisco-cx/of/wrap/prometheus/v1alpha1"
 )
 
 // Ensure Counter can be created.
 func TestCounter_Create(t *testing.T) {
-	cntr := prometheusv1alpha1.Counter{Namespace: "TestApp", Name: "test_counter_create", Help: "This is a test counter."}
+	cntr := prometheus.Counter{Namespace: "TestApp", Name: "test_counter_create", Help: "This is a test counter."}
 	err := cntr.Create()
 	require.NoError(t, err)
 	defer cntr.Destroy()
@@ -24,7 +41,7 @@ func TestCounter_Create(t *testing.T) {
 
 // Ensure Counter can be incremented.
 func TestCounter_Incr(t *testing.T) {
-	cntr := prometheusv1alpha1.Counter{Namespace: "TestApp", Name: "test_counter_incr", Help: "This is a test counter."}
+	cntr := prometheus.Counter{Namespace: "TestApp", Name: "test_counter_incr", Help: "This is a test counter."}
 	err := cntr.Create()
 	require.NoError(t, err)
 	defer cntr.Destroy()
@@ -37,8 +54,9 @@ func TestCounter_Incr(t *testing.T) {
 	require.Contains(t, promMetrics(t), "TestApp_test_counter_incr 10")
 }
 
+// Ensure Counter can be destroyed.
 func TestCounter_Destroy(t *testing.T) {
-	cntr := prometheusv1alpha1.Counter{Namespace: "TestApp", Name: "test_counter_destroy", Help: "This is a test counter."}
+	cntr := prometheus.Counter{Namespace: "TestApp", Name: "test_counter_destroy", Help: "This is a test counter."}
 	err := cntr.Create()
 	require.NoError(t, err)
 	err = cntr.Destroy()
