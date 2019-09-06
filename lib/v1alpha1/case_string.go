@@ -27,6 +27,10 @@
 
 package v1alpha1
 
+// CaseString represents a string that will be commonly used in the receiver of
+// the CaseConverter interface.
+type CaseString string
+
 // CaseConverter is an interface that represents the ability to return
 // a case-converted string. For example, "this-case" -> "ThatCase".
 //

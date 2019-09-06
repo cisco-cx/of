@@ -46,7 +46,10 @@ import (
 
 // Map represents an arbitrary map[string]interface{} data that will be decoded
 // into a native Go structure.
-type Map map[string]interface{}
+//
+// Map is based on Map in:
+// "github.com/cisco-cx/of/lib/v1alpha1"
+type Map of.Map
 
 // Confirm that Map implements the of.MapDecoder interface.
 var emptyMap Map = NewMap(map[string]interface{}{"": ""})
@@ -57,9 +60,13 @@ func NewMap(input map[string]interface{}) Map {
 	return Map(input)
 }
 
-// Decode decodes a raw interface into structured data.
+// DecodeMap decodes a raw interface into structured data.
 //
-// Decode is based on Decode in "github.com/mitchellh/mapstructure".
+// DecodeMap implements MapDecoder in:
+// "github.com/cisco-cx/of/lib/v1alpha1"
+//
+// DecodeMap is based on Decode in:
+// "github.com/mitchellh/mapstructure"
 func (m Map) DecodeMap(output interface{}) error {
 	// Case m to an interface{} var.
 	var input interface{} = m

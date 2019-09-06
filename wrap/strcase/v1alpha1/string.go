@@ -47,7 +47,10 @@ import (
 )
 
 // CaseString implements the of.CaseConverter interface.
-type CaseString string
+//
+// CaseString is based on CaseString in:
+// "github.com/cisco-cx/of/lib/v1alpha1"
+type CaseString of.CaseString
 
 // Confirm that CaseString implements the of.CaseConverter interface.
 var c CaseString = ""
@@ -55,8 +58,8 @@ var _ of.CaseConverter = c
 
 // ToSnake converts a CaseString to `snake_case`.
 //
-// ToSnake is based on ToSnake in
-// `github.com/iancoleman/strcase`
+// ToSnake is based on ToSnake in:
+// "github.com/iancoleman/strcase"
 func (c CaseString) ToSnake() string {
 	return strcase.ToSnake(string(c))
 }

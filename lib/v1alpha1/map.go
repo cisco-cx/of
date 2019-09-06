@@ -38,6 +38,10 @@
 
 package v1alpha1
 
+// Map represents an arbitrary map[string]interface{} data that will be decoded
+// into a native Go structure.
+type Map map[string]interface{}
+
 // MapDecoder is the implemented by an object that can decode arbitrary
 // map[string]interface{} into a native Go structure and return the result.
 //
