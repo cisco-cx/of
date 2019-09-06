@@ -95,6 +95,13 @@ The `/cmd` directory's packages contains the Go packages for executable commands
 
 In each of these "command" packages, we combine one or more packages from `/lib` (contains domain types and interfaces) with one or more "one external dependency" packages like `/wrap/$dependency_name/$named_version` (contains **implementations** of domain types and interfaces) to arrive at statically compiled binaries that MAY be deployed inside one or more Docker images.
 
+Each package in this directory pattern MAY:
+- Import a couple of external dependencies to simplify the building of a CLI. For example, you might choose to directly import [cobra](https://github.com/spf13/cobra) or [kingpin](https://github.com/alecthomas/kingpin) in your `/cmd` package.
+
+Each package in this directory pattern SHOULD:
+- NOT import any non-standard-lib external depedencies not related to the "MAY" list directly above this one.
+- NOT try to avoid or skip wrapping your external dependency over in `/wrap`.
+
 #### `/cmd/of`
 
 The `of` command is to become the core Go command of the Observability Framework. That is, we plan to ship one combined static binary that can assume mutliple personalities (e.g. am-apic-client AND am-snmp-client), not unlike the [hashicorp/vault](https://github.com/hashicorp/vault)'s `vault` command has [subcommands](https://www.vaultproject.io/docs/commands/) `server` and `agent`.
