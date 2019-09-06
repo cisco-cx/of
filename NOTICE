@@ -1,8 +1,12 @@
 Framework for observability and monitoring.
 Copyright 2019 Cisco Systems, Inc.
 
-This work incorporates works covered by the following notice:
-
+This work incorporates works covered by the following notices:
+---
+A golang package for converting to snake_case or CamelCase
+Copyright (c) 2015 Ian Coleman
+Copyright (c) 2018 Ma_124, <github.com/Ma124>
+---
 Common libraries shared by Prometheus Go components.
 Copyright 2015-2019 The Prometheus Authors
 
