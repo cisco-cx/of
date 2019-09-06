@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package of
+package main
 
-// APIVersion represents a named version of an API (e.g. "v1alpha1", "v1").
-type APIVersion string
+import (
+	"fmt"
 
-// APIVersionStringer is an interface that embeds the `fmt.Stringer`
-// interface.
-type APIVersionStringer interface {
-	// String implements the `fmt.Stringer` interface.
-	String() string
-}
+	of "github.com/cisco-cx/of/lib/v1alpha1"
+)
 
-// APIVersionValidator is an interface that represents the ability to
-// return a non-nil error if a given APIVersion is invalid.
-type APIVersionValidator interface {
-	// Validate returns a non-nil error if a given APIVersion is found to be
-	// invalid.
-	Validate() error
+func main() {
+	var v of.APIVersion
+	v = "v1alpha1"  // TODO: Get this by running `of.NamedVersion()`
+	fmt.Println(v)
 }

@@ -15,7 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package of
+package v1alpha1
 
 // LabelMap is a Domain Type that represents a map of labels used to label a
 // resource. It is based on `prometheus/common.LabelSet`
