@@ -16,17 +16,17 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2013 Mitchell Hashimoto
+// Copyright (c) 2014 Alex Saskevich
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, Subject to the following conditions:
+// furnished to do so, subject to the following conditions:
 //
 // The above copyright notice and this permission notice shall be included in all
-// copies or Substantial portions of the Software.
+// copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -44,56 +44,53 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	of "github.com/cisco-cx/of/lib/v1alpha1"
-	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1alpha1"
+	govalidator "github.com/cisco-cx/of/wrap/govalidator/v1alpha1"
 )
 
-// TestPerson is an struct used for testing the mapstructure wrapper. It
-// represents a struct where the output of DecodeMap will be written.
-type TestPerson struct {
-	Name   string
-	Age    int
-	Emails []string
-	Extra  map[string]string
-}
+// IPv4
 
-// Confirm that mapstructure.Map implements the of.MapDecoder interface.
-func TestMap_Interface(t *testing.T) {
-	var _ of.MapDecoder = mapstructure.Map{}
+// Confirm that govalidator.IP implements the of.IPv4Validator interface.
+func TestIPv4Validator_Interface(t *testing.T) {
+	var _ of.IPv4Validator = &govalidator.IP{}
 	assert.Nil(t, nil) // If we get this far, the test passed.
 }
 
-// Ensure a simple Map is decoded as expected.
-//
-// TestMap_DecodeSimple is based on:
-// https://godoc.org/github.com/mitchellh/mapstructure#ex-Decode
-func TestMap_DecodeSimple(t *testing.T) {
-	// Prepare to assert multiple times.
-	assert := assert.New(t)
+// Check a simple negative path of govalidator.IsIPv4.
+func TestIPv4Validator_SimpleNegative(t *testing.T) {
+	assert := assert.New(t) // Prepare to assert multiple times.
+	ip, err := govalidator.NewIP("2001:db8::1")
+	assert.Nil(err)
+	assert.False(ip.IsIPv4())
+}
 
-	// Create a simple Map without type-inference.
-	input := map[string]interface{}{
-		"name":   "Mitchell",
-		"age":    91,
-		"emails": []string{"one", "two", "three"},
-		"extra": map[string]string{
-			"twitter": "mitchellh",
-		},
-	}
-	m := mapstructure.NewMap(input)
+// Check a simple positive path of govalidator.IsIPv4.
+func TestIPv4Validator_SimplePositive(t *testing.T) {
+	assert := assert.New(t) // Prepare to assert multiple times.
+	ip, err := govalidator.NewIP("192.168.222.222")
+	assert.Nil(err)
+	assert.True(ip.IsIPv4())
+}
 
-	// Declare expected outcome.
-	var expect TestPerson = TestPerson{
-		Name:   "Mitchell",
-		Age:    91,
-		Emails: []string{"one", "two", "three"},
-		Extra: map[string]string{
-			"twitter": "mitchellh",
-		},
-	}
+// IPv6
 
-	// Confirm the decode went as planned.
-	var result TestPerson
-	err := m.DecodeMap(&result)
-	assert.Nil(err, "mapstructure.DecodeMap() returned non-nil error")
-	assert.Equal(expect, result, "Did not obtain expected result.")
+// Confirm that govalidator.IP implements the of.IPv6Validator interface.
+func TestIPv6Validator_Interface(t *testing.T) {
+	var _ of.IPv6Validator = &govalidator.IP{}
+	assert.Nil(t, nil) // If we get this far, the test passed.
+}
+
+// Check a simple negative path of govalidator.IsIPv6.
+func TestIPv6Validator_SimpleNegative(t *testing.T) {
+	assert := assert.New(t) // Prepare to assert multiple times.
+	ip, err := govalidator.NewIP("192.168.222.222")
+	assert.Nil(err)
+	assert.False(ip.IsIPv6())
+}
+
+// Check a simple positive path of govalidator.IsIPv6.
+func TestIPv6Validator_SimplePositive(t *testing.T) {
+	assert := assert.New(t) // Prepare to assert multiple times.
+	ip, err := govalidator.NewIP("2001:db8::1")
+	assert.Nil(err)
+	assert.True(ip.IsIPv6())
 }

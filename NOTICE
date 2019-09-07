@@ -3,6 +3,12 @@ Copyright 2019 Cisco Systems, Inc.
 
 This work incorporates works covered by the following notices:
 ---
+[Go] Package of validators and sanitizers for strings, numerics, slices and structs
+Copyright (c) 2014 Alex Saskevich
+---
+The Go programming language
+Copyright (c) 2009 The Go Authors. All rights reserved.
+---
 Acigo is a Go package for interacting with Cisco ACI using API calls.
 Copyright (c) 2016 udhos
 ---

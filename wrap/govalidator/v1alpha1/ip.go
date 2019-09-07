@@ -16,17 +16,17 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2013 Mitchell Hashimoto
+// Copyright (c) 2014 Alex Saskevich
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, Subject to the following conditions:
+// furnished to do so, subject to the following conditions:
 //
 // The above copyright notice and this permission notice shall be included in all
-// copies or Substantial portions of the Software.
+// copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -36,64 +36,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package v1alpha1_test
+package v1alpha1
 
 import (
-	"testing"
+	"fmt"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/asaskevich/govalidator"
 
 	of "github.com/cisco-cx/of/lib/v1alpha1"
-	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1alpha1"
 )
 
-// TestPerson is an struct used for testing the mapstructure wrapper. It
-// represents a struct where the output of DecodeMap will be written.
-type TestPerson struct {
-	Name   string
-	Age    int
-	Emails []string
-	Extra  map[string]string
+// IP represents an IPv4 or IPv6 address.
+type IP struct {
+	ofIP of.IP
 }
 
-// Confirm that mapstructure.Map implements the of.MapDecoder interface.
-func TestMap_Interface(t *testing.T) {
-	var _ of.MapDecoder = mapstructure.Map{}
-	assert.Nil(t, nil) // If we get this far, the test passed.
+// NewIP returns a new instance of IP.
+func NewIP(ip string) (IP, error) {
+	return IP{
+		ofIP: of.IP(string(ip)),
+	}, nil
 }
 
-// Ensure a simple Map is decoded as expected.
-//
-// TestMap_DecodeSimple is based on:
-// https://godoc.org/github.com/mitchellh/mapstructure#ex-Decode
-func TestMap_DecodeSimple(t *testing.T) {
-	// Prepare to assert multiple times.
-	assert := assert.New(t)
+// IsIPv4 validate that a given IP is an IPv4 address.
+func (ip IP) IsIPv4() bool {
+	return govalidator.IsIPv4(string(ip.ofIP))
+}
 
-	// Create a simple Map without type-inference.
-	input := map[string]interface{}{
-		"name":   "Mitchell",
-		"age":    91,
-		"emails": []string{"one", "two", "three"},
-		"extra": map[string]string{
-			"twitter": "mitchellh",
-		},
-	}
-	m := mapstructure.NewMap(input)
+// IsIPv6 validate that a given IP is an IPv6 address.
+func (ip IP) IsIPv6() bool {
+	return govalidator.IsIPv6(string(ip.ofIP))
+}
 
-	// Declare expected outcome.
-	var expect TestPerson = TestPerson{
-		Name:   "Mitchell",
-		Age:    91,
-		Emails: []string{"one", "two", "three"},
-		Extra: map[string]string{
-			"twitter": "mitchellh",
-		},
-	}
-
-	// Confirm the decode went as planned.
-	var result TestPerson
-	err := m.DecodeMap(&result)
-	assert.Nil(err, "mapstructure.DecodeMap() returned non-nil error")
-	assert.Equal(expect, result, "Did not obtain expected result.")
+// String implements the fmt.Stringer interface.
+func (ip IP) String() string {
+	return fmt.Sprintf("%v", ip.ofIP)
 }
