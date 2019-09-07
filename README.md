@@ -125,3 +125,8 @@ This directory will contain mocks for all of the above. The form that this direc
 - https://www.youtube.com/watch?v=zzAdEt3xZ1M
 - https://github.com/kubernetes/kubernetes
 - https://github.com/benbjohnson/peapod
+
+### for Error Handling
+
+- https://dave.cheney.net/2016/04/07/constant-errors
+- https://blog.golang.org/error-handling-and-go

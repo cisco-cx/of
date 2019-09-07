@@ -42,10 +42,9 @@ package v1alpha1
 // into a native Go structure.
 type Map map[string]interface{}
 
-// MapDecoder is the implemented by an object that can decode arbitrary
-// map[string]interface{} into a native Go structure and return the result.
-//
-// DecodeMap must copy the output data if it wishes to retain its data.
+// MapDecoder is implemented by an object that can decode arbitrary
+// map[string]interface{} data into a native Go structure and return the
+// result.
 //
 // MapDecoder is based on: "github.com/mitchellh/mapstructure"
 type MapDecoder interface {

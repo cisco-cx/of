@@ -10,5 +10,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/prometheus/client_golang v1.1.0
 	github.com/stretchr/testify v1.4.0
+	github.com/udhos/acigo v0.0.0-20190702182318-b04b827bd920
 	gopkg.in/yaml.v2 v2.2.2
 )

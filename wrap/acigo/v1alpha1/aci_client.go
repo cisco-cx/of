@@ -14,19 +14,19 @@
 //
 // This work incorporates works covered by the following notices:
 //
-// The MIT License (MIT)
+// MIT License
 //
-// Copyright (c) 2013 Mitchell Hashimoto
+// Copyright (c) 2016 udhos
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, Subject to the following conditions:
+// furnished to do so, subject to the following conditions:
 //
 // The above copyright notice and this permission notice shall be included in all
-// copies or Substantial portions of the Software.
+// copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -39,37 +39,56 @@
 package v1alpha1
 
 import (
-	"github.com/mitchellh/mapstructure"
+	"github.com/udhos/acigo/aci"
 
 	of "github.com/cisco-cx/of/lib/v1alpha1"
+	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1alpha1"
 )
 
-// Map represents an arbitrary map[string]interface{} data that will be decoded
-// into a native Go structure.
+// ACIClient represents an instance of the acigo ACI API client.
 //
-// Map is based on Map in:
-// "github.com/cisco-cx/of/lib/v1alpha1"
-type Map struct {
-	ofMap of.Map
+// ACIClient implements the of.ACIClient interface.
+type ACIClient struct {
+	client *aci.Client
 }
 
-// NewMap returns a new instance of Map.
-func NewMap(input map[string]interface{}) Map {
-	return Map{
-		ofMap: input,
+// NewACIClient returns a new instance of ACIClient configured by an
+// of.ACIClientConfig struct.
+func NewACIClient(cfg of.ACIClientConfig) (*ACIClient, error) {
+	// Convert of.ACIClientConfig to aci.ClientOptions.
+	opts := aci.ClientOptions{
+		Hosts: cfg.Hosts,
+		User:  cfg.User,
+		Pass:  cfg.Pass,
+		Debug: cfg.Debug,
 	}
+	// Configure the new internal client.
+	client, err := aci.New(opts)
+	if err != nil {
+		return &ACIClient{}, err
+	}
+	return &ACIClient{client: client}, nil
 }
 
-// DecodeMap decodes a raw interface into structured data.
-//
-// DecodeMap implements MapDecoder in:
-// "github.com/cisco-cx/of/lib/v1alpha1"
-//
-// DecodeMap is based on Decode in: "github.com/mitchellh/mapstructure"
-func (m Map) DecodeMap(output interface{}) error {
-	// Convert m to an interface{} var.
-	var input interface{} = m.ofMap
-	// Call external package to decode input into output.
-	err := mapstructure.Decode(input, output)
-	return err
+// Login opens a new API session.
+func (c *ACIClient) Login() error {
+	return c.client.Login()
+}
+
+// Faults returns the API's "fault table" as a slice of of.Map objects.
+func (c *ACIClient) Faults() ([]of.Map, error) {
+	list, err := c.client.FaultList()
+	if err != nil {
+		return []of.Map{}, nil
+	}
+	mm := make([]of.Map, len(list))
+	for i, v := range list {
+		mapstructure.NewMap(v).DecodeMap(mm[i])
+	}
+	return mm, nil
+}
+
+// Logout closes the API session.
+func (c *ACIClient) Logout() error {
+	return c.client.Logout()
 }

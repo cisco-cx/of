@@ -3,6 +3,9 @@ Copyright 2019 Cisco Systems, Inc.
 
 This work incorporates works covered by the following notices:
 ---
+Acigo is a Go package for interacting with Cisco ACI using API calls.
+Copyright (c) 2016 udhos
+---
 Go library for decoding generic map values into native Go structures.
 Copyright (c) 2013 Mitchell Hashimoto
 ---

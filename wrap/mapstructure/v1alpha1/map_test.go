@@ -43,6 +43,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	of "github.com/cisco-cx/of/lib/v1alpha1"
 	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1alpha1"
 )
 
@@ -51,6 +52,12 @@ type TestPerson struct {
 	Age    int
 	Emails []string
 	Extra  map[string]string
+}
+
+// Confirm that mapstructure.Map implements the of.MapDecoder interface.
+func TestMap_Interface(t *testing.T) {
+	var _ of.MapDecoder = mapstructure.Map{}
+	assert.Nil(t, nil) // If we get this far, the test passed.
 }
 
 // Ensure a simple Map is decoded as expected.
@@ -85,6 +92,6 @@ func TestMap_DecodeSimple(t *testing.T) {
 	// Confirm the decode went as planned.
 	var result TestPerson
 	err := m.DecodeMap(&result)
-	assert.Equal(err, nil, "mapstructure.Decode() returned non-nil error")
+	assert.Nil(err, "mapstructure.DecodeMap() returned non-nil error")
 	assert.Equal(expect, result, "Did not obtain expected result.")
 }
