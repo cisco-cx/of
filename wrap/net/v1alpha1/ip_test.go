@@ -45,6 +45,7 @@
 package v1alpha1_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -54,7 +55,16 @@ import (
 )
 
 // Confirm that net.IP implements the of.HostnameFinder interface.
-func TestHostFinder_Interface(t *testing.T) {
+func TestIP_InterfaceHostnameFinder(t *testing.T) {
 	var _ of.HostnameFinder = &net.IP{}
 	assert.Nil(t, nil) // If we get this far, the test passed.
+}
+
+// Simple test of IP's implementation of the fmt.Stringer interface.
+func TestIP_StringerSimple(t *testing.T) {
+	// Prepare to assert multiple times.
+	assert := assert.New(t)
+	ip, err := net.NewIP("2001:db8::1")
+	assert.Nil(err)
+	assert.Equal("2001:db8::1", fmt.Sprintf("%s", ip))
 }

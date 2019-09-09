@@ -54,14 +54,14 @@ import (
 	net "github.com/cisco-cx/of/wrap/net/v1alpha1"
 )
 
-// Confirm that net.Hostname implements the of.IPv4Finder interface.
-func TestIPv4Finder_Interface(t *testing.T) {
+// Confirm that Hostname implements the of.IPv4Finder interface.
+func TestHostname_InterfaceIPv4Finder(t *testing.T) {
 	var _ of.IPv4Finder = &net.Hostname{}
 	assert.Nil(t, nil) // If we get this far, the test passed.
 }
 
-// Confirm that net.Hostname implements the of.IPv6Finder interface.
-func TestIPv6Finder_Interface(t *testing.T) {
+// Confirm that Hostname implements the of.IPv6Finder interface.
+func TestHostname_InterfaceIPv6Finder(t *testing.T) {
 	var _ of.IPv6Finder = &net.Hostname{}
 	assert.Nil(t, nil) // If we get this far, the test passed.
 }
