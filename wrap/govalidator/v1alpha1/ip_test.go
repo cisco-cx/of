@@ -39,6 +39,7 @@
 package v1alpha1_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -50,13 +51,13 @@ import (
 // IPv4
 
 // Confirm that govalidator.IP implements the of.IPv4Validator interface.
-func TestIPv4Validator_Interface(t *testing.T) {
+func TestIP_InterfaceIPv4Validator(t *testing.T) {
 	var _ of.IPv4Validator = &govalidator.IP{}
 	assert.Nil(t, nil) // If we get this far, the test passed.
 }
 
 // Check a simple negative path of govalidator.IsIPv4.
-func TestIPv4Validator_SimpleNegative(t *testing.T) {
+func TestIP_IPv4SimpleNegative(t *testing.T) {
 	assert := assert.New(t) // Prepare to assert multiple times.
 	ip, err := govalidator.NewIP("2001:db8::1")
 	assert.Nil(err)
@@ -64,7 +65,7 @@ func TestIPv4Validator_SimpleNegative(t *testing.T) {
 }
 
 // Check a simple positive path of govalidator.IsIPv4.
-func TestIPv4Validator_SimplePositive(t *testing.T) {
+func TestIP_IPv4SimplePositive(t *testing.T) {
 	assert := assert.New(t) // Prepare to assert multiple times.
 	ip, err := govalidator.NewIP("192.168.222.222")
 	assert.Nil(err)
@@ -74,13 +75,13 @@ func TestIPv4Validator_SimplePositive(t *testing.T) {
 // IPv6
 
 // Confirm that govalidator.IP implements the of.IPv6Validator interface.
-func TestIPv6Validator_Interface(t *testing.T) {
+func TestIP_InterfaceIPv6Validator(t *testing.T) {
 	var _ of.IPv6Validator = &govalidator.IP{}
 	assert.Nil(t, nil) // If we get this far, the test passed.
 }
 
 // Check a simple negative path of govalidator.IsIPv6.
-func TestIPv6Validator_SimpleNegative(t *testing.T) {
+func TestIP_IPv6SimpleNegative(t *testing.T) {
 	assert := assert.New(t) // Prepare to assert multiple times.
 	ip, err := govalidator.NewIP("192.168.222.222")
 	assert.Nil(err)
@@ -88,9 +89,20 @@ func TestIPv6Validator_SimpleNegative(t *testing.T) {
 }
 
 // Check a simple positive path of govalidator.IsIPv6.
-func TestIPv6Validator_SimplePositive(t *testing.T) {
+func TestIP_IPv6SimplePositive(t *testing.T) {
 	assert := assert.New(t) // Prepare to assert multiple times.
 	ip, err := govalidator.NewIP("2001:db8::1")
 	assert.Nil(err)
 	assert.True(ip.IsIPv6())
+}
+
+// Generic
+
+// Simple test of IP's implementation of the fmt.Stringer interface.
+func TestGovalidatorIP_StringerSimple(t *testing.T) {
+	// Prepare to assert multiple times.
+	assert := assert.New(t)
+	ip, err := govalidator.NewIP("2001:db8::1")
+	assert.Nil(err)
+	assert.Equal("2001:db8::1", fmt.Sprintf("%s", ip))
 }

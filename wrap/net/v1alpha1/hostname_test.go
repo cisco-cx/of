@@ -46,6 +46,7 @@
 package v1alpha1_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -64,4 +65,13 @@ func TestHostname_InterfaceIPv4Finder(t *testing.T) {
 func TestHostname_InterfaceIPv6Finder(t *testing.T) {
 	var _ of.IPv6Finder = &net.Hostname{}
 	assert.Nil(t, nil) // If we get this far, the test passed.
+}
+
+// Simple test of Hostname's implementation of the fmt.Stringer interface.
+func TestHostname_StringerSimple(t *testing.T) {
+	// Prepare to assert multiple times.
+	assert := assert.New(t)
+	h, err := net.NewHostname("hello.example.org")
+	assert.Nil(err)
+	assert.Equal("hello.example.org", fmt.Sprintf("%s", h))
 }
