@@ -20,6 +20,8 @@ import (
 )
 
 // Time is based on time.Time.
+//
+// FYI: OF's domain type in this case is literally "time.Time".
 type Time struct {
 	time time.Time
 }

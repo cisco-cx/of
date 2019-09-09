@@ -60,7 +60,7 @@ type Hostname struct {
 // NewHostname returns a new instance of Hostname.
 func NewHostname(h string) (Hostname, error) {
 	return Hostname{
-		ofHostname: of.Hostname(string(h)),
+		ofHostname: of.Hostname(h),
 	}, nil
 }
 

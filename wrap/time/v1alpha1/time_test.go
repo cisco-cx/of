@@ -22,20 +22,20 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	of "github.com/cisco-cx/of/lib/v1alpha1"
+	wrap "github.com/cisco-cx/of/wrap/time/v1alpha1"
 )
 
-// Confirm that of.Time implements the fmt.Stringer interface.
+// Confirm that wrap.Time implements the fmt.Stringer interface.
 func TestTime_StringerInterface(t *testing.T) {
-	ofTime := of.NewTime(time.Time{})
-	var _ fmt.Stringer = ofTime
+	wrapTime := wrap.NewTime(time.Time{})
+	var _ fmt.Stringer = wrapTime
 	assert.Nil(t, nil) // If we get this far, the test passed.
 }
 
 // Simple test of Time's implementation of the fmt.Stringer interface.
 func TestTime_StringerSimple(t *testing.T) {
-	ofTime := of.NewTime(time.Date(2000, time.February, 29, 1, 2, 3, 4, time.UTC))
-	assert.Equal(t, "2000-02-29T01:02:03Z", fmt.Sprintf("%s", ofTime))
+	wrapTime := wrap.NewTime(time.Date(2000, time.February, 29, 1, 2, 3, 4, time.UTC))
+	assert.Equal(t, "2000-02-29T01:02:03Z", fmt.Sprintf("%s", wrapTime))
 }
 
 // Simple test of Time's implementation of the Marshaler interface in
@@ -43,16 +43,16 @@ func TestTime_StringerSimple(t *testing.T) {
 func TestTime_JSONMarshalerSimple(t *testing.T) {
 	assert := assert.New(t) // Prepare to assert multiple times
 	input := time.Date(2000, time.February, 29, 1, 2, 3, 4, time.UTC)
-	ofTime := of.NewTime(input)
-	result, err := ofTime.MarshalJSON()
+	wrapTime := wrap.NewTime(input)
+	result, err := wrapTime.MarshalJSON()
 	assert.Nil(err, "Time.MarshalJSON() returned non-nil error")
 	expect := []byte("\"2000-02-29T01:02:03Z\"")
 	assert.Equal(expect, result, "Did not obtain expected result.")
 }
 
-// Confirm that of.Time implements the Marshaler interface in encoding/json.
+// Confirm that wrap.Time implements the Marshaler interface in encoding/json.
 func TestTime_JSONMarshalerInterface(t *testing.T) {
-	ofTime := of.NewTime(time.Time{})
-	var _ json.Marshaler = ofTime
+	wrapTime := wrap.NewTime(time.Time{})
+	var _ json.Marshaler = wrapTime
 	assert.Nil(t, nil) // If we get this far, the test passed.
 }
