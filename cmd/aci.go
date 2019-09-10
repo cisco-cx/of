@@ -32,12 +32,12 @@ func cmdACI() *cobra.Command {
 	return cmd
 }
 
-// cmdACIServer returns the `aci server` command.
-func cmdACIServer() *cobra.Command {
+// cmdACIHandler returns the `aci handler` command.
+func cmdACIHandler() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "handler",
 		Short: "Start the ACI handler",
-		Run: runACIServer,
+		Run: runACIHandler,
 	}
 	// Define flags and configuration settings.
 	// cmd.PersistentFlags().String("foo", "", "A help for foo")
@@ -45,11 +45,7 @@ func cmdACIServer() *cobra.Command {
 	return cmd
 }
 
-func runACI(cmd *cobra.Command, args []string) {
-	fmt.Println("aci called")
-}
-
-func runACIServer(cmd *cobra.Command, args []string) {
+func runACIHandler(cmd *cobra.Command, args []string) {
 	fmt.Println("aci handler called")
 }
 
@@ -59,7 +55,7 @@ func init() {
 	cmd := cmdACI()
 
 	// Create and add the subcommands of the `aci` command.
-	cmd.AddCommand(cmdACIServer())
+	cmd.AddCommand(cmdACIHandler())
 
 	// Add the `aci` command to the root command.
 	rootCmd.AddCommand(cmd)
