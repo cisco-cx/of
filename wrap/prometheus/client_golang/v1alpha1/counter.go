@@ -18,35 +18,35 @@
 package v1alpha1
 
 import (
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/cisco-cx/of/lib/v1alpha1"
+	promclient "github.com/prometheus/client_golang/prometheus"
+	of "github.com/cisco-cx/of/lib/v1alpha1"
 )
 
-// Ensures Counter implements v1alpha1.Counter
-var _ v1alpha1.Counter = &Counter{}
+// Ensures Counter implements of.Counter
+var _ of.Counter = &Counter{}
 
-// Counter represents the options required for prometheus.Counter
-// and reference to the created prometheus.Counter.
+// Counter represents the options required for promclient.Counter
+// and reference to the created promclient.Counter.
 type Counter struct {
 	Namespace string
 	Name      string
 	Help      string
-	cntr      prometheus.Counter
+	cntr      promclient.Counter
 }
 
 // Create a new counter.
 func (c *Counter) Create() error {
-	c.cntr = prometheus.NewCounter(prometheus.CounterOpts{
+	c.cntr = promclient.NewCounter(promclient.CounterOpts{
 		Namespace: c.Namespace,
 		Name:      c.Name,
 		Help:      c.Help,
 	})
 
 	if c.cntr == nil {
-		return v1alpha1.ErrCounterCreateFailed
+		return of.ErrCounterCreateFailed
 	}
 
-	return prometheus.Register(c.cntr)
+	return promclient.Register(c.cntr)
 }
 
 // Increment the counter by 1.
@@ -57,8 +57,8 @@ func (c *Counter) Incr() error {
 
 // Remove counter..
 func (c *Counter) Destroy() error {
-	if prometheus.Unregister(c.cntr) {
+	if promclient.Unregister(c.cntr) {
 		return nil
 	}
-	return v1alpha1.ErrCounterDestroyFailed
+	return of.ErrCounterDestroyFailed
 }
