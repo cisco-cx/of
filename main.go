@@ -1,10 +1,10 @@
-// Copyright 2019 Cisco Systems, Inc.
+// Copyright © 2019 Cisco Systems, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,14 +14,8 @@
 
 package main
 
-import (
-	"fmt"
-
-	of "github.com/cisco-cx/of/lib/v1alpha1"
-)
+import "github.com/cisco-cx/of/cmd"
 
 func main() {
-	var v of.APIVersion
-	v = "v1alpha1" // TODO: Get this by running `of.NamedVersion()`
-	fmt.Println(v)
+	cmd.Execute()
 }
