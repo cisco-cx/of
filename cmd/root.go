@@ -46,9 +46,9 @@ func Execute() {
 //
 // source: https://golang.org/doc/effective_go.html#init
 func init() {
-    // Define flags and configuration settings.
-    // rootCmd.PersistentFlags().String("foo", "", "A help for foo")
-    // rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// Define flags and configuration settings.
+	// rootCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	// Define configuration settings.
 	cobra.OnInitialize(initConfig)
@@ -60,7 +60,6 @@ func init() {
 	// Define local flags that only run upon calling this action.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
 
 // initConfig reads in config file and ENV variables if set.
 //

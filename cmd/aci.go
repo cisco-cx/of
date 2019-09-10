@@ -37,7 +37,7 @@ func cmdACIHandler() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "handler",
 		Short: "Start the ACI handler",
-		Run: runACIHandler,
+		Run:   runACIHandler,
 	}
 	// Define flags and configuration settings.
 	// cmd.PersistentFlags().String("foo", "", "A help for foo")
