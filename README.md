@@ -36,7 +36,9 @@ Here are some general rules that apply regardless of the directory or Go package
 
 This directory contains files like `LICENSE`, `NOTICE`, `README.md`, `go.mod`, `go.sum`.
 
-Files with names ending in `.go` MUST not be committed in `/`.
+The only Go file that is allowed here is a minimalistic `main.go` that bootstraps the `of` command using [spf13/cobra](https://github.com/spf13/cobra). We don't wrap cobra yet, because doing so would may get get ugly quickly.
+
+No other `.go` files may be added to `/`.
 
 #### `/lib/$named_version`
 
@@ -87,16 +89,16 @@ Each package matching this pattern SHOULD:
 Each package matching this pattern MAY:
 - Within reason, import any other package under the `/wrap` directory.
 
-#### `/cmd/$EXECUTABLE`
+#### `/cmd/$SUBCOMMAND.go`
 
-(e.g. `package main` package for executable `foo` would be in `/cmd/foo`)
+(`package cmd` contains source code for the `of` executable)
 
-The `/cmd` directory's packages contains the Go packages for executable commands (e.g. `/cmd/foo`) that wire together named-version packages in `/wrap` with those in `/lib`.
+We embed subcommands in the `of` executable for all Observability Framework use cases. The `cmd` package and any subpackages in it contain the source code for the `of` executable. In the `cmd` package we wire together named-version packages in `/wrap` with those in `/lib`.
 
-In each of these "command" packages, we combine one or more packages from `/lib` (contains domain types and interfaces) with one or more "one external dependency" packages like `/wrap/$dependency_name/$named_version` (contains **implementations** of domain types and interfaces) to arrive at statically compiled binaries that MAY be deployed inside one or more Docker images.
+For example, `of handler snmp` would start the OF's handler API server for processing SNMP notifications into Alertmanager alerts. That is, `of handler snmp` would do effectively the same thing as `am-client-snmp` or `am-snmp-client-go` have done for us in the past.
 
-Each package in this directory pattern MAY:
-- Import a couple of external dependencies to simplify the building of a CLI. For example, you might choose to directly import [cobra](https://github.com/spf13/cobra) or [kingpin](https://github.com/alecthomas/kingpin) in your `/cmd` package.
+The `cmd` package and any subpackages for it pattern MAY:
+- Import a couple of external dependencies to simplify the building of a CLI. For example, we chose to directly import [cobra](https://github.com/spf13/cobra) and not wrap it to simplify our lives.
 
 Each package in this directory pattern SHOULD:
 - NOT import any non-standard-lib external depedencies not related to the "MAY" list directly above this one.
