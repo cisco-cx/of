@@ -11,7 +11,7 @@ Status: **TODO**
 
 Status: **TODO**
 
-### `of handler apic`
+### `of aci handler`
 
 Status: **WIP**
 
@@ -95,7 +95,7 @@ Each package matching this pattern MAY:
 
 We embed subcommands in the `of` executable for all Observability Framework use cases. The `cmd` package and any subpackages in it contain the source code for the `of` executable. In the `cmd` package we wire together named-version packages in `/wrap` with those in `/lib`.
 
-For example, `of handler snmp` would start the OF's handler API server for processing SNMP notifications into Alertmanager alerts. That is, `of handler snmp` would do effectively the same thing as `am-client-snmp` or `am-snmp-client-go` have done for us in the past.
+For example, `of snmp handler` would start the OF's handler API server for processing SNMP notifications into Alertmanager alerts. That is, `of snmp handler` would do effectively the same thing as `am-client-snmp` or `am-snmp-client-go` have done for us in the past.
 
 The `cmd` package and any subpackages for it pattern MAY:
 - Import a couple of external dependencies to simplify the building of a CLI. For example, we chose to directly import [cobra](https://github.com/spf13/cobra) and not wrap it to simplify our lives.
