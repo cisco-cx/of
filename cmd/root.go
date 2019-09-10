@@ -18,26 +18,17 @@ import (
 	"fmt"
 	"os"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	homedir "github.com/cisco-cx/of/wrap/go-homedir/v1alpha1"
 )
 
 var cfgFile string
 
-// rootCmd represents the base command when called without any subcommands
+// rootCmd represents the command that runs when no subcommands are called.
 var rootCmd = &cobra.Command{
 	Use:   "of",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Short: "Observability Framework",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -49,20 +40,32 @@ func Execute() {
 	}
 }
 
+// "init is called after all the variable declarations in the package have
+//  evaluated their initializers, and those are evaluated only after all the
+//  imported packages have been initialized."
+//
+// source: https://golang.org/doc/effective_go.html#init
 func init() {
+    // Define flags and configuration settings.
+    // rootCmd.PersistentFlags().String("foo", "", "A help for foo")
+    // rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	// Define configuration settings.
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.of.yaml)")
+	// TODO: Decide if we want a global config file.
+	// Define persistent flags that run upon calling any action.
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.of.yaml)")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// Define local flags that only run upon calling this action.
+	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
+
 // initConfig reads in config file and ENV variables if set.
+//
+// TODO: If we have config files per subcommand instead of one global config,
+// let's rework this.
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
@@ -80,7 +83,8 @@ func initConfig() {
 		viper.SetConfigName(".of")
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
+	// Read in environment variables that match.
+	viper.AutomaticEnv()
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {

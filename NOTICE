@@ -3,6 +3,12 @@ Copyright 2019 Cisco Systems, Inc.
 
 This work incorporates works covered by the following notices:
 ---
+A Commander for modern Go CLI interactions
+Copyright © 2015 Steve Francia <spf@spf13.com>.
+---
+Go library for detecting and expanding the user's home directory without cgo.
+Copyright (c) 2013 Mitchell Hashimoto
+---
 [Go] Package of validators and sanitizers for strings, numerics, slices and structs
 Copyright (c) 2014 Alex Saskevich
 ---
