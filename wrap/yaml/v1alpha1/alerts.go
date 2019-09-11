@@ -21,10 +21,10 @@ import (
 	"io"
 
 	"gopkg.in/yaml.v2"
-	"github.com/cisco-cx/of/lib/v1alpha1"
+	of "github.com/cisco-cx/of/lib/v1alpha1"
 )
 
-type Alerts v1alpha1.Alerts
+type Alerts of.Alerts
 
 func (a *Alerts) Decode(r io.Reader) error {
 	return yaml.NewDecoder(r).Decode(a)

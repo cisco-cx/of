@@ -15,6 +15,6 @@ require (
 	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.4.0
 	github.com/udhos/acigo v0.0.0-20190702182318-b04b827bd920
-	golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5 // indirect
+	golang.org/x/crypto v0.0.0-20190617133340-57b3e21c3d56 // indirect
 	gopkg.in/yaml.v2 v2.2.2
 )

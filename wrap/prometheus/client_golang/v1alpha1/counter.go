@@ -22,11 +22,8 @@ import (
 	of "github.com/cisco-cx/of/lib/v1alpha1"
 )
 
-// Ensures Counter implements of.Counter
-var _ of.Counter = &Counter{}
-
-// Counter represents the options required for promclient.Counter
-// and reference to the created promclient.Counter.
+// Counter represents the options required for prometheus.Counter
+// and reference to the created prometheus.Counter.
 type Counter struct {
 	Namespace string
 	Name      string

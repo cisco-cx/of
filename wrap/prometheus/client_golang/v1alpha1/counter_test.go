@@ -25,8 +25,14 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stretchr/testify/require"
+	of "github.com/cisco-cx/of/lib/v1alpha1"
 	promclient "github.com/cisco-cx/of/wrap/prometheus/client_golang/v1alpha1"
 )
+
+// Ensures Counter implements of.Counter
+func TestInterface(t *testing.T) {
+	var _ of.Counter = &promclient.Counter{}
+}
 
 // Ensure Counter can be created.
 func TestCounter_Create(t *testing.T) {

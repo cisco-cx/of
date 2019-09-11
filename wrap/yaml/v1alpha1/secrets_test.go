@@ -23,9 +23,15 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/cisco-cx/of/lib/v1alpha1"
+	of "github.com/cisco-cx/of/lib/v1alpha1"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v1alpha1"
 )
+
+// Enforce interface implementation.
+func TestSecretsInterface(t *testing.T) {
+	var _ of.Decoder = &yaml.Secrets{}
+	var _ of.Encoder = &yaml.Secrets{}
+}
 
 // Ensure yaml decodes Secrets
 func TestSecretsDecoder(t *testing.T) {
@@ -35,9 +41,9 @@ apic:
   cluster:
     name: lab-aci`)
 
-	expected := v1alpha1.Secrets{
-		APIC: v1alpha1.SecretsConfigAPIC{
-			Cluster: v1alpha1.SecretsConfigAPICCluster{
+	expected := of.Secrets{
+		APIC: of.SecretsConfigAPIC{
+			Cluster: of.SecretsConfigAPICCluster{
 				Name: "lab-aci",
 			},
 		},
@@ -56,8 +62,8 @@ func TestSecretsEncoder(t *testing.T) {
     name: lab-aci`
 
 	cfg := yaml.Secrets{
-		APIC: v1alpha1.SecretsConfigAPIC{
-			Cluster: v1alpha1.SecretsConfigAPICCluster{
+		APIC: of.SecretsConfigAPIC{
+			Cluster: of.SecretsConfigAPICCluster{
 				Name: "lab-aci",
 			},
 		},

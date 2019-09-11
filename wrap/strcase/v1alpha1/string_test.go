@@ -47,8 +47,16 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	of "github.com/cisco-cx/of/lib/v1alpha1"
 	strcase "github.com/cisco-cx/of/wrap/strcase/v1alpha1"
 )
+
+// Enforce interface implementation.
+func TestInterface(t *testing.T) {
+	var c strcase.CaseString = ""
+	var _ of.CaseConverter = c
+
+}
 
 // Ensure CaseString is converted from `kebab-case` to `snake_case`.
 func TestString_FromKebabToSnake(t *testing.T) {
