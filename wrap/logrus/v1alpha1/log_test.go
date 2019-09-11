@@ -28,14 +28,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/cisco-cx/of/lib/v1alpha1"
 	of "github.com/cisco-cx/of/lib/v1alpha1"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 )
 
 // Enforce interface implementation.
 func TestInterface(t *testing.T) {
-	var _ v1alpha1.Logger = &logger.Logger{}
+	var _ of.Logger = &logger.Logger{}
 }
 
 // Test Error without any fields
@@ -87,9 +86,8 @@ func TestWithDebugEnabled(t *testing.T) {
 	log := customLogger(buf)
 	log.SetLevel("deBug")
 	log.Debugf("Debug log enabled.")
-
 	// time="2019-09-10T11:25:46+05:30" level=debug msg="Debug log enabled." func= file="log_test.go:88
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s\"", "debug", "Debug log enabled.", "log_test.go:89"))
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "debug", "Debug log enabled.", "log_test.go", getLineNumber()-2))
 }
 
 // Test debug log level disabled
