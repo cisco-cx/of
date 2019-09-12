@@ -16,17 +16,15 @@ package v1alpha1
 
 import (
 	"io"
-
-	"gopkg.in/yaml.v2"
-	of "github.com/cisco-cx/of/lib/v1alpha1"
+	"net/http"
 )
 
-type Alerts of.Alerts
-
-func (a *Alerts) Decode(r io.Reader) error {
-	return yaml.NewDecoder(r).Decode(a)
+// Wrapping http.Client
+func NewClient() *http.Client {
+	return &http.Client{}
 }
 
-func (a *Alerts) Encode(w io.Writer) error {
-	return yaml.NewEncoder(w).Encode(a)
+// Wrapping http.Requests
+func NewRequest(method, url string, body io.Reader) (*http.Request, error) {
+	return http.NewRequest(method, url, body)
 }

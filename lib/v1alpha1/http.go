@@ -14,19 +14,24 @@
 
 package v1alpha1
 
-import (
-	"io"
+import "net/http"
 
-	"gopkg.in/yaml.v2"
-	of "github.com/cisco-cx/of/lib/v1alpha1"
-)
+type ResponseWriter http.ResponseWriter
+type Request *http.Request
+type Server http.Server
 
-type Alerts of.Alerts
-
-func (a *Alerts) Decode(r io.Reader) error {
-	return yaml.NewDecoder(r).Decode(a)
+// Represents HTTP handler
+type Handler interface {
+	ServeHTTP(ResponseWriter, Request)
 }
 
-func (a *Alerts) Encode(w io.Writer) error {
-	return yaml.NewEncoder(w).Encode(a)
+// Represents HTTP server components
+type Serve interface {
+	ListenAndServe() error
+	Shutdown() error
+	Handle(string, Handler)
+	HandleFunc(string, func(ResponseWriter, Request))
 }
+
+// Represents HTTP client
+type Client http.Client
