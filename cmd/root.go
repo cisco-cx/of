@@ -17,18 +17,26 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	homedir "github.com/cisco-cx/of/wrap/go-homedir/v1alpha1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 )
 
 var cfgFile string
+var log = logger.New()
 
 // rootCmd represents the command that runs when no subcommands are called.
 var rootCmd = &cobra.Command{
 	Use:   "of",
 	Short: "Observability Framework",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		logLevel := viper.GetString("log-level")
+		log.SetLevel(logLevel)
+		log.Infof("Logging Enabled. Level : %s", log.LogLevel())
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -38,6 +46,7 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+
 }
 
 // "init is called after all the variable declarations in the package have
@@ -50,6 +59,8 @@ func init() {
 	// rootCmd.PersistentFlags().String("foo", "", "A help for foo")
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
+	rootCmd.PersistentFlags().String("log-level", "info", "Log Level")
+	viper.BindPFlags(rootCmd.PersistentFlags())
 	// Define configuration settings.
 	cobra.OnInitialize(initConfig)
 
@@ -82,6 +93,7 @@ func initConfig() {
 		viper.SetConfigName(".of")
 	}
 
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	// Read in environment variables that match.
 	viper.AutomaticEnv()
 

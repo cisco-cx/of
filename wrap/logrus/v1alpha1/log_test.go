@@ -191,7 +191,7 @@ func TestFatalFSkip(t *testing.T) {
 	require.Contains(t, string(buf.Bytes()), "")
 }
 
-// Test setting log leve.
+// Test setting log level.
 func TestGetLevel(t *testing.T) {
 	// log.Fatalf calls os.Exit, so executing it as another process.
 	log := logger.New()
