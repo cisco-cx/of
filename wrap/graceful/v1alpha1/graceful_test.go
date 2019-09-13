@@ -17,6 +17,7 @@ package v1alpha1_test
 import (
 	"io/ioutil"
 	"net/http"
+	"syscall"
 	"testing"
 	"time"
 
@@ -82,4 +83,21 @@ func TestGraceStop(t *testing.T) {
 
 	_, err := http.Get("http://localhost:54932/")
 	require.Error(t, err)
+}
+
+// Test with SIGINT a server.
+func TestKill(t *testing.T) {
+	server := &http.Server{
+		Addr:    "localhost:54931",
+		Handler: &testServer{timeout: time.Second * 10},
+	}
+
+	g := graceful.New(server)
+	go func() {
+		require.NoError(t, g.Start())
+	}()
+
+	_, err := http.Get("http://localhost:54932/")
+	require.Error(t, err)
+	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 }

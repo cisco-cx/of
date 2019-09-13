@@ -44,6 +44,16 @@ func TestLogError(t *testing.T) {
 	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "error", "This is an error message.", "log_test.go", getLineNumber()-2))
 }
 
+// Test Waringf
+func TestLogWarningf(t *testing.T) {
+	buf := &bytes.Buffer{}
+	log := customLogger(buf)
+	err := errors.New("This is an warning.")
+	log.Warningf("%s", err.Error())
+	// "time="2019-09-10T10:51:43+05:30" level=error msg="This is an error message." func= file="log_test.go:43"
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "warning", "This is an warning.", "log_test.go", getLineNumber()-2))
+}
+
 // Test logger with WithError method.
 func TestWithError(t *testing.T) {
 	buf := &bytes.Buffer{}
@@ -152,7 +162,7 @@ func TestLogPanic(t *testing.T) {
 }
 
 // Test log.Fatalf without any fields
-func TestLogFatal(t *testing.T) {
+func TestFatalF(t *testing.T) {
 	// log.Fatalf calls os.Exit, so executing it as another process.
 	msg := "This is an fatal message."
 	if os.Getenv("BE_CRASHER") == "1" {
@@ -161,7 +171,7 @@ func TestLogFatal(t *testing.T) {
 		return
 	}
 
-	cmd := exec.Command(os.Args[0], "-test.run=TestLogFatal")
+	cmd := exec.Command(os.Args[0], "-test.run=TestFatalF")
 	cmd.Env = append(os.Environ(), "BE_CRASHER=1")
 	output, err := cmd.CombinedOutput()
 	require.Error(t, err)
@@ -169,6 +179,29 @@ func TestLogFatal(t *testing.T) {
 	require.Contains(t, string(output), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "fatal", msg, "log_test.go", getLineNumber()-9))
 }
 
+// Test log.Fatalf without any fields
+func TestFatalFSkip(t *testing.T) {
+	// log.Fatalf calls os.Exit, so executing it as another process.
+	buf := &bytes.Buffer{}
+	log := customLogger(buf)
+	log.SetLevel("panic")
+	log.Fatalf("This is an fatal message.")
+
+	//time="2019-09-10T12:41:33+05:30" level=fatal msg="This is an fatal message." func= file="log_test.go:128"
+	require.Contains(t, string(buf.Bytes()), "")
+}
+
+// Test setting log leve.
+func TestGetLevel(t *testing.T) {
+	// log.Fatalf calls os.Exit, so executing it as another process.
+	log := logger.New()
+	log.SetLevel("debug")
+	log.LogLevel()
+
+	require.EqualValues(t, "debug", log.LogLevel())
+}
+
+// Get line number of caller.
 func getLineNumber() int {
 	_, _, line, _ := runtime.Caller(1)
 	return line

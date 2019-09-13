@@ -33,18 +33,26 @@ type Logger struct {
 func New() *Logger {
 	logger := logrus.New()
 	logger.SetReportCaller(true)
-	logger.SetFormatter(&logrus.TextFormatter{CallerPrettyfier: prettyfier})
+	logger.SetFormatter(&logrus.TextFormatter{
+		CallerPrettyfier:       prettyfier,
+		DisableLevelTruncation: true,
+	})
 	e := logrus.NewEntry(logger)
 	l := Logger{entry: e}
 	return &l
 }
 
 // Log correct file name and line number from where Logger call was invoked.
+// TODO: Finder a better way to get line number. If not revert to default.
 func prettyfier(r *runtime.Frame) (string, string) {
-	_, file, line, ok := runtime.Caller(8)
+	lookback := 8
+
+	if r.Func.Name() == "github.com/cisco-cx/of/wrap/logrus/v1alpha1.(*Logger).Warningf" {
+		lookback = 9
+	}
+	_, file, line, ok := runtime.Caller(lookback)
 	if !ok {
-		file = r.File
-		line = r.Line
+		return "", ""
 	}
 	file = filepath.Base(file)
 	return "", fmt.Sprintf("%s:%d", file, line)
@@ -62,7 +70,9 @@ func (l *Logger) Infof(msg string, args ...interface{}) {
 
 // Log at fatal level.
 func (l *Logger) Fatalf(msg string, args ...interface{}) {
-	l.entry.Fatalf(msg, args...)
+	if l.entry.Logger.IsLevelEnabled(logrus.FatalLevel) {
+		l.entry.Fatalf(msg, args...)
+	}
 }
 
 // Log at panic level.
