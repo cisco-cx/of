@@ -48,3 +48,8 @@ type Alert struct {
 	EndsAt       time.Time         `json:"endsAt"`
 	GeneratorURL string            `json:"generatorURL"`
 }
+
+// Interface for fingerprinting alerts.
+type Fingerprinter interface {
+	Fingerprint() string
+}

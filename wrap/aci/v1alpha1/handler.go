@@ -167,8 +167,9 @@ func (h *Handler) PushAlerts() {
 	}
 }
 
-func (h *Handler) faultsToAlerts(faults []of.Map) ([]*of.Alert, error) {
-	var alerts []*of.Alert
+// Convert acigo faults to Alertmanager alerts.
+func (h *Handler) faultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error) {
+	var alerts []*alertmanager.Alert
 	for _, mapFault := range faults {
 
 		// Decode fault into struct.
@@ -185,10 +186,7 @@ func (h *Handler) faultsToAlerts(faults []of.Map) ([]*of.Alert, error) {
 		}
 
 		// Create alert boilerplate.
-		alert := &of.Alert{
-			Annotations: h.Annotations(f),
-			Labels:      of.LabelMap{},
-		}
+		alert := alertmanager.NewAlert(f)
 
 		// Get an integer representation of fault severity for numerical comparison.
 		s, err := acigo.NewACIFaultSeverityRaw(fp.Fault.Severity)
@@ -253,9 +251,7 @@ func (h *Handler) faultsToAlerts(faults []of.Map) ([]*of.Alert, error) {
 			alert.EndsAt = faultLastTransition
 		}
 
-		// Add "alert_fingerprint" label.
-		// TODO:
-		//h.addFingerprint(alert)
+		alert.Labels[amAlertFingerprintLabel] = of.LabelValue(alert.Fingerprint())
 
 		// Debug sample code.
 		b := []byte{}
@@ -271,14 +267,6 @@ func (h *Handler) faultsToAlerts(faults []of.Map) ([]*of.Alert, error) {
 	return alerts, nil
 
 }
-
-// TODO:
-// Finger print alert.
-/*
-func (h *Handler) addFingerprint(a *of.Alert) {
-	a.Labels[amAlertFingerprintLabel] = model.LabelValue(a.Labels.Fingerprint().String())
-}
-*/
 
 // Wrapper to read a file into an implementation of of.Decoder.
 func LoadConfig(cfg of.Decoder, fileName string) {

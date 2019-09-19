@@ -1,4 +1,4 @@
-package alertmanager
+package v1alpha1
 
 import (
 	"bytes"
@@ -15,7 +15,7 @@ type AlertService struct {
 }
 
 // Send alerts to Alertmanager
-func (a *AlertService) Notify(alerts []*of.Alert) error {
+func (a *AlertService) Notify(alerts []*Alert) error {
 	amAlertsURL := fmt.Sprintf("%s/api/v1/alerts", a.AmURL)
 
 	b := []byte{}

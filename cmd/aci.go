@@ -21,7 +21,6 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/prometheus/common/model"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -52,15 +51,6 @@ type ACI struct {
 	sourceAddress  string
 	counters       map[string]*prometheus.Counter
 	server         *http.Server
-}
-
-// Represents Alertmanager alert.
-type amAlert struct {
-	Labels       model.LabelSet    `json:"labels"`
-	Annotations  map[string]string `json:"annotations"`
-	StartsAt     time.Time         `json:"startsAt"`
-	EndsAt       time.Time         `json:"endsAt"`
-	GeneratorURL string            `json:"generatorURL"`
 }
 
 // Counters names.
