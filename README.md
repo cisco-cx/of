@@ -36,7 +36,7 @@ Here are some general rules that apply regardless of the directory or Go package
 
 This directory contains files like `LICENSE`, `NOTICE`, `README.md`, `go.mod`, `go.sum`.
 
-The only Go file that is allowed here is a minimalistic `main.go` that bootstraps the `of` command using [spf13/cobra](https://github.com/spf13/cobra). We don't wrap cobra yet, because doing so would may get get ugly quickly.
+The only Go file that is allowed here is a minimalistic `main.go` that bootstraps the `of` command using [spf13/cobra](https://github.com/spf13/cobra). We don't wrap cobra yet, because doing so would be complicated.
 
 No other `.go` files may be added to `/`.
 
@@ -127,6 +127,7 @@ This directory will contain mocks for all of the above. The form that this direc
 - https://www.youtube.com/watch?v=zzAdEt3xZ1M
 - https://github.com/kubernetes/kubernetes
 - https://github.com/benbjohnson/peapod
+- https://dave.cheney.net/2017/06/11/go-without-package-scoped-variables
 
 ### for Error Handling
 
