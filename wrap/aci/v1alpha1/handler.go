@@ -29,7 +29,6 @@ import (
 	http "github.com/cisco-cx/of/wrap/http/v1alpha1"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v1alpha1"
-	strcase "github.com/cisco-cx/of/wrap/strcase/v1alpha1"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v1alpha1"
 )
 
@@ -280,27 +279,6 @@ func LoadConfig(cfg of.Decoder, fileName string) {
 	if err != nil {
 		log.WithError(err).Fatalf("Failed to decode alerts config file.")
 	}
-}
-
-// Convert all alert fields to annotations.
-func (h *Handler) Annotations(f of.ACIFaultRaw) map[string]string {
-	// refs:
-	// * https://stackoverflow.com/a/18927729
-	// * https://play.golang.org/p/_zSICvw562P
-
-	v := reflect.ValueOf(f)
-
-	annotations := make(map[string]string, v.NumField())
-
-	for i := 0; i < v.NumField(); i++ {
-		c := strcase.CaseString(v.Type().Field(i).Name)
-		snakeCaseOldKey := c.ToSnake()
-		key := fmt.Sprintf("fault_%s", snakeCaseOldKey)
-		value := v.Field(i).String()
-		annotations[key] = value
-	}
-
-	return annotations
 }
 
 func (h *Handler) GetAlertConfig(fault of.ACIFaultRaw) (string, *of.AlertConfig, error) {

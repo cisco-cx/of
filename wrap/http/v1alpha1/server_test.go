@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/lib/v1alpha1"
@@ -37,6 +38,7 @@ func TestServer(t *testing.T) {
 		err := srv.ListenAndServe()
 		require.NoError(t, err)
 	}()
+	time.Sleep(time.Second)
 
 	err := srv.Shutdown()
 	require.NoError(t, err)
@@ -57,6 +59,7 @@ func TestHandleFunc(t *testing.T) {
 		err := srv.ListenAndServe()
 		require.NoError(t, err)
 	}()
+	time.Sleep(time.Second)
 	checkResponse(t, "http://"+addr, response_text)
 	err := srv.Shutdown()
 	require.NoError(t, err)
@@ -74,6 +77,7 @@ func TestHandle(t *testing.T) {
 		err := srv.ListenAndServe()
 		require.NoError(t, err)
 	}()
+	time.Sleep(time.Second)
 	checkResponse(t, "http://"+addr, "This is a handler.")
 	err := srv.Shutdown()
 	require.NoError(t, err)

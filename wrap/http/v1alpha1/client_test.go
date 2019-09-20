@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	"gotest.tools/assert"
@@ -11,11 +12,10 @@ import (
 	http "github.com/cisco-cx/of/wrap/http/v1alpha1"
 )
 
-var server_addr string = "localhost:54931"
-
 // Test http.Get
 func TestGet(t *testing.T) {
-	srv := startServer(t)
+	server_addr := "localhost:54941"
+	srv := startServer(t, server_addr)
 	defer srv.Shutdown()
 	c := http.NewClient()
 	res, err := c.Get("http://" + server_addr)
@@ -28,7 +28,7 @@ func TestGet(t *testing.T) {
 }
 
 // Start a HTTP Server to test.
-func startServer(t *testing.T) *http.Server {
+func startServer(t *testing.T, server_addr string) *http.Server {
 	response_text := "HandleFunc called."
 	server := of.Server{
 		Addr: server_addr,
@@ -41,12 +41,14 @@ func startServer(t *testing.T) *http.Server {
 		err := srv.ListenAndServe()
 		require.NoError(t, err)
 	}()
+	time.Sleep(time.Second)
 	return srv
 }
 
 // Test client.Do request.
 func TestDo(t *testing.T) {
-	srv := startServer(t)
+	server_addr := "localhost:54942"
+	srv := startServer(t, server_addr)
 	defer srv.Shutdown()
 	c := http.NewClient()
 
