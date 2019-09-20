@@ -2,16 +2,18 @@ package v1alpha1
 
 import (
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
 	of "github.com/cisco-cx/of/lib/v1alpha1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 )
 
 type FaultParser struct {
 	Fault of.ACIFaultRaw
 }
+
+var log = logger.New()
 
 const timeLayout = time.RFC3339
 
@@ -25,7 +27,7 @@ func (f *FaultParser) Created() (time.Time, error) {
 	}
 
 	zone, offset := t.Zone()
-	log.Printf("Before forcing UTC time zone, APIC fault's 'created' timezone and offset were: %s, %d\n", zone, offset)
+	log.Debugf("Before forcing UTC time zone, APIC fault's 'created' timezone and offset were: %s, %d\n", zone, offset)
 	return t.UTC(), nil
 }
 
@@ -38,7 +40,7 @@ func (f *FaultParser) LastTransition() (time.Time, error) {
 		return time.Time{}, err
 	}
 	zone, offset := t.Zone()
-	log.Printf("Before forcing UTC time zone, APIC fault's 'lastTransition' timezone and offset were: %s, %d\n", zone, offset)
+	log.Debugf("Before forcing UTC time zone, APIC fault's 'lastTransition' timezone and offset were: %s, %d\n", zone, offset)
 	return t.UTC(), nil
 }
 

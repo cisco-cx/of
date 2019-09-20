@@ -70,6 +70,6 @@ func (m Map) DecodeMap(output interface{}) error {
 	// Convert m to an interface{} var.
 	var input interface{} = m.ofMap
 	// Call external package to decode input into output.
-	err := mapstructure.Decode(input, output)
+	err := mapstructure.Decode(input, &output)
 	return err
 }

@@ -18,7 +18,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 	"time"
 
@@ -66,7 +65,7 @@ var log = logger.New()
 
 func (h *Handler) Run() {
 
-	h.initCounters()
+	h.InitHandler()
 	srv := of.Server{
 		Addr:         h.Config.ListenAddress,
 		ReadTimeout:  10 * time.Second,
@@ -88,7 +87,12 @@ func (h *Handler) Run() {
 	}
 }
 
-func (h *Handler) initCounters() {
+func (h *Handler) InitHandler() {
+
+	h.ac = &yaml.Alerts{}
+	LoadConfig(h.ac, h.Config.AlertsCFGFile)
+	h.sc = &yaml.Secrets{}
+	LoadConfig(h.sc, h.Config.SecretsCFGFile)
 
 	h.counters = map[string]*prometheus.Counter{
 		amConnectAttemptCount: &prometheus.Counter{Namespace: h.Config.Application, Name: amConnectAttemptCount,
@@ -124,11 +128,6 @@ func (h *Handler) initCounters() {
 // Pull ACI faults and forward to Alertmanager.
 func (h *Handler) PushAlerts() {
 
-	h.ac = &yaml.Alerts{}
-	LoadConfig(h.ac, h.Config.AlertsCFGFile)
-	h.sc = &yaml.Secrets{}
-	LoadConfig(h.sc, h.Config.SecretsCFGFile)
-
 	for {
 		h.counters[notificationCycleCount].Incr()
 		log.Infof("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
@@ -141,7 +140,7 @@ func (h *Handler) PushAlerts() {
 			return
 		}
 
-		alerts, err := h.faultsToAlerts(faults)
+		alerts, err := h.FaultsToAlerts(faults)
 		if err != nil {
 			log.WithError(err).Errorf("Failed to convert faults to alerts.")
 			goto NEXTCYCLE
@@ -167,7 +166,7 @@ func (h *Handler) PushAlerts() {
 }
 
 // Convert acigo faults to Alertmanager alerts.
-func (h *Handler) faultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error) {
+func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error) {
 	var alerts []*alertmanager.Alert
 	for _, mapFault := range faults {
 
@@ -223,8 +222,8 @@ func (h *Handler) faultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 			alert.Labels["alert_severity"] = of.LabelValue(newAlertConfig.AlertSeverity)
 		} else {
 			h.counters[faultsUnmatchedCount].Incr()
-			log.Errorf("%s\n", err)
-			log.Errorf("Setting default alertname and severity for fault code: %s\n", f.Code)
+			log.Debugf("%s\n", err)
+			log.Debugf("Setting default alertname and severity for fault code: %s\n", f.Code)
 
 			// Fall back to the "rule" field in the scraped fault.
 			alert.Labels["alertname"] = of.LabelValue(f.Rule)
@@ -258,7 +257,7 @@ func (h *Handler) faultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		if err != nil {
 			return nil, err
 		}
-		log.Errorf("Alert generated: %s\n", b)
+		log.Debugf("Alert generated: %s\n", b)
 
 		alerts = append(alerts, alert)
 		h.counters[alertsGeneratedCount].Incr()
@@ -282,45 +281,20 @@ func LoadConfig(cfg of.Decoder, fileName string) {
 }
 
 func (h *Handler) GetAlertConfig(fault of.ACIFaultRaw) (string, *of.AlertConfig, error) {
-	// refs:
-	// * https://stackoverflow.com/a/18927729
-	// * https://play.golang.org/p/_zSICvw562P
-
 	// Loop through alerts.yaml:alerts; if an alertConfig mentions the current fault code,
 	// return the alertName and alertConfig and break the loop.
 
-	faultCode := ""
-	matchFound := false
-
-	v1 := reflect.ValueOf(h.ac)
-
-	for _, e1 := range v1.MapKeys() {
-		alertName := e1.Interface().(string)
-		newAlertConfig := v1.MapIndex(e1).Interface().(of.AlertConfig)
-
-		// Loop through the nested faults to complete the above goal.
-		v2 := reflect.ValueOf(newAlertConfig.Faults)
-		for _, e2 := range v2.MapKeys() {
-			// ref: https://stackoverflow.com/a/51977415
-			faultCode = e2.Interface().(string)
-			if faultCode == fault.Code {
-				matchFound = true
-
-				// Commenting this out, but we may want to use it in the future.
-				newAlertConfigFault := v2.MapIndex(e2).Interface().(of.AlertConfigFault)
-				log.Infof("%+v", newAlertConfigFault)
-				break
+	for alertName, alertConfig := range h.ac.Alerts {
+		for code, _ := range alertConfig.Faults {
+			if code == fault.Code {
+				return alertName, &alertConfig, nil
 			}
-		}
-
-		if matchFound {
-			return alertName, &newAlertConfig, nil
 		}
 	}
 
 	// We didn't find anything...
 	err := fmt.Errorf("getAlertConfig() was unable to locate a alert map for fault code: %s", fault.Code)
-	return faultCode, &of.AlertConfig{}, err
+	return "", &of.AlertConfig{}, err
 }
 
 func (h *Handler) Shutdown() error {

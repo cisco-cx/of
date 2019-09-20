@@ -119,7 +119,7 @@ func cmdACIHandler() *cobra.Command {
 // Entry point for ./of aci handler.
 func runACIHandler(cmd *cobra.Command, args []string) {
 	config := ACIConfig(cmd)
-	handler := *&aci.Handler{Config: config}
+	handler := &aci.Handler{Config: config}
 	handler.Aci = &acigo.ACIService{config}
 	handler.Ams = &alertmanager.AlertService{config}
 	handler.Run()
