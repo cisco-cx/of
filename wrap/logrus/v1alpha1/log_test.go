@@ -40,8 +40,8 @@ func TestLogError(t *testing.T) {
 	log := customLogger(buf)
 	err := errors.New("This is an error message.")
 	log.Errorf("%s", err.Error())
-	// "time="2019-09-10T10:51:43+05:30" level=error msg="This is an error message." func= file="log_test.go:43"
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "error", "This is an error message.", "log_test.go", getLineNumber()-2))
+	// "time="2019-09-10T10:51:43+05:30" level=error msg="This is an error message." file="log_test.go:43"
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\"", "error", "This is an error message.", "log_test.go", getLineNumber()-2))
 }
 
 // Test Waringf
@@ -50,8 +50,8 @@ func TestLogWarningf(t *testing.T) {
 	log := customLogger(buf)
 	err := errors.New("This is an warning.")
 	log.Warningf("%s", err.Error())
-	// "time="2019-09-10T10:51:43+05:30" level=error msg="This is an error message." func= file="log_test.go:43"
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "warning", "This is an warning.", "log_test.go", getLineNumber()-2))
+	// "time="2019-09-10T10:51:43+05:30" level=error msg="This is an error message." file="log_test.go:43"
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\"", "warning", "This is an warning.", "log_test.go", getLineNumber()-2))
 }
 
 // Test logger with WithError method.
@@ -60,8 +60,8 @@ func TestWithError(t *testing.T) {
 	log := customLogger(buf)
 	err := errors.New("This is a custom error.")
 	log.WithError(err).Errorf("Encountered an error.")
-	// time="2019-09-10T10:56:17+05:30" level=error msg="Encountered an error." func= file="log_test.go:53" error="This is a custom error."
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\" error=\"%s\"", "error", "Encountered an error.", "log_test.go", getLineNumber()-2, "This is a custom error."))
+	// time="2019-09-10T10:56:17+05:30" level=error msg="Encountered an error." file="log_test.go:53" error="This is a custom error."
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" error=\"%s\"", "error", "Encountered an error.", "log_test.go", getLineNumber()-2, "This is a custom error."))
 }
 
 // Test logger with WithField method.
@@ -69,8 +69,8 @@ func TestWithField(t *testing.T) {
 	buf := &bytes.Buffer{}
 	log := customLogger(buf)
 	log.WithField("key", "value").WithField("key2", "value2").Errorf("Errors with custom field.")
-	// time="2019-09-10T11:17:19+05:30" level=error msg="Errors with custom field." func= file="log_test.go:63" key=value key2=value2
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\" key=value key2=value2", "error", "Errors with custom field.", "log_test.go", getLineNumber()-2))
+	// time="2019-09-10T11:17:19+05:30" level=error msg="Errors with custom field." file="log_test.go:63" key=value key2=value2
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" key=value key2=value2", "error", "Errors with custom field.", "log_test.go", getLineNumber()-2))
 }
 
 func TestWithFields(t *testing.T) {
@@ -83,8 +83,8 @@ func TestWithFields(t *testing.T) {
 	}).
 		WithField("key3", "val3").
 		Debugf("Errors with custom fields.")
-	// time="2019-09-10T11:21:40+05:30" level=debug msg="Errors with custom fields." func= file="log_test.go:77" key1=val1 key2=val2 key3=val3
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\" key1=val1 key2=val2 key3=val3", "debug", "Errors with custom fields.", "log_test.go", getLineNumber()-2))
+	// time="2019-09-10T11:21:40+05:30" level=debug msg="Errors with custom fields." file="log_test.go:77" key1=val1 key2=val2 key3=val3
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" key1=val1 key2=val2 key3=val3", "debug", "Errors with custom fields.", "log_test.go", getLineNumber()-2))
 }
 
 // Test debug log level enabled
@@ -93,8 +93,8 @@ func TestWithDebugEnabled(t *testing.T) {
 	log := customLogger(buf)
 	log.SetLevel("deBug")
 	log.Debugf("Debug log enabled.")
-	// time="2019-09-10T11:25:46+05:30" level=debug msg="Debug log enabled." func= file="log_test.go:88
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "debug", "Debug log enabled.", "log_test.go", getLineNumber()-2))
+	// time="2019-09-10T11:25:46+05:30" level=debug msg="Debug log enabled." file="log_test.go:88
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\"", "debug", "Debug log enabled.", "log_test.go", getLineNumber()-2))
 }
 
 // Test debug log level disabled
@@ -121,8 +121,8 @@ func TestLogInfo(t *testing.T) {
 	log := customLogger(buf)
 	msg := "This is an info message."
 	log.Infof(msg)
-	// "time="2019-09-10T10:51:43+05:30" level=info msg="This is an info message." func= file="log_test.go:118"
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "info", msg, "log_test.go", getLineNumber()-2))
+	// "time="2019-09-10T10:51:43+05:30" level=info msg="This is an info message." file="log_test.go:118"
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\"", "info", msg, "log_test.go", getLineNumber()-2))
 }
 
 // Test log.Tracef without any fields
@@ -132,8 +132,8 @@ func TestLogTrace(t *testing.T) {
 	log.SetLevel("trace")
 	msg := "This is an trace message."
 	log.Tracef(msg)
-	// "time="2019-09-10T10:51:43+05:30" level=info msg="This is an info message." func= file="log_test.go:118"
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "trace", msg, "log_test.go", getLineNumber()-2))
+	// "time="2019-09-10T10:51:43+05:30" level=info msg="This is an info message." file="log_test.go:118"
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\"", "trace", msg, "log_test.go", getLineNumber()-2))
 }
 
 // Test log.Debugf without any fields
@@ -143,8 +143,8 @@ func TestLogDebug(t *testing.T) {
 	log.SetLevel("debug")
 	msg := "This is an debug message."
 	log.Debugf(msg)
-	// "time="2019-09-10T10:51:43+05:30" level=info msg="This is an info message." func= file="log_test.go:118"
-	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "debug", msg, "log_test.go", getLineNumber()-2))
+	// "time="2019-09-10T10:51:43+05:30" level=info msg="This is an info message." file="log_test.go:118"
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\"", "debug", msg, "log_test.go", getLineNumber()-2))
 }
 
 // Test log.Panicf without any fields
@@ -175,8 +175,8 @@ func TestFatalF(t *testing.T) {
 	cmd.Env = append(os.Environ(), "BE_CRASHER=1")
 	output, err := cmd.CombinedOutput()
 	require.Error(t, err)
-	//time="2019-09-10T12:41:33+05:30" level=fatal msg="This is an fatal message." func= file="log_test.go:128"
-	require.Contains(t, string(output), fmt.Sprintf("level=%s msg=\"%s\" func= file=\"%s:%d\"", "fatal", msg, "log_test.go", getLineNumber()-9))
+	//time="2019-09-10T12:41:33+05:30" level=fatal msg="This is an fatal message." file="log_test.go:128"
+	require.Contains(t, string(output), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\"", "fatal", msg, "log_test.go", getLineNumber()-9))
 }
 
 // Test log.Fatalf without any fields
@@ -187,7 +187,7 @@ func TestFatalFSkip(t *testing.T) {
 	log.SetLevel("panic")
 	log.Fatalf("This is an fatal message.")
 
-	//time="2019-09-10T12:41:33+05:30" level=fatal msg="This is an fatal message." func= file="log_test.go:128"
+	//time="2019-09-10T12:41:33+05:30" level=fatal msg="This is an fatal message." file="log_test.go:128"
 	require.Contains(t, string(buf.Bytes()), "")
 }
 
