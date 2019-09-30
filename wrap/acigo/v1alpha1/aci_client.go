@@ -42,6 +42,7 @@ import (
 	"github.com/udhos/acigo/aci"
 
 	of "github.com/cisco-cx/of/lib/v1alpha1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1alpha1"
 )
 
@@ -50,11 +51,12 @@ import (
 // ACIClient implements the of.ACIClient interface.
 type ACIClient struct {
 	client *aci.Client
+	Log    *logger.Logger
 }
 
 // NewACIClient returns a new instance of ACIClient configured by an
 // of.ACIClientConfig struct.
-func NewACIClient(cfg of.ACIClientConfig) (*ACIClient, error) {
+func NewACIClient(cfg of.ACIClientConfig, log *logger.Logger) (*ACIClient, error) {
 	// Convert of.ACIClientConfig to aci.ClientOptions.
 	opts := aci.ClientOptions{
 		Hosts: cfg.Hosts,
@@ -67,7 +69,7 @@ func NewACIClient(cfg of.ACIClientConfig) (*ACIClient, error) {
 	if err != nil {
 		return &ACIClient{}, err
 	}
-	return &ACIClient{client: client}, nil
+	return &ACIClient{client: client, Log: log}, nil
 }
 
 // Login opens a new API session.
@@ -79,7 +81,7 @@ func (c *ACIClient) Login() error {
 func (c *ACIClient) Faults() ([]of.Map, error) {
 	list, err := c.client.FaultList()
 	if err != nil {
-		return []of.Map{}, nil
+		return []of.Map{}, err
 	}
 	mm := make([]of.Map, len(list))
 	for i, v := range list {

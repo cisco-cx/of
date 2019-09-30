@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/lib/v1alpha1"
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1alpha1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 )
 
 var fault = of.ACIFaultRaw{
@@ -76,8 +77,8 @@ func TestSeverityID(t *testing.T) {
 
 // Wrapper to create a acigo.FaultParser with test fault data.
 func faultParser() *acigo.FaultParser {
-
+	log := logger.New()
 	f := of.ACIFaultRaw{}
 	mapstructure.Decode(fault, &f)
-	return &acigo.FaultParser{f}
+	return &acigo.FaultParser{f, log}
 }

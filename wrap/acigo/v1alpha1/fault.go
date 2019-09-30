@@ -11,9 +11,8 @@ import (
 
 type FaultParser struct {
 	Fault of.ACIFaultRaw
+	Log   *logger.Logger
 }
-
-var log = logger.New()
 
 const timeLayout = time.RFC3339
 
@@ -27,7 +26,7 @@ func (f *FaultParser) Created() (time.Time, error) {
 	}
 
 	zone, offset := t.Zone()
-	log.Debugf("Before forcing UTC time zone, APIC fault's 'created' timezone and offset were: %s, %d\n", zone, offset)
+	f.Log.Debugf("Before forcing UTC time zone, APIC fault's 'created' timezone and offset were: %s, %d\n", zone, offset)
 	return t.UTC(), nil
 }
 
@@ -40,7 +39,7 @@ func (f *FaultParser) LastTransition() (time.Time, error) {
 		return time.Time{}, err
 	}
 	zone, offset := t.Zone()
-	log.Debugf("Before forcing UTC time zone, APIC fault's 'lastTransition' timezone and offset were: %s, %d\n", zone, offset)
+	f.Log.Debugf("Before forcing UTC time zone, APIC fault's 'lastTransition' timezone and offset were: %s, %d\n", zone, offset)
 	return t.UTC(), nil
 }
 

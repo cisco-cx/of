@@ -2,14 +2,17 @@ package v1alpha1
 
 import (
 	of "github.com/cisco-cx/of/lib/v1alpha1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 )
 
 type ACIService struct {
 	*of.ACIConfig
+	*logger.Logger
 }
 
 func (s *ACIService) Faults() ([]of.Map, error) {
-	client, err := NewACIClient(of.ACIClientConfig{Hosts: []string{s.SourceAddress}, User: s.User, Pass: s.Pass})
+	client, err := NewACIClient(of.ACIClientConfig{Hosts: []string{s.SourceHostname},
+		User: s.User, Pass: s.Pass}, s.Logger)
 	if err != nil {
 		return nil, err
 	}

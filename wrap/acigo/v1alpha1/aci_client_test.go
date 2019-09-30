@@ -31,35 +31,3 @@ func TestACIClient_Interface(t *testing.T) {
 	var _ of.ACIClient = &acigo.ACIClient{}
 	assert.Nil(t, nil) // If we get this far, the test passed.
 }
-
-// Confirm simple acigo.NewACIClient() functionality.
-func TestACIClient_Simple(t *testing.T) {
-	// Get a new client.
-	_, err := acigo.NewACIClient(of.ACIClientConfig{
-		Hosts: []string{"host1", "host2", "host3"},
-		User:  "user",
-		Pass:  "pass",
-	})
-	assert.Nil(t, err)
-}
-
-// Simple ACIClient.Faults() functionality test.
-func TestACIClient_FaultsSimple(t *testing.T) {
-	// Prepare to assert multiple times.
-	assert := assert.New(t)
-	// Get a new client and confirm nil err.
-	client, err := acigo.NewACIClient(of.ACIClientConfig{
-		Hosts: []string{"host1", "host2", "host3"},
-		User:  "user",
-		Pass:  "pass",
-	})
-	// Confirm nil err for new client.
-	assert.Nil(err)
-	// Get ACI faults without type inference.
-	var faults []of.Map
-	faults, err = client.Faults()
-	// Confirm nil err for getting ACI faults.
-	assert.Nil(err)
-	// Confirm faults data type (again).
-	assert.Equal([]of.Map{}, faults)
-}
