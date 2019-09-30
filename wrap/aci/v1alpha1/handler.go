@@ -130,7 +130,7 @@ func (h *Handler) PushAlerts() {
 
 	for {
 		h.counters[notificationCycleCount].Incr()
-		log.Infof("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
+		log.Debugf("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
 
 		h.counters[apicConnectAttemptCount].Incr()
 		faults, err := h.Aci.Faults()
@@ -159,7 +159,7 @@ func (h *Handler) PushAlerts() {
 			log.Errorf("No faults found")
 		}
 
-		log.Infof("Notification cycle succeeded. Sleeping for %d seconds.\n", h.Config.CycleInterval)
+		log.Debugf("Notification cycle succeeded. Sleeping for %d seconds.\n", h.Config.CycleInterval)
 	NEXTCYCLE:
 		time.Sleep(time.Duration(h.Config.CycleInterval) * time.Second)
 	}
@@ -178,7 +178,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 
 		// If this is in alerts.yaml:dropped_faults, skip it.
 		if _, drop := h.ac.DroppedFaults[strings.ToUpper(fp.Fault.Code)]; drop {
-			log.Errorf("Dropping fault: %s\n", f)
+			log.Debugf("Dropping fault: %s\n", f)
 			h.counters[faultsDroppedCount].Incr()
 			continue
 		}
@@ -217,7 +217,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		alertName, newAlertConfig, err := h.GetAlertConfig(f)
 		if err == nil && alertName != "" {
 			h.counters[faultsMatchedCount].Incr()
-			log.Errorf("Found matching fault code in alertsConfig.Alerts.")
+			log.Debugf("Found matching fault code in alertsConfig.Alerts.")
 			alert.Labels["alertname"] = of.LabelValue(alertName)
 			alert.Labels["alert_severity"] = of.LabelValue(newAlertConfig.AlertSeverity)
 		} else {
@@ -257,6 +257,8 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		if err != nil {
 			return nil, err
 		}
+		log.Infof("Alert generated: Alert name : %s, Fingerprint : %s\n", alert.Labels["alertname"],
+			alert.Labels[amAlertFingerprintLabel])
 		log.Debugf("Alert generated: %s\n", b)
 
 		alerts = append(alerts, alert)
