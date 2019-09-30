@@ -257,8 +257,9 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		if err != nil {
 			return nil, err
 		}
-		log.Infof("Alert generated: Alert name : %s, Fingerprint : %s\n", alert.Labels["alertname"],
-			alert.Labels[amAlertFingerprintLabel])
+		log.WithField("Alert name", alert.Labels["alertname"]).
+			WithField("Fingerprint", alert.Labels[amAlertFingerprintLabel]).
+			Infof("Alert generated.")
 		log.Debugf("Alert generated: %s\n", b)
 
 		alerts = append(alerts, alert)

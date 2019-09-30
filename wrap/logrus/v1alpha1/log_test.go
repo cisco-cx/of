@@ -58,10 +58,26 @@ func TestLogWarningf(t *testing.T) {
 func TestWithError(t *testing.T) {
 	buf := &bytes.Buffer{}
 	log := customLogger(buf)
+
+	// Check Errorf().
+	checkErrorf(t, log, buf)
+
+	// This shouldn't have any effect on WithError.
+	log.AutoClearFields(false)
+
+	checkErrorf(t, log, buf)
+}
+
+func checkErrorf(t *testing.T, log of.Logger, buf *bytes.Buffer) {
 	err := errors.New("This is a custom error.")
 	log.WithError(err).Errorf("Encountered an error.")
 	// time="2019-09-10T10:56:17+05:30" level=error msg="Encountered an error." file="log_test.go:53" error="This is a custom error."
 	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" error=\"%s\"", "error", "Encountered an error.", "log_test.go", getLineNumber()-2, "This is a custom error."))
+
+	// Check if error field is cleared.
+	log.Errorf("Encountered an error.")
+	// time="2019-09-10T10:56:17+05:30" level=error msg="Encountered an error." file="log_test.go:53" error="This is a custom error."
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\"", "error", "Encountered an error.", "log_test.go", getLineNumber()-2))
 }
 
 // Test logger with WithField method.
@@ -71,6 +87,22 @@ func TestWithField(t *testing.T) {
 	log.WithField("key", "value").WithField("key2", "value2").Errorf("Errors with custom field.")
 	// time="2019-09-10T11:17:19+05:30" level=error msg="Errors with custom field." file="log_test.go:63" key=value key2=value2
 	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" key=value key2=value2", "error", "Errors with custom field.", "log_test.go", getLineNumber()-2))
+	log.WithField("key3", "value3").Errorf("Errors with custom field again.")
+	// time="2019-09-10T11:17:19+05:30" level=error msg="Errors with custom field." file="log_test.go:63" key=value key2=value2
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" key3=value3", "error", "Errors with custom field again.", "log_test.go", getLineNumber()-2))
+}
+
+// Test logger with AutoClear disabled.
+func TestAutoClearFieldsDisabled(t *testing.T) {
+	buf := &bytes.Buffer{}
+	log := customLogger(buf)
+	log.AutoClearFields(false)
+	log.WithField("key", "value").WithField("key2", "value2").Errorf("Errors with custom field.")
+	// time="2019-09-10T11:17:19+05:30" level=error msg="Errors with custom field." file="log_test.go:63" key=value key2=value2
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" key=value key2=value2", "error", "Errors with custom field.", "log_test.go", getLineNumber()-2))
+
+	log.WithField("key3", "value3").Errorf("Errors with custom field again.")
+	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" key=value key2=value2 key3=value3", "error", "Errors with custom field again.", "log_test.go", getLineNumber()-1))
 }
 
 func TestWithFields(t *testing.T) {

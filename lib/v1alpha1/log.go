@@ -31,6 +31,7 @@ type Logger interface {
 	WithError(error) Logger
 	WithField(string, interface{}) Logger
 	WithFields(map[string]interface{}) Logger
+	AutoClearFields(bool)
 
 	SetOutput(io.Writer)
 }

@@ -27,6 +27,8 @@ import (
 // Represents loggo logger and fields to support structured logging.
 type Logger struct {
 	entry *logrus.Entry
+	// if true , Will clear any field that is set using WithField(s) call after a log line is logged/printed.
+	autoClearFields bool // Default: true
 }
 
 // Initiate logger.
@@ -39,6 +41,7 @@ func New() *Logger {
 	})
 	e := logrus.NewEntry(logger)
 	l := Logger{entry: e}
+	l.AutoClearFields(true)
 	return &l
 }
 
@@ -58,41 +61,52 @@ func prettyfier(r *runtime.Frame) (string, string) {
 	return "", fmt.Sprintf("%s:%d", file, line)
 }
 
+// if true , Will clear any field that is set using WithField(s) call after a log line is logged/printed.
+func (l *Logger) AutoClearFields(enabled bool) {
+	l.autoClearFields = enabled
+}
+
+// Reset all fields set by WithField(s) method.
+func (l *Logger) ClearFields() {
+	l.entry.Data = make(logrus.Fields)
+}
+
 // Log at error level.
 func (l *Logger) Errorf(msg string, args ...interface{}) {
-	l.entry.Errorf(msg, args...)
+	l.Logf(logrus.ErrorLevel, msg, args...)
 }
 
 // Log at info level.
 func (l *Logger) Infof(msg string, args ...interface{}) {
-	l.entry.Infof(msg, args...)
+	l.Logf(logrus.InfoLevel, msg, args...)
 }
 
 // Log at fatal level.
 func (l *Logger) Fatalf(msg string, args ...interface{}) {
 	if l.entry.Logger.IsLevelEnabled(logrus.FatalLevel) {
-		l.entry.Fatalf(msg, args...)
+		l.Logf(logrus.FatalLevel, msg, args...)
+		l.entry.Logger.Exit(1)
 	}
 }
 
 // Log at panic level.
 func (l *Logger) Panicf(msg string, args ...interface{}) {
-	l.entry.Panicf(msg, args...)
+	l.Logf(logrus.PanicLevel, msg, args...)
 }
 
 // Log at debug level.
 func (l *Logger) Debugf(msg string, args ...interface{}) {
-	l.entry.Debugf(msg, args...)
+	l.Logf(logrus.DebugLevel, msg, args...)
 }
 
 // Log at trace level.
 func (l *Logger) Tracef(msg string, args ...interface{}) {
-	l.entry.Tracef(msg, args...)
+	l.Logf(logrus.TraceLevel, msg, args...)
 }
 
 // Log at warning level.
 func (l *Logger) Warningf(msg string, args ...interface{}) {
-	l.entry.Warningf(msg, args...)
+	l.Logf(logrus.WarnLevel, msg, args...)
 }
 
 // Log the given error as a seperate field.
@@ -111,6 +125,16 @@ func (l *Logger) WithField(k string, v interface{}) of.Logger {
 func (l *Logger) WithFields(kv map[string]interface{}) of.Logger {
 	l.entry = l.entry.WithFields(logrus.Fields(kv))
 	return l
+}
+
+// Log at given log level.
+func (l *Logger) Logf(level logrus.Level, msg string, args ...interface{}) {
+	l.entry.Logf(level, msg, args...)
+	//l.entry.Data = make(logrus.Fields)
+	delete(l.entry.Data, logrus.ErrorKey)
+	if l.autoClearFields == true {
+		l.ClearFields()
+	}
 }
 
 // Set log level
