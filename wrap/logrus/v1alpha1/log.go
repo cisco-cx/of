@@ -48,10 +48,10 @@ func New() *Logger {
 // Log correct file name and line number from where Logger call was invoked.
 // TODO: Finder a better way to get line number. If not revert to default.
 func prettyfier(r *runtime.Frame) (string, string) {
-	lookback := 8
+	lookback := 9
 
 	if r.Func.Name() == "github.com/cisco-cx/of/wrap/logrus/v1alpha1.(*Logger).Warningf" {
-		lookback = 9
+		lookback = 10
 	}
 	_, file, line, ok := runtime.Caller(lookback)
 	if !ok {
