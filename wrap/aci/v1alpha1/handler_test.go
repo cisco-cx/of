@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/lib/v1alpha1"
 	aci "github.com/cisco-cx/of/wrap/aci/v1alpha1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1alpha1"
 )
 
@@ -21,7 +22,7 @@ func TestFaultToAlerts(t *testing.T) {
 	c.Application = "testing_handler"
 	c.AlertsCFGFile = "test/alerts.yaml"
 	c.SecretsCFGFile = "test/secrets.yaml"
-	handler := &aci.Handler{Config: c}
+	handler := &aci.Handler{Config: c, Log: logger.New()}
 	handler.InitHandler()
 	faults, err := handler.FaultsToAlerts(getFaults(t))
 	require.NoError(t, err)
@@ -44,10 +45,8 @@ func getFaults(t *testing.T) []of.Map {
 
 	mm := make([]of.Map, len(list))
 	for i, v := range list {
-		//fmt.Printf("i : %v, v : %v", i, v)
 		mapstructure.NewMap(v).DecodeMap(&mm[i])
 	}
-	fmt.Sprintf("%+v\n", mm)
 	return mm
 }
 

@@ -38,11 +38,14 @@
 
 package v1alpha1
 
+import "time"
+
 // Represents ACI settings.
 type ACIConfig struct {
 	Application    string
 	ListenAddress  string
 	CycleInterval  int
+	ACITimeout     time.Duration
 	AmURL          string
 	ACIHost        string
 	AlertsCFGFile  string

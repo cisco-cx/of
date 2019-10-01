@@ -23,6 +23,7 @@ require (
 	github.com/udhos/acigo v0.0.0-20190702182318-b04b827bd920
 	golang.org/x/sys v0.0.0-20190919044723-0c1ff786ef13 // indirect
 	golang.org/x/text v0.3.2 // indirect
+	google.golang.org/appengine v1.1.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.2.2
 	gotest.tools v2.2.0+incompatible

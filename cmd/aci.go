@@ -29,30 +29,8 @@ import (
 	aci "github.com/cisco-cx/of/wrap/aci/v1alpha1"
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1alpha1"
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1alpha1"
-	http "github.com/cisco-cx/of/wrap/http/v1alpha1"
 	net "github.com/cisco-cx/of/wrap/net/v1alpha1"
-	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v1alpha1"
-	yaml "github.com/cisco-cx/of/wrap/yaml/v1alpha1"
 )
-
-// Represents ACI settings.
-type ACI struct {
-	Application    string
-	ListenAddress  string
-	CycleInterval  int
-	AmURL          string
-	ACIHost        string
-	AlertsCFGFile  string
-	SecretsCFGFile string
-	user           string
-	pass           string
-	ac             *yaml.Alerts
-	sc             *yaml.Secrets
-	sourceHostname string
-	sourceAddress  string
-	counters       map[string]*prometheus.Counter
-	server         *http.Server
-}
 
 // Counters names.
 const (
@@ -109,6 +87,7 @@ func cmdACIHandler() *cobra.Command {
 	cmd.Flags().String("aci-password", "", "ACI password")
 	cmd.Flags().String("alerts-config", "alerts.yaml", "Alerts config file (default: alerts.yaml)")
 	cmd.Flags().String("secrets-config", "secrets.yaml", "Secrets config file (default: secrets.yaml)")
+	cmd.Flags().Duration("aci-timeout", 10*time.Second, "ACI Read/Write timeout  (default: 10s)")
 
 	// Enable ENV to set flag values.
 	// Ex: ENV AM_URL will set the value for --am-url.
@@ -120,8 +99,8 @@ func cmdACIHandler() *cobra.Command {
 // Entry point for ./of aci handler.
 func runACIHandler(cmd *cobra.Command, args []string) {
 	config := ACIConfig(cmd)
-	handler := &aci.Handler{Config: config}
-	handler.Aci = &acigo.ACIService{config}
+	handler := &aci.Handler{Config: config, Log: log}
+	handler.Aci = &acigo.ACIService{config, log}
 	handler.Ams = &alertmanager.AlertService{config}
 	handler.Run()
 }

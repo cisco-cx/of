@@ -13,6 +13,7 @@ import (
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1alpha1"
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1alpha1"
 	http "github.com/cisco-cx/of/wrap/http/v1alpha1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
 )
 
 type DNSEntry struct {
@@ -25,7 +26,7 @@ type DNSEntry struct {
 func TestHandlerRun(t *testing.T) {
 	cfg := &of.ACIConfig{}
 	cfg.Application = "testing_aci"
-	cfg.ListenAddress = "127.0.0.1:9100"
+	cfg.ListenAddress = "127.0.0.1:9011"
 	cfg.CycleInterval = 10
 	cfg.AmURL = "locahost:9093"
 	cfg.ACIHost = "::1"
@@ -33,8 +34,9 @@ func TestHandlerRun(t *testing.T) {
 	cfg.AlertsCFGFile = "test/alerts.yaml"
 	cfg.SecretsCFGFile = "test/secrets.yaml"
 
-	handler := *&aci.Handler{Config: cfg}
-	handler.Aci = &acigo.ACIService{cfg}
+	log := logger.New()
+	handler := *&aci.Handler{Config: cfg, Log: log}
+	handler.Aci = &acigo.ACIService{cfg, log}
 	handler.Ams = &alertmanager.AlertService{cfg}
 	go handler.Run()
 

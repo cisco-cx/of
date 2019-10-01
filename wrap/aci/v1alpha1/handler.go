@@ -59,17 +59,16 @@ type Handler struct {
 	Ams      *alertmanager.AlertService
 	ac       *yaml.Alerts
 	sc       *yaml.Secrets
+	Log      *logger.Logger
 }
-
-var log = logger.New()
 
 func (h *Handler) Run() {
 
 	h.InitHandler()
 	srv := of.Server{
 		Addr:         h.Config.ListenAddress,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
+		ReadTimeout:  h.Config.ACITimeout,
+		WriteTimeout: h.Config.ACITimeout,
 	}
 
 	go h.PushAlerts()
@@ -83,16 +82,16 @@ func (h *Handler) Run() {
 	h.server.Handle("/metrics", prometheus.NewHandler())
 	err := h.server.ListenAndServe()
 	if err != nil {
-		log.WithError(err).Fatalf("Failed to listen at %s", h.Config.ListenAddress)
+		h.Log.WithError(err).Fatalf("Failed to listen at %s", h.Config.ListenAddress)
 	}
 }
 
 func (h *Handler) InitHandler() {
 
 	h.ac = &yaml.Alerts{}
-	LoadConfig(h.ac, h.Config.AlertsCFGFile)
+	h.LoadConfig(h.ac, h.Config.AlertsCFGFile)
 	h.sc = &yaml.Secrets{}
-	LoadConfig(h.sc, h.Config.SecretsCFGFile)
+	h.LoadConfig(h.sc, h.Config.SecretsCFGFile)
 
 	h.counters = map[string]*prometheus.Counter{
 		amConnectAttemptCount: &prometheus.Counter{Namespace: h.Config.Application, Name: amConnectAttemptCount,
@@ -120,7 +119,7 @@ func (h *Handler) InitHandler() {
 	for name, c := range h.counters {
 		err := c.Create()
 		if err != nil {
-			log.WithError(err).Fatalf("Failed to init counter, %s", name)
+			h.Log.WithError(err).Fatalf("Failed to init counter, %s", name)
 		}
 	}
 }
@@ -129,20 +128,22 @@ func (h *Handler) InitHandler() {
 func (h *Handler) PushAlerts() {
 
 	for {
+		var alerts []*alertmanager.Alert
+		var err error
 		h.counters[notificationCycleCount].Incr()
-		log.Debugf("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
+		h.Log.Debugf("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
 
 		h.counters[apicConnectAttemptCount].Incr()
 		faults, err := h.Aci.Faults()
 		if err != nil {
 			h.counters[apicConnectErrorCount].Incr()
-			log.WithError(err).Errorf("Failed to get faults.")
-			return
+			h.Log.WithError(err).Errorf("Failed to get faults.")
+			goto NEXTCYCLE
 		}
 
-		alerts, err := h.FaultsToAlerts(faults)
+		alerts, err = h.FaultsToAlerts(faults)
 		if err != nil {
-			log.WithError(err).Errorf("Failed to convert faults to alerts.")
+			h.Log.WithError(err).Errorf("Failed to convert faults to alerts.")
 			goto NEXTCYCLE
 		}
 
@@ -152,14 +153,14 @@ func (h *Handler) PushAlerts() {
 			err = h.Ams.Notify(alerts)
 			if err != nil {
 				h.counters[amConnectErrorCount].Incr()
-				log.Errorf("Notification cycle failed. Will retry in %d, %s\n", h.Config.CycleInterval, err.Error())
+				h.Log.Errorf("Notification cycle failed. Will retry in %d, %s\n", h.Config.CycleInterval, err.Error())
 				goto NEXTCYCLE
 			}
 		} else {
-			log.Errorf("No faults found")
+			h.Log.Errorf("No faults found")
 		}
 
-		log.Debugf("Notification cycle succeeded. Sleeping for %d seconds.\n", h.Config.CycleInterval)
+		h.Log.Debugf("Notification cycle succeeded. Sleeping for %d seconds.\n", h.Config.CycleInterval)
 	NEXTCYCLE:
 		time.Sleep(time.Duration(h.Config.CycleInterval) * time.Second)
 	}
@@ -173,12 +174,12 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		// Decode fault into struct.
 		f := of.ACIFaultRaw{}
 		mapstructure.Decode(mapFault, &f)
-		fp := acigo.FaultParser{f}
+		fp := acigo.FaultParser{f, h.Log}
 		h.counters[faultsScrapedCount].Incr()
 
 		// If this is in alerts.yaml:dropped_faults, skip it.
 		if _, drop := h.ac.DroppedFaults[strings.ToUpper(fp.Fault.Code)]; drop {
-			log.Debugf("Dropping fault: %s\n", f)
+			h.Log.Debugf("Dropping fault: %s\n", f)
 			h.counters[faultsDroppedCount].Incr()
 			continue
 		}
@@ -189,7 +190,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		// Get an integer representation of fault severity for numerical comparison.
 		s, err := acigo.NewACIFaultSeverityRaw(fp.Fault.Severity)
 		if err != nil {
-			log.Errorf("Failed to parse severity, %s", err.Error())
+			h.Log.Errorf("Failed to parse severity, %s", err.Error())
 			return nil, err
 		}
 		faultSeverityLevel := s.ID()
@@ -217,13 +218,13 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		alertName, newAlertConfig, err := h.GetAlertConfig(f)
 		if err == nil && alertName != "" {
 			h.counters[faultsMatchedCount].Incr()
-			log.Debugf("Found matching fault code in alertsConfig.Alerts.")
+			h.Log.Debugf("Found matching fault code in alertsConfig.Alerts.")
 			alert.Labels["alertname"] = of.LabelValue(alertName)
 			alert.Labels["alert_severity"] = of.LabelValue(newAlertConfig.AlertSeverity)
 		} else {
 			h.counters[faultsUnmatchedCount].Incr()
-			log.Debugf("%s\n", err)
-			log.Debugf("Setting default alertname and severity for fault code: %s\n", f.Code)
+			h.Log.Debugf("%s\n", err)
+			h.Log.Debugf("Setting default alertname and severity for fault code: %s\n", f.Code)
 
 			// Fall back to the "rule" field in the scraped fault.
 			alert.Labels["alertname"] = of.LabelValue(f.Rule)
@@ -240,7 +241,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 
 		s, err = acigo.NewACIFaultSeverityRaw(h.ac.APIC.AlertSeverityThreshold)
 		if err != nil {
-			log.Errorf("Failed to parse severity, %s", err.Error())
+			h.Log.Errorf("Failed to parse severity, %s", err.Error())
 			return nil, err
 		}
 
@@ -257,10 +258,10 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		if err != nil {
 			return nil, err
 		}
-		log.WithField("Alert name", alert.Labels["alertname"]).
+		h.Log.WithField("Alert name", alert.Labels["alertname"]).
 			WithField("Fingerprint", alert.Labels[amAlertFingerprintLabel]).
 			Infof("Alert generated.")
-		log.Debugf("Alert generated: %s\n", b)
+		h.Log.Debugf("Alert generated: %s\n", b)
 
 		alerts = append(alerts, alert)
 		h.counters[alertsGeneratedCount].Incr()
@@ -270,16 +271,16 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 }
 
 // Wrapper to read a file into an implementation of of.Decoder.
-func LoadConfig(cfg of.Decoder, fileName string) {
+func (h *Handler) LoadConfig(cfg of.Decoder, fileName string) {
 
 	f, err := os.Open(fileName)
 	if err != nil {
-		log.WithError(err).Fatalf("Failed to open file. config-file : %s", fileName)
+		h.Log.WithError(err).Fatalf("Failed to open file. config-file : %s", fileName)
 	}
 
 	err = cfg.Decode(f)
 	if err != nil {
-		log.WithError(err).Fatalf("Failed to decode alerts config file.")
+		h.Log.WithError(err).Fatalf("Failed to decode alerts config file.")
 	}
 }
 
