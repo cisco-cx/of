@@ -71,7 +71,12 @@ func (h *Handler) Run() {
 		WriteTimeout: h.Config.ACITimeout,
 	}
 
-	go h.PushAlerts()
+	go func() {
+		for {
+			h.PushAlerts()
+			time.Sleep(time.Duration(h.Config.CycleInterval) * time.Second)
+		}
+	}()
 
 	h.server = http.NewServer(srv)
 
@@ -127,43 +132,39 @@ func (h *Handler) InitHandler() {
 // Pull ACI faults and forward to Alertmanager.
 func (h *Handler) PushAlerts() {
 
-	for {
-		var alerts []*alertmanager.Alert
-		var err error
-		h.counters[notificationCycleCount].Incr()
-		h.Log.Debugf("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
+	var alerts []*alertmanager.Alert
+	var err error
+	h.counters[notificationCycleCount].Incr()
+	h.Log.Debugf("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
 
-		h.counters[apicConnectAttemptCount].Incr()
-		faults, err := h.Aci.Faults()
-		if err != nil {
-			h.counters[apicConnectErrorCount].Incr()
-			h.Log.WithError(err).Errorf("Failed to get faults.")
-			goto NEXTCYCLE
-		}
-
-		alerts, err = h.FaultsToAlerts(faults)
-		if err != nil {
-			h.Log.WithError(err).Errorf("Failed to convert faults to alerts.")
-			goto NEXTCYCLE
-		}
-
-		// Notify AlertManager. if we have any alerts
-		if len(alerts) > 0 {
-			h.counters[amConnectAttemptCount].Incr()
-			err = h.Ams.Notify(alerts)
-			if err != nil {
-				h.counters[amConnectErrorCount].Incr()
-				h.Log.Errorf("Notification cycle failed. Will retry in %d, %s\n", h.Config.CycleInterval, err.Error())
-				goto NEXTCYCLE
-			}
-		} else {
-			h.Log.Errorf("No faults found")
-		}
-
-		h.Log.Debugf("Notification cycle succeeded. Sleeping for %d seconds.\n", h.Config.CycleInterval)
-	NEXTCYCLE:
-		time.Sleep(time.Duration(h.Config.CycleInterval) * time.Second)
+	h.counters[apicConnectAttemptCount].Incr()
+	faults, err := h.Aci.Faults()
+	if err != nil {
+		h.counters[apicConnectErrorCount].Incr()
+		h.Log.WithError(err).Errorf("Failed to get faults.")
+		return
 	}
+
+	alerts, err = h.FaultsToAlerts(faults)
+	if err != nil {
+		h.Log.WithError(err).Errorf("Failed to convert faults to alerts.")
+		return
+	}
+
+	// Notify AlertManager. if we have any alerts
+	if len(alerts) > 0 {
+		h.counters[amConnectAttemptCount].Incr()
+		err = h.Ams.Notify(alerts)
+		if err != nil {
+			h.counters[amConnectErrorCount].Incr()
+			h.Log.Errorf("Notification cycle failed. Will retry in %d, %s\n", h.Config.CycleInterval, err.Error())
+			return
+		}
+	} else {
+		h.Log.Errorf("No faults found")
+	}
+
+	h.Log.Debugf("Notification cycle succeeded. Sleeping for %d seconds.\n", h.Config.CycleInterval)
 }
 
 // Convert acigo faults to Alertmanager alerts.
