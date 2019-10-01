@@ -19,6 +19,7 @@ import (
 	"os"
 	"reflect"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -142,6 +143,12 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 	cfg.Pass = viper.GetString("aci-password")
 	cfg.Version = fmt.Sprintf("%s %s (%s)", application, revision, runtime.Version())
 	cfg.SourceHostname, cfg.SourceAddress = VerifiedHost(cfg.ACIHost)
+
+	cfg.ACITimeout = viper.GetDuration("aci-timeout")
+
+	if strings.HasPrefix(cfg.AmURL, "http") == false {
+		log.Fatalf("AM URL must begin with http/https")
+	}
 
 	t := time.Now()
 	zone, offset := t.Zone()
