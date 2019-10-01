@@ -83,7 +83,7 @@ func (c *ACIClient) Faults() ([]of.Map, error) {
 	}
 	mm := make([]of.Map, len(list))
 	for i, v := range list {
-		mapstructure.NewMap(v).DecodeMap(mm[i])
+		mapstructure.NewMap(v).DecodeMap(&mm[i])
 	}
 	return mm, nil
 }
