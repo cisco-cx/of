@@ -1,6 +1,7 @@
 package v1alpha1_test
 
 import (
+	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -72,4 +73,29 @@ func newSchema(t *testing.T) *js.Schema {
 	err := schema.Load(schemaBytes)
 	require.NoError(t, err)
 	return schema
+}
+
+// Test Alerts schema.
+func TestAlertsSchema(t *testing.T) {
+	testSchema(t, "alerts.schema", "test/alerts.yaml")
+}
+
+// Test Secrets schema.
+func TestSecretsSchema(t *testing.T) {
+	testSchema(t, "secrets.schema", "test/secrets.yaml")
+}
+
+// Test Alerts schema.
+func testSchema(t *testing.T, schemaFile string, yamlFile string) {
+	schemaContent, err := ioutil.ReadFile(schemaFile)
+	require.NoError(t, err)
+	yaml, err := ioutil.ReadFile(yamlFile)
+	require.NoError(t, err)
+
+	schema := &js.Schema{}
+	err = schema.Load(schemaContent)
+	require.NoError(t, err)
+
+	err = schema.ValidateYAML(yaml)
+	require.NoError(t, err)
 }
