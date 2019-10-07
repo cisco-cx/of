@@ -3,6 +3,9 @@ Copyright 2019 Cisco Systems, Inc.
 
 This work incorporates works covered by the following notices:
 ---
+Simple profiling for Go
+Copyright (c) 2013 Dave Cheney. All rights reserved.
+---
 A Commander for modern Go CLI interactions
 Copyright © 2015 Steve Francia <spf@spf13.com>.
 ---

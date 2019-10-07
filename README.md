@@ -114,6 +114,22 @@ This command SHOULD eventually support multiple named-version `/lib` and `/wrap`
 
 This directory will contain mocks for all of the above. The form that this directory takes is flexible right now -- and so its design is left open until further notice.
 
+## Profiling
+
+Here's an example of how to profile memory for `of aci handler` and generate a PDF report for that.
+
+```bash
+export PROFILER_MODE=mem  # cpu, mem, mutex, block
+
+of aci handler --aci-host REDACTED --aci-password REDACTED --aci-user REDACTED --am-url https://localhost:9093
+
+# Run until you see faults are scraped, then CTRL+C to exit.
+
+make reports
+
+# Now you should have `./mem.pprof.pdf`.
+```
+
 ## Inspiration
 
 ### for Project Layout
@@ -133,6 +149,12 @@ This directory will contain mocks for all of the above. The form that this direc
 
 - https://dave.cheney.net/2016/04/07/constant-errors
 - https://blog.golang.org/error-handling-and-go
+
+### for Profiling
+
+- https://flaviocopes.com/golang-profiling/
+- https://github.com/pkg/profile
+- https://github.com/cisco-cx/am-snmp-client-go/blob/master/main.go
 
 ### for Testing
 

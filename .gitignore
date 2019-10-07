@@ -12,5 +12,15 @@
 *.out
 coverage.html
 
+# Profiler output
+*.pprof
+
+# Reports
+*.pdf
+
 # Built files
 of
+
+# Configs
+alerts.yaml
+secrets.yaml

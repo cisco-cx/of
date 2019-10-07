@@ -30,6 +30,7 @@ import (
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1alpha1"
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1alpha1"
 	net "github.com/cisco-cx/of/wrap/net/v1alpha1"
+	profile "github.com/cisco-cx/of/wrap/profile/v1alpha1"
 )
 
 // Counters names.
@@ -98,6 +99,9 @@ func cmdACIHandler() *cobra.Command {
 
 // Entry point for ./of aci handler.
 func runACIHandler(cmd *cobra.Command, args []string) {
+    // Start the profiler and defer stopping it until the program exits.
+    defer profile.Start().Stop()
+
 	config := ACIConfig(cmd)
 	handler := &aci.Handler{Config: config, Log: log}
 	handler.Aci = &acigo.ACIService{config, log}
