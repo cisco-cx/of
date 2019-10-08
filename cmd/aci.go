@@ -99,8 +99,8 @@ func cmdACIHandler() *cobra.Command {
 
 // Entry point for ./of aci handler.
 func runACIHandler(cmd *cobra.Command, args []string) {
-    // Start the profiler and defer stopping it until the program exits.
-    defer profile.Start().Stop()
+	// Start the profiler and defer stopping it until the program exits.
+	defer profile.Start().Stop()
 
 	config := ACIConfig(cmd)
 	handler := &aci.Handler{Config: config, Log: log}
