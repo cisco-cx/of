@@ -65,8 +65,8 @@ report:  ## Generate all reports.
 test:  ## Run all tests and generate all reports.
 	@echo "==> Running all tests."
 	go test ./... -coverprofile=cp.out -mod=vendor
-	#@$(MAKE) vet
-	#@$(MAKE) report
+	@$(MAKE) vet
+	@$(MAKE) report
 
 .PHONY: tidy
 tidy:  ## Run go mod tidy (depends on access to github.com)
