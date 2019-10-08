@@ -1,3 +1,5 @@
+SHELL := bash
+
 # based in part on: https://povilasv.me/exposing-go-modules-to-prometheus/
 PROGRAM := of
 PACKAGE := github.com/cisco-cx/$(PROGRAM)
@@ -47,7 +49,7 @@ report:  ## Generate all reports.
 	@echo "==> Generating profiler reports."
 	for mode in cpu mem mutex block; do \
 	  if [ -e $$mode.pprof ]; then go tool pprof --pdf $(PROGRAM) $$mode.pprof > $$mode.pprof.pdf; fi; done
-	@if [ -d ~/x/tmp ]; then cp -v *pdf ~/x/tmp; fi
+	@if [ -d ~/x/tmp ] && compgen -G "*.pdf"; then cp -v *.pdf ~/x/tmp; fi
 	@echo "==> Generating coverage reports."
 	go tool cover -html=cp.out -o=coverage.html
 
@@ -55,4 +57,4 @@ report:  ## Generate all reports.
 test:  ## Run all tests and generate all reports.
 	@echo "==> Running all tests."
 	go test ./... -coverprofile=cp.out
-	@$(MAKE) reports
+	@$(MAKE) report
