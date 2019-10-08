@@ -65,6 +65,7 @@ report:  ## Generate all reports.
 test:  ## Run all tests and generate all reports.
 	@echo "==> Running all tests."
 	go test ./... -coverprofile=cp.out -mod=vendor
+	go tool cover -func=cp.out
 	@$(MAKE) vet
 	@$(MAKE) report
 
