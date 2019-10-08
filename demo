@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+## Enable bash strictness.
+set -euo pipefail
+
+## Set globally relevant vars.
+export AM_URL=http://localhost:9093
+export PROFILER_MODE=${PROFILER_MODE:-}
+
+## aci runs a demo of 'of aci handler'.
+aci() {
+
+  ## Configure OF ACI Handler.
+  export     ACI_HOST=$(jsonnet /keybase/path | jq -r .aci.cluster.hosts[0])
+  export     ACI_USER=$(jsonnet /keybase/path | jq -r .aci.auth.username)
+  export ACI_PASSWORD=$(jsonnet /keybase/path | jq -r .aci.auth.password)
+
+  ## Symlink to example configs.
+  for f in alerts.yaml secrets.yaml; do
+    if [ ! -e ${f} ]; then
+      ln -s ${f}.example ${f}
+    fi
+  done
+
+  ## Run it.
+  ./of aci handler
+}
+
+## Run the selected demo and try to generate reports afterward.
+${1:-aci}; make report

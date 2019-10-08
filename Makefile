@@ -1,3 +1,4 @@
+.DEFAULT_GOAL := help
 SHELL := bash
 
 # based in part on: https://povilasv.me/exposing-go-modules-to-prometheus/
@@ -22,12 +23,12 @@ LDFLAGS += -X "$(INFO_PACKAGE).Revision=$(GIT_HASH)"
 LDFLAGS += -X "$(INFO_PACKAGE).Branch=$(BRANCH)"
 
 .PHONY: all
-all: | refine test build
+all: | refine test build  ## Run all generally applicable targets.
 
 .PHONY: build
 build:  ## Build the program for Linux.
 	@echo "==> Building the program for Linux."
-	CGO_ENABLED=0 GOOS=linux go build -v -a -ldflags '$(LDFLAGS)' .
+	CGO_ENABLED=0 GOOS=linux go build -v -a -ldflags '$(LDFLAGS)' -mod=vendor .
 
 .PHONY: clean
 clean:  ## Clean temporary files.
@@ -37,12 +38,19 @@ clean:  ## Clean temporary files.
 	rm -f ./*.pprof
 	rm -f ./cp.out
 
+.PHONY: docker
+docker:  ## Build a docker image for local dev.
+	docker build . -t of:local
+
+.PHONY: demo-docker
+demo-docker:  ## Run the demo using Docker image
+	# TODO: Use docker-compose and add Alertmanager.
+	docker run --rm --net=host -v /keybase/path -it of:local demo
+
 .PHONY: refine
-refine:  ## Run all formatters and static analysis. Tidy dependency list.
+refine:  ## Run all formatters and static analysis.
 	@echo "==> Running all formatters and static analysis."
 	gofmt -w .
-	@echo "==> Tidying dependency list."
-	go mod tidy
 
 .PHONY: report
 report:  ## Generate all reports.
@@ -56,5 +64,29 @@ report:  ## Generate all reports.
 .PHONY: test
 test:  ## Run all tests and generate all reports.
 	@echo "==> Running all tests."
-	go test ./... -coverprofile=cp.out
-	@$(MAKE) report
+	go test ./... -coverprofile=cp.out -mod=vendor
+	#@$(MAKE) vet
+	#@$(MAKE) report
+
+.PHONY: tidy
+tidy:  ## Run go mod tidy (depends on access to github.com)
+	@echo "==> Tidying dependency list."
+	go mod tidy -v
+
+.PHONY: vet
+vet:  ## Run Go vet.
+	@echo "==> Running Go vet."
+	go vet ./...
+
+.PHONY: vendor
+vendor:  ## Re-vendor dependencies. (depends on access to github.com)
+	@echo "==> Re-vendoring dependencies."
+	go mod vendor -v
+	go mod verify
+
+.PHONY: help
+help:  ## Print list of Makefile targets.
+	@# Taken from https://github.com/spf13/hugo/blob/master/Makefile
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+	  cut -d ":" -f1- | \
+	  awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
