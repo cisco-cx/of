@@ -175,7 +175,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		// Decode fault into struct.
 		f := of.ACIFaultRaw{}
 		mapstructure.Decode(mapFault, &f)
-		fp := acigo.FaultParser{f, h.Log}
+		fp := acigo.FaultParser{Fault: f, Log: h.Log}
 		h.counters[faultsScrapedCount].Incr()
 
 		// If this is in alerts.yaml:dropped_faults, skip it.

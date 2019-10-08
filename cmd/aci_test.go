@@ -36,8 +36,8 @@ func TestHandlerRun(t *testing.T) {
 
 	log := logger.New()
 	handler := *&aci.Handler{Config: cfg, Log: log}
-	handler.Aci = &acigo.ACIService{cfg, log}
-	handler.Ams = &alertmanager.AlertService{cfg}
+	handler.Aci = &acigo.ACIService{ACIConfig: cfg, Logger: log}
+	handler.Ams = &alertmanager.AlertService{ACIConfig: cfg}
 	go handler.Run()
 
 	time.Sleep(time.Second)
