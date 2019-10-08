@@ -8,12 +8,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"gotest.tools/assert"
 	"github.com/cisco-cx/of/cmd"
-	of "github.com/cisco-cx/of/lib/v1alpha1"
-	aci "github.com/cisco-cx/of/wrap/aci/v1alpha1"
-	acigo "github.com/cisco-cx/of/wrap/acigo/v1alpha1"
-	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1alpha1"
-	http "github.com/cisco-cx/of/wrap/http/v1alpha1"
-	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
+	of "github.com/cisco-cx/of/lib/v1"
+	aci "github.com/cisco-cx/of/wrap/aci/v1"
+	acigo "github.com/cisco-cx/of/wrap/acigo/v1"
+	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1"
+	http "github.com/cisco-cx/of/wrap/http/v1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1"
 )
 
 type DNSEntry struct {

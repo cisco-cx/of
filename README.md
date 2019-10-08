@@ -45,7 +45,7 @@ No other `.go` files may be added to `/`.
 (e.g. `package v1` in a directory like `/lib/v1`)
 
 Each package in this directory pattern SHOULD:
-- Contain a version-named set (e.g. `v1alpha1`) of [domain types and interfaces](https://www.youtube.com/watch?v=LMSbsW1Xpwg) for the Observability Framework.
+- Contain a version-named set (e.g. `v1`) of [domain types and interfaces](https://www.youtube.com/watch?v=LMSbsW1Xpwg) for the Observability Framework.
 - Have NO external dependencies, with the only exception being unavoidable dependencies on the Go standard library.
 
 Each package matching this pattern MUST NOT:

@@ -25,12 +25,12 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-	of "github.com/cisco-cx/of/lib/v1alpha1"
-	aci "github.com/cisco-cx/of/wrap/aci/v1alpha1"
-	acigo "github.com/cisco-cx/of/wrap/acigo/v1alpha1"
-	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1alpha1"
-	net "github.com/cisco-cx/of/wrap/net/v1alpha1"
-	profile "github.com/cisco-cx/of/wrap/profile/v1alpha1"
+	of "github.com/cisco-cx/of/lib/v1"
+	aci "github.com/cisco-cx/of/wrap/aci/v1"
+	acigo "github.com/cisco-cx/of/wrap/acigo/v1"
+	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1"
+	net "github.com/cisco-cx/of/wrap/net/v1"
+	profile "github.com/cisco-cx/of/wrap/profile/v1"
 )
 
 // Counters names.

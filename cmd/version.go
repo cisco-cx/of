@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/cisco-cx/of/info"
-	informer "github.com/cisco-cx/of/wrap/informer/v1alpha1"
+	informer "github.com/cisco-cx/of/wrap/informer/v1"
 )
 
 // cmdVersion returns the `version` command.

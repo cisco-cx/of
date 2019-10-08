@@ -21,8 +21,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	homedir "github.com/cisco-cx/of/wrap/go-homedir/v1alpha1"
-	logger "github.com/cisco-cx/of/wrap/logrus/v1alpha1"
+	homedir "github.com/cisco-cx/of/wrap/go-homedir/v1"
+	logger "github.com/cisco-cx/of/wrap/logrus/v1"
 )
 
 var cfgFile string

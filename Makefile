@@ -37,6 +37,7 @@ clean:  ## Clean temporary files.
 	rm -f ./*.pdf
 	rm -f ./*.pprof
 	rm -f ./cp.out
+	rm -f ./of
 
 .PHONY: docker
 docker:  ## Build a docker image for local dev.
