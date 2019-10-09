@@ -1,21 +1,110 @@
+[![Build Status](https://cloud.drone.io/api/badges/cisco-cx/of/status.svg)](https://cloud.drone.io/cisco-cx/of)
+
 # of
+
 Observability Framework
 
 ## Commands
 
-### `of help`
+### Help
 
-Status: **TODO**
+**NOTE:** The following help example output may be stale.
 
-### `of version`
+**TODO:** Create a make target to update this snippet.
 
-Status: **TODO**
+```bash
+of help
+# INFO[0000]root.go:38 Logging Enabled. Level : info
+# Observability Framework
+#
+# Usage:
+#   of [command]
+#
+# Available Commands:
+#   aci         Commands for the ACI integration
+#   help        Help about any command
+#   version     Display version information
+#
+# Flags:
+#   -h, --help               help for of
+#       --log-level string   Log Level (default "info")
+#
+# Use "of [command] --help" for more information about a command.
+```
 
-### `of aci handler`
+### Version
 
-Status: **WIP**
+```bash
+of version
+# INFO[0000]root.go:38 Logging Enabled. Level : info
+# (metadata=(program=of, license=Apache-2.0, url=https://github.com/cisco-cx/of), versionInfo=(version=2464b98, branch=issue-110.12, revision=2464b98), buildInfo=(language=go, languageVersion=go1.13.1, user=vagrant, date=2019-10-09T15:59:30+0000))
+```
+
+### ACI
+
+#### ACI Handler
+
+```bash
+of aci handler
+```
 
 This subcommand starts a daemon that scrapes APIC servers in Cisco ACI clusters for their fault lists and then notifies Prometheus Alertmanager to fire and resolve Alertmanager alerts.
+
+## Docker Image
+
+Pulling this image from our private GCR registry requires prior configuration of `gcloud`. An introduction to how to configure `gcloud` for `docker pull` is mentioned [here](https://github.com/cisco-cx/kusanagi-sre-ao/tree/master/sandboxes/of#start-all-dockerized-services).
+
+[Tags](https://console.cloud.google.com/gcr/images/ciscocx/ASIA/of)
+
+```bash
+docker pull docker.io/ciscocx/of:${DOCKER_TAG}  # Requires pre-existing gcloud config.
+```
+
+## Profiling
+
+Here's an example of how to profile memory for `of aci handler` and generate a PDF report for that.
+
+```bash
+export PROFILER_MODE=mem  # cpu, mem, mutex, block
+
+of aci handler --aci-host REDACTED --aci-password REDACTED --aci-user REDACTED --am-url https://localhost:9093
+
+# Run until you see faults are scraped, then CTRL+C to exit.
+
+make reports
+
+# Now you should have `./mem.pprof.pdf`.
+```
+
+## Inspiration
+
+### for Project Layout
+
+- https://www.youtube.com/watch?v=LMSbsW1Xpwg
+- https://www.youtube.com/watch?v=MzTcsI6tn-0
+- https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1
+- https://medium.com/wtf-dial/wtf-dial-domain-model-9655cd523182
+- https://github.com/benbjohnson/wtf
+- https://medium.com/p/7cdbc8391fc1/responses/show
+- https://www.youtube.com/watch?v=zzAdEt3xZ1M
+- https://github.com/kubernetes/kubernetes
+- https://github.com/benbjohnson/peapod
+- https://dave.cheney.net/2017/06/11/go-without-package-scoped-variables
+
+### for Error Handling
+
+- https://dave.cheney.net/2016/04/07/constant-errors
+- https://blog.golang.org/error-handling-and-go
+
+### for Profiling
+
+- https://flaviocopes.com/golang-profiling/
+- https://github.com/pkg/profile
+- https://github.com/cisco-cx/am-snmp-client-go/blob/master/main.go
+
+### for Testing
+
+- https://golangcode.com/how-to-run-go-tests-with-coverage-percentage/
 
 ## Repo Layout
 
@@ -113,49 +202,3 @@ This command SHOULD eventually support multiple named-version `/lib` and `/wrap`
 #### `/mock`
 
 This directory will contain mocks for all of the above. The form that this directory takes is flexible right now -- and so its design is left open until further notice.
-
-## Profiling
-
-Here's an example of how to profile memory for `of aci handler` and generate a PDF report for that.
-
-```bash
-export PROFILER_MODE=mem  # cpu, mem, mutex, block
-
-of aci handler --aci-host REDACTED --aci-password REDACTED --aci-user REDACTED --am-url https://localhost:9093
-
-# Run until you see faults are scraped, then CTRL+C to exit.
-
-make reports
-
-# Now you should have `./mem.pprof.pdf`.
-```
-
-## Inspiration
-
-### for Project Layout
-
-- https://www.youtube.com/watch?v=LMSbsW1Xpwg
-- https://www.youtube.com/watch?v=MzTcsI6tn-0
-- https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1
-- https://medium.com/wtf-dial/wtf-dial-domain-model-9655cd523182
-- https://github.com/benbjohnson/wtf
-- https://medium.com/p/7cdbc8391fc1/responses/show
-- https://www.youtube.com/watch?v=zzAdEt3xZ1M
-- https://github.com/kubernetes/kubernetes
-- https://github.com/benbjohnson/peapod
-- https://dave.cheney.net/2017/06/11/go-without-package-scoped-variables
-
-### for Error Handling
-
-- https://dave.cheney.net/2016/04/07/constant-errors
-- https://blog.golang.org/error-handling-and-go
-
-### for Profiling
-
-- https://flaviocopes.com/golang-profiling/
-- https://github.com/pkg/profile
-- https://github.com/cisco-cx/am-snmp-client-go/blob/master/main.go
-
-### for Testing
-
-- https://golangcode.com/how-to-run-go-tests-with-coverage-percentage/
