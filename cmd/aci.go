@@ -47,7 +47,7 @@ const (
 	notificationCycleCount  = "notification_cycle_count"
 )
 
-const staticLabelUsage = "Custom labels to be added with each alert posted to Alertmanager. Expected format : 'label1=value1,label2=value2'"
+const staticLabelUsage = "Static labels to be added with each alert posted to Alertmanager. Expected format : 'label1=value1,label2=value2'"
 
 // Alertmanager alert specific constants.
 const (
