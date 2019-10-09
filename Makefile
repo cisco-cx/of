@@ -13,6 +13,7 @@ GIT_HASH := $(shell git --no-pager describe --tags --always)
 BRANCH := $(shell git branch | grep '*' | cut -d ' ' -f2)
 
 GOFLAGS := GOFLAGS="-mod=vendor"
+GOFILES := $(shell $(GOFLAGS) go list ./... | grep -oP "/of/\K.*")  # ref: https://stackoverflow.com/a/39530381
 
 LDFLAGS := -s
 LDFLAGS += -X "$(INFO_PACKAGE).Program=$(PROGRAM)"
@@ -53,7 +54,7 @@ demo-docker:  ## Run the demo using Docker image
 .PHONY: refine
 refine:  ## Run all formatters and static analysis.
 	@echo "==> Running all formatters and static analysis."
-	go fmt ./...
+	gofmt -w $(GOFILES)  # ref: https://github.com/golang/go/issues/27841
 
 .PHONY: report
 report:  ## Generate all reports.
