@@ -205,6 +205,12 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		alert.StartsAt = faultCreated
 		alert.GeneratorURL = fmt.Sprintf(apicFaultHelpURL, f.Code)
 		alert.Labels["cluster_name"] = of.LabelValue(h.sc.APIC.Cluster.Name)
+
+		// Adding custom labels.
+		for l, v := range h.Config.CustomLabels {
+			alert.Labels[l] = v
+		}
+
 		sub_id, _ := fp.SubID()
 		alert.Labels["sub_id"] = of.LabelValue(sub_id)
 		alert.Annotations["source_address"] = h.Config.SourceAddress

@@ -14,6 +14,7 @@ aci() {
   export     ACI_HOST=$(jsonnet /keybase/path | jq -r .aci.cluster.hosts[0])
   export     ACI_USER=$(jsonnet /keybase/path | jq -r .aci.auth.username)
   export ACI_PASSWORD=$(jsonnet /keybase/path | jq -r .aci.auth.password)
+  export CUSTOM_LABELS="source_hostname=vagrant,source_address=127.0.0.1"
 
   ## Symlink to example configs.
   for f in alerts.yaml secrets.yaml; do

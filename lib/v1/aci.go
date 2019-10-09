@@ -57,4 +57,5 @@ type ACIConfig struct {
 	sc             Secrets
 	SourceHostname string
 	SourceAddress  string
+	CustomLabels   LabelMap
 }

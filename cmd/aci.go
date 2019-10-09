@@ -89,6 +89,7 @@ func cmdACIHandler() *cobra.Command {
 	cmd.Flags().String("alerts-config", "alerts.yaml", "Alerts config file (default: alerts.yaml)")
 	cmd.Flags().String("secrets-config", "secrets.yaml", "Secrets config file (default: secrets.yaml)")
 	cmd.Flags().Duration("aci-timeout", 10*time.Second, "ACI Read/Write timeout  (default: 10s)")
+	cmd.Flags().String("custom-labels", "None", "Custom labels to be added with each alert posted to Alertmanager. Expected format : 'label1=value1,label2=value2'")
 
 	// Enable ENV to set flag values.
 	// Ex: ENV AM_URL will set the value for --am-url.
@@ -131,6 +132,20 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 
 	if strings.HasPrefix(cfg.AmURL, "http") == false {
 		log.Fatalf("AM URL must begin with http/https")
+	}
+
+	customLabels := viper.GetString("custom-labels")
+	if customLabels != "" && customLabels != "None" {
+		m := make(of.LabelMap)
+		labelItems := strings.Split(customLabels, ",")
+		for _, labelItem := range labelItems {
+			kvs := strings.Split(labelItem, "=")
+			if len(kvs) != 2 {
+				log.Fatalf("Custom label's expected format is 'label=value', given : %s", labelItem)
+			}
+			m[of.LabelName(kvs[0])] = of.LabelValue(kvs[1])
+		}
+		cfg.CustomLabels = m
 	}
 
 	t := time.Now()
