@@ -48,6 +48,7 @@ const (
 	faultsScrapedCount      = "faults_scraped_count"
 	faultsMatchedCount      = "faults_matched_count"
 	faultsUnmatchedCount    = "faults_unmatched_count"
+	faultsUnknownIgnored    = "faults_unknown_ignored_count"
 	notificationCycleCount  = "notification_cycle_count"
 )
 
@@ -112,6 +113,8 @@ func (h *Handler) InitHandler() {
 			Help: "Number of times we found an alertConfig that mentioned the encountered fault code."},
 		faultsUnmatchedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: faultsUnmatchedCount,
 			Help: "Number of times we could not find an alertConfig that mentioned the encountered fault code."},
+		faultsUnknownIgnored: &prometheus.Counter{Namespace: h.Config.Application, Name: faultsUnknownIgnored,
+			Help: "Number of times we could not find an alertConfig that mentioned the encountered fault code and the fault was ignored."},
 		notificationCycleCount: &prometheus.Counter{Namespace: h.Config.Application, Name: notificationCycleCount,
 			Help: "Number of times we tried ran the notification cycle loop."},
 	}
@@ -223,6 +226,11 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 			h.Log.Debugf("Found matching fault code in alertsConfig.Alerts.")
 			alert.Labels["alertname"] = of.LabelValue(alertName)
 			alert.Labels["alert_severity"] = of.LabelValue(newAlertConfig.AlertSeverity)
+		} else if h.ac.APIC.DropUnknownAlerts {
+			// the alert wasn't found and we are ignoring unknown alerts
+			h.Log.Debugf("Ignoring unknown fault code=%s, rule=%s\n", f.Code, f.Rule)
+			h.counters[faultsUnknownIgnored].Incr()
+			continue
 		} else {
 			h.counters[faultsUnmatchedCount].Incr()
 			h.Log.Debugf("%s\n", err)

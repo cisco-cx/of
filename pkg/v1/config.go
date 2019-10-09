@@ -25,6 +25,7 @@ type Alerts struct {
 
 type AlertsConfigAPIC struct {
 	AlertSeverityThreshold string `yaml:"alert_severity_threshold,omitempty"`
+	DropUnknownAlerts      bool   `yaml:"drop_unknown_alerts,omitempty"`
 }
 
 type AlertsConfigDefaults struct {

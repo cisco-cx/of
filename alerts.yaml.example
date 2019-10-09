@@ -6,6 +6,9 @@ apic:
   ##
   ## ref: https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/1-x/faults/guide/b_APIC_Faults_Errors/b_IFC_Faults_Errors_chapter_01.html
   alert_severity_threshold: minor
+  ## apic.drop_unknown_alerts if set to true will cause this client to drop any unknown faults coming
+  ## from the APICs that aren't listed in the alerts dictionary. Defaults to false
+  drop_unknown_alerts: true
 
 defaults:
   ## defaults.alert_severity is the severity to use when alert not mapped in this config.
