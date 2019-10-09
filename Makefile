@@ -12,6 +12,8 @@ USER := $(shell whoami)
 GIT_HASH := $(shell git --no-pager describe --tags --always)
 BRANCH := $(shell git branch | grep '*' | cut -d ' ' -f2)
 
+GOFLAGS := GOFLAGS="-mod=vendor"
+
 LDFLAGS := -s
 LDFLAGS += -X "$(INFO_PACKAGE).Program=$(PROGRAM)"
 LDFLAGS += -X "$(INFO_PACKAGE).License=$(LICENSE)"
@@ -28,7 +30,7 @@ all: | refine test build  ## Run all generally applicable targets.
 .PHONY: build
 build:  ## Build the program for Linux.
 	@echo "==> Building the program for Linux."
-	CGO_ENABLED=0 GOOS=linux go build -v -a -ldflags '$(LDFLAGS)' -mod=vendor .
+	$(GOFLAGS) CGO_ENABLED=0 GOOS=linux go build -v -a -ldflags '$(LDFLAGS)' .
 
 .PHONY: clean
 clean:  ## Clean temporary files.
@@ -60,15 +62,15 @@ report:  ## Generate all reports.
 	  if [ -e $$mode.pprof ]; then go tool pprof --pdf $(PROGRAM) $$mode.pprof > $$mode.pprof.pdf; fi; done
 	@if [ -d ~/x/tmp ] && compgen -G "*.pdf"; then cp -v *.pdf ~/x/tmp; fi
 	@echo "==> Generating coverage reports."
-	go tool cover -html=cp.out -o=coverage.html
+	$(GOFLAGS) go tool cover -html=cp.out -o=coverage.html
 
 .PHONY: test
 test:  ## Run all tests and generate all reports.
 	@echo "==> Running all tests."
-	go test ./... -coverprofile=cp.out -mod=vendor
-	go tool cover -func=cp.out
-	@$(MAKE) vet
-	@$(MAKE) report
+	$(GOFLAGS) go test ./... -coverprofile=cp.out
+	$(GOFLAGS) go tool cover -func=cp.out
+	$(MAKE) vet
+	$(MAKE) report
 
 .PHONY: tidy
 tidy:  ## Run go mod tidy (depends on access to github.com)
@@ -78,7 +80,7 @@ tidy:  ## Run go mod tidy (depends on access to github.com)
 .PHONY: vet
 vet:  ## Run Go vet.
 	@echo "==> Running Go vet."
-	go vet ./...
+	$(GOFLAGS) go vet ./...
 
 .PHONY: vendor
 vendor:  ## Re-vendor dependencies. (depends on access to github.com)
