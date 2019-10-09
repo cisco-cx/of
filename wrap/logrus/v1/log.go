@@ -46,19 +46,23 @@ func New() *Logger {
 }
 
 // Log correct file name and line number from where Logger call was invoked.
-// TODO: Finder a better way to get line number. If not revert to default.
 func prettyfier(r *runtime.Frame) (string, string) {
-	lookback := 9
 
-	if r.Func.Name() == "github.com/cisco-cx/of/wrap/logrus/v1.(*Logger).Warningf" {
-		lookback = 10
+	// Restrict the lookback frames to avoid runaway lookups
+	pcs := make([]uintptr, 25)
+	depth := runtime.Callers(4, pcs)
+	frames := runtime.CallersFrames(pcs[:depth])
+
+	for f, again := frames.Next(); again; f, again = frames.Next() {
+
+		file := filepath.Base(f.File)
+		// If the caller isn't part of logrus files, we're done
+		if file != "log.go" && file != "entry.go" {
+			return "", fmt.Sprintf("%s:%d", file, f.Line)
+		}
 	}
-	_, file, line, ok := runtime.Caller(lookback)
-	if !ok {
-		return "", ""
-	}
-	file = filepath.Base(file)
-	return "", fmt.Sprintf("%s:%d", file, line)
+
+	return "", ""
 }
 
 // if true , Will clear any field that is set using WithField(s) call after a log line is logged/printed.
@@ -130,7 +134,6 @@ func (l *Logger) WithFields(kv map[string]interface{}) of.Logger {
 // Log at given log level.
 func (l *Logger) Logf(level logrus.Level, msg string, args ...interface{}) {
 	l.entry.Logf(level, msg, args...)
-	//l.entry.Data = make(logrus.Fields)
 	delete(l.entry.Data, logrus.ErrorKey)
 	if l.autoClearFields == true {
 		l.ClearFields()
