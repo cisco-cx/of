@@ -65,11 +65,6 @@ type Handler struct {
 func (h *Handler) Run() {
 
 	h.InitHandler()
-	srv := of.Server{
-		Addr:         h.Config.ListenAddress,
-		ReadTimeout:  h.Config.ACITimeout,
-		WriteTimeout: h.Config.ACITimeout,
-	}
 
 	go func() {
 		for {
@@ -78,7 +73,7 @@ func (h *Handler) Run() {
 		}
 	}()
 
-	h.server = http.NewServer(srv)
+	h.server = http.NewServer(h.Config)
 
 	h.server.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, h.Config.Version)

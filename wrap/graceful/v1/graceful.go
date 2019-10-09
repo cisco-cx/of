@@ -29,10 +29,10 @@ type Graceful struct {
 
 // Initialize Graceful
 func New(srv *http.Server) *Graceful {
-	g := Graceful{
+	g := &Graceful{
 		server: graceful.WithDefaults(srv),
 	}
-	return &g
+	return g
 }
 
 // Starts a http.Server that shuts down on SIGINT or SIGTERM.

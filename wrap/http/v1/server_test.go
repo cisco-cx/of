@@ -28,11 +28,10 @@ func TestInterface(t *testing.T) {
 func TestServer(t *testing.T) {
 
 	addr := "localhost:54931"
-	server := of.Server{
-		Addr: addr,
-	}
 
-	srv := http.NewServer(server)
+	c := &of.ACIConfig{ListenAddress: addr}
+
+	srv := http.NewServer(c)
 
 	go func() {
 		err := srv.ListenAndServe()
@@ -48,10 +47,9 @@ func TestServer(t *testing.T) {
 func TestHandleFunc(t *testing.T) {
 	response_text := "HandleFunc called."
 	addr := "localhost:54932"
-	server := of.Server{
-		Addr: addr,
-	}
-	srv := http.NewServer(server)
+	c := &of.ACIConfig{ListenAddress: addr}
+
+	srv := http.NewServer(c)
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, response_text)
 	})
@@ -68,10 +66,9 @@ func TestHandleFunc(t *testing.T) {
 // Test http.Handle
 func TestHandle(t *testing.T) {
 	addr := "localhost:54933"
-	server := of.Server{
-		Addr: addr,
-	}
-	srv := http.NewServer(server)
+	c := &of.ACIConfig{ListenAddress: addr}
+
+	srv := http.NewServer(c)
 	srv.Handle("/", &testHandler{})
 	go func() {
 		err := srv.ListenAndServe()

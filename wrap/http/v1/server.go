@@ -22,37 +22,39 @@ import (
 )
 
 // Represents server components.
-type Server struct {
-	srv *http.Server
-	mux *http.ServeMux
-	g   *graceful.Graceful
-}
+type Server of.Server
 
 // Initialize a server.
-func NewServer(s of.Server) *Server {
+func NewServer(config *of.ACIConfig) *Server {
+
+	srv := &http.Server{
+		Addr:         config.ListenAddress,
+		ReadTimeout:  config.ACITimeout,
+		WriteTimeout: config.ACITimeout,
+	}
+
 	m := http.NewServeMux()
-	s.Handler = m
-	srv := http.Server(s)
+	srv.Handler = m
 	return &Server{
-		srv: &srv,
-		mux: m,
-		g:   graceful.New(&srv)}
+		Srv: srv,
+		Mux: m,
+		G:   graceful.New(srv)}
 }
 
 // Start a graceful server.
 func (s *Server) ListenAndServe() error {
-	return s.g.Start()
+	return s.G.Start()
 }
 
 // Shutdown http server.
 func (s *Server) Shutdown() error {
-	return s.g.Stop()
+	return s.G.Stop()
 }
 
 // Handle registers the handler for the given pattern.
 func (s *Server) Handle(pattern string, h of.Handler) {
 	newHandler := &handlerOveride{h.ServeHTTP}
-	s.mux.Handle(pattern, newHandler)
+	s.Mux.Handle(pattern, newHandler)
 }
 
 // HandleFunc registers the handler function for the given pattern.
@@ -60,5 +62,5 @@ func (s *Server) HandleFunc(pattern string, h func(of.ResponseWriter, of.Request
 	newHandler := func(rw http.ResponseWriter, r *http.Request) {
 		h(rw, r)
 	}
-	s.mux.HandleFunc(pattern, newHandler)
+	s.Mux.HandleFunc(pattern, newHandler)
 }

@@ -14,11 +14,18 @@
 
 package v1
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type ResponseWriter http.ResponseWriter
 type Request *http.Request
-type Server http.Server
+
+type Server struct {
+	Srv *http.Server
+	Mux *http.ServeMux
+	G   Graceful
+}
 
 // Represents HTTP handler
 type Handler interface {
