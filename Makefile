@@ -53,7 +53,7 @@ demo-docker:  ## Run the demo using Docker image
 .PHONY: refine
 refine:  ## Run all formatters and static analysis.
 	@echo "==> Running all formatters and static analysis."
-	gofmt -w .
+	go fmt ./...
 
 .PHONY: report
 report:  ## Generate all reports.

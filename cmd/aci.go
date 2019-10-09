@@ -101,7 +101,7 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 	// Start the profiler and defer stopping it until the program exits.
 	defer profile.Start().Stop()
 
-    log.WithField("info", infoSvc).Infof("aci handler called")
+	log.WithField("info", infoSvc).Infof("aci handler called")
 
 	config := ACIConfig(cmd)
 	handler := &aci.Handler{Config: config, Log: log}
