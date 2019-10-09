@@ -19,7 +19,7 @@ package v1
 
 import (
 	promclient "github.com/prometheus/client_golang/prometheus"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 // Counter represents the options required for prometheus.Counter

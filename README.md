@@ -129,9 +129,9 @@ The only Go file that is allowed here is a minimalistic `main.go` that bootstrap
 
 No other `.go` files may be added to `/`.
 
-#### `/lib/$named_version`
+#### `/pkg/$named_version`
 
-(e.g. `package v1` in a directory like `/lib/v1`)
+(e.g. `package v1` in a directory like `/pkg/v1`)
 
 Each package in this directory pattern SHOULD:
 - Contain a version-named set (e.g. `v1`) of [domain types and interfaces](https://www.youtube.com/watch?v=LMSbsW1Xpwg) for the Observability Framework.
@@ -140,11 +140,11 @@ Each package in this directory pattern SHOULD:
 Each package matching this pattern MUST NOT:
 - Import any code from directories: `/cmd`, `/wrap`. This rule is necessary to keep our domain types and interfaces decoupled from their implementations and avoid circular package dependencies as these are not supported by Go.
 
-Where **no external dependency exists**, packages in `/lib` MAY:
+Where **no external dependency exists**, packages in `/pkg` MAY:
 - Implement its own interfaces. Here's a somewhat contrived example of a compliant scenario:
 
 ```
-package v999alpha1  // github.com/cisco-cx/of/lib/v999alpha1
+package v999alpha1  // github.com/cisco-cx/of/pkg/v999alpha1
 
 import "fmt"
 
@@ -170,7 +170,7 @@ Each directory in `/wrap` MUST contain Go code in named-version packages that wr
 (e.g. `package v2alpha1` package in a directory like `/wrap/postgres/v2alpha1`)
 
 Each package matching this pattern SHOULD:
-- **Implement not define** domain types and interfaces as imported from `/lib/$named_version` for no more than [one external dependency](https://www.youtube.com/watch?v=LMSbsW1Xpwg).
+- **Implement not define** domain types and interfaces as imported from `/pkg/$named_version` for no more than [one external dependency](https://www.youtube.com/watch?v=LMSbsW1Xpwg).
 - Be named for its dependency and version.
   - For example, if the package we depend on is called `postgres`, the first-draft package for that would be `package v1alpha1` inside `/wrap/postgres/v1alpha1`.
 - Be the definitive place we implement that external dependency. In this way, over in `cmd` we SHOULD only import our own wrappers of external dependencies. Exceptions (even on standard library's `http`) should be avoided if at all possible.
@@ -182,7 +182,7 @@ Each package matching this pattern MAY:
 
 (`package cmd` contains source code for the `of` executable)
 
-We embed subcommands in the `of` executable for all Observability Framework use cases. The `cmd` package and any subpackages in it contain the source code for the `of` executable. In the `cmd` package we wire together named-version packages in `/wrap` with those in `/lib`.
+We embed subcommands in the `of` executable for all Observability Framework use cases. The `cmd` package and any subpackages in it contain the source code for the `of` executable. In the `cmd` package we wire together named-version packages in `/wrap` with those in `/pkg`.
 
 For example, `of snmp handler` would start the OF's handler API server for processing SNMP notifications into Alertmanager alerts. That is, `of snmp handler` would do effectively the same thing as `am-client-snmp` or `am-snmp-client-go` have done for us in the past.
 
@@ -197,7 +197,7 @@ Each package in this directory pattern SHOULD:
 
 The `of` command is to become the core Go command of the Observability Framework. That is, we plan to ship one combined static binary that can assume mutliple personalities (e.g. am-apic-client AND am-snmp-client), not unlike the [hashicorp/vault](https://github.com/hashicorp/vault)'s `vault` command has [subcommands](https://www.vaultproject.io/docs/commands/) `server` and `agent`.
 
-This command SHOULD eventually support multiple named-version `/lib` and `/wrap` packages, but for now a tightly coupling to a single named-version for any `/lib` or `/wrap` packages is allowed.
+This command SHOULD eventually support multiple named-version `/pkg` and `/wrap` packages, but for now a tightly coupling to a single named-version for any `/pkg` or `/wrap` packages is allowed.
 
 #### `/mock`
 

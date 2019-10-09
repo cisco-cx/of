@@ -17,7 +17,7 @@ package v1
 import (
 	"strconv"
 
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 // ACIFaultSeverityID represents a ACI fault's severity level ID as mapped

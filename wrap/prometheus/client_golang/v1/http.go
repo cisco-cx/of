@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 type Handler struct {

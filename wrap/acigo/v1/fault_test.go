@@ -6,7 +6,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/stretchr/testify/require"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
 )

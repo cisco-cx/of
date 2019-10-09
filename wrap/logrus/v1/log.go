@@ -21,7 +21,7 @@ import (
 	"runtime"
 
 	"github.com/sirupsen/logrus"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 // Represents loggo logger and fields to support structured logging.

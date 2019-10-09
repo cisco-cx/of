@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 	http "github.com/cisco-cx/of/wrap/http/v1"
 )
 

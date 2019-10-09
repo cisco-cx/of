@@ -50,7 +50,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 	net "github.com/cisco-cx/of/wrap/net/v1"
 )
 

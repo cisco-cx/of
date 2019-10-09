@@ -48,7 +48,7 @@ import (
 	"fmt"
 	"net"
 
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 	govalidator "github.com/cisco-cx/of/wrap/govalidator/v1"
 )
 

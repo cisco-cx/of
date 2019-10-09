@@ -16,7 +16,7 @@ package v1
 
 import (
 	"fmt"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 // ACIFaultSeverityRaw represents a ACI fault's severity level string as mapped

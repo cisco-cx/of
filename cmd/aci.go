@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 	aci "github.com/cisco-cx/of/wrap/aci/v1"
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1"
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1"

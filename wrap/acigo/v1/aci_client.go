@@ -41,7 +41,7 @@ package v1
 import (
 	"github.com/udhos/acigo/aci"
 
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
 	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1"
 )

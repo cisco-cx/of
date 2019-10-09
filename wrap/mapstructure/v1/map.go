@@ -41,14 +41,14 @@ package v1
 import (
 	"github.com/mitchellh/mapstructure"
 
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 // Map represents an arbitrary map[string]interface{} data that will be decoded
 // into a native Go structure.
 //
 // Map is based on Map in:
-// "github.com/cisco-cx/of/lib/v1"
+// "github.com/cisco-cx/of/pkg/v1"
 type Map struct {
 	ofMap of.Map
 }
@@ -63,7 +63,7 @@ func NewMap(input map[string]interface{}) Map {
 // DecodeMap decodes a raw interface into structured data.
 //
 // DecodeMap implements MapDecoder in:
-// "github.com/cisco-cx/of/lib/v1"
+// "github.com/cisco-cx/of/pkg/v1"
 //
 // DecodeMap is based on Decode in: "github.com/mitchellh/mapstructure"
 func (m Map) DecodeMap(output interface{}) error {

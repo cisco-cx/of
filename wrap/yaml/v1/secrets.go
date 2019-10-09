@@ -18,7 +18,7 @@ import (
 	"io"
 
 	"gopkg.in/yaml.v2"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 type Secrets of.Secrets

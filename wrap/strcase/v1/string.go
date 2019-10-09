@@ -43,13 +43,13 @@ import (
 	"fmt"
 
 	"github.com/iancoleman/strcase"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 // CaseString implements the of.CaseConverter interface.
 //
 // CaseString is based on CaseString in:
-// "github.com/cisco-cx/of/lib/v1"
+// "github.com/cisco-cx/of/pkg/v1"
 type CaseString of.CaseString
 
 // ToSnake converts a CaseString to `snake_case`.

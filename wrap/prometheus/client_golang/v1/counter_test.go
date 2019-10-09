@@ -25,7 +25,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stretchr/testify/require"
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 	promclient "github.com/cisco-cx/of/wrap/prometheus/client_golang/v1"
 )
 

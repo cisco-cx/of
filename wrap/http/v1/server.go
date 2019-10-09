@@ -17,7 +17,7 @@ package v1
 import (
 	"net/http"
 
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 	graceful "github.com/cisco-cx/of/wrap/graceful/v1"
 )
 

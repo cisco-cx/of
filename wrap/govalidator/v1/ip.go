@@ -43,7 +43,7 @@ import (
 
 	"github.com/asaskevich/govalidator"
 
-	of "github.com/cisco-cx/of/lib/v1"
+	of "github.com/cisco-cx/of/pkg/v1"
 )
 
 // IP represents an IPv4 or IPv6 address.
