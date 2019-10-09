@@ -15,12 +15,7 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
-
-	"github.com/cisco-cx/of/info"
-	informer "github.com/cisco-cx/of/wrap/informer/v1"
 )
 
 // cmdVersion returns the `version` command.
@@ -34,19 +29,7 @@ func cmdVersion() *cobra.Command {
 }
 
 func runVersion(cmd *cobra.Command, args []string) {
-	s := informer.NewInfoService(
-		info.Program,
-		info.License,
-		info.URL,
-		info.BuildUser,
-		info.BuildDate,
-		info.Language,
-		info.LanguageVersion,
-		info.Version,
-		info.Revision,
-		info.Branch,
-	)
-	fmt.Println(s)
+	log.WithField("info", infoSvc).Infof("version called")
 }
 
 // init creates and adds the `version` command

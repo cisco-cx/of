@@ -21,12 +21,28 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/cisco-cx/of/info"
 	homedir "github.com/cisco-cx/of/wrap/go-homedir/v1"
+	informer "github.com/cisco-cx/of/wrap/informer/v1"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
 )
 
 var cfgFile string
 var log = logger.New()
+
+// Start a shared info service.
+var infoSvc = informer.NewInfoService(
+	info.Program,
+	info.License,
+	info.URL,
+	info.BuildUser,
+	info.BuildDate,
+	info.Language,
+	info.LanguageVersion,
+	info.Version,
+	info.Revision,
+	info.Branch,
+)
 
 // rootCmd represents the command that runs when no subcommands are called.
 var rootCmd = &cobra.Command{

@@ -18,13 +18,13 @@ import (
 	"fmt"
 	"os"
 	"reflect"
-	"runtime"
 	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"github.com/cisco-cx/of/info"
 	of "github.com/cisco-cx/of/pkg/v1"
 	aci "github.com/cisco-cx/of/wrap/aci/v1"
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1"
@@ -54,10 +54,6 @@ const (
 	apicFaultHelpURL        = "https://pubhub.devnetcloud.com/media/apic-mim-ref-411/docs/FAULT-%s.html"
 	amAlertFingerprintLabel = "alert_fingerprint"
 )
-
-// App info.
-var application = "amapicclient"
-var revision = "unset"
 
 // cmdACI returns the `aci` command.
 func cmdACI() *cobra.Command {
@@ -105,6 +101,8 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 	// Start the profiler and defer stopping it until the program exits.
 	defer profile.Start().Stop()
 
+    log.WithField("info", infoSvc).Infof("aci handler called")
+
 	config := ACIConfig(cmd)
 	handler := &aci.Handler{Config: config, Log: log}
 	handler.Aci = &acigo.ACIService{ACIConfig: config, Logger: log}
@@ -116,7 +114,7 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 	checkRequiredFlags(cmd)
 	cfg := &of.ACIConfig{}
-	cfg.Application = application
+	cfg.Application = info.Program
 	cfg.ListenAddress = viper.GetString("listen-address")
 	cfg.CycleInterval = viper.GetInt("cycle-interval")
 	cfg.AmURL = viper.GetString("am-url")
@@ -127,7 +125,7 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 
 	cfg.User = viper.GetString("aci-user")
 	cfg.Pass = viper.GetString("aci-password")
-	cfg.Version = fmt.Sprintf("%s %s (%s)", application, revision, runtime.Version())
+	cfg.Version = infoSvc.String()
 	cfg.SourceHostname, cfg.SourceAddress = VerifiedHost(cfg.ACIHost)
 
 	cfg.ACITimeout = viper.GetDuration("aci-timeout")
