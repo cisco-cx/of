@@ -207,7 +207,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		alert.Labels["cluster_name"] = of.LabelValue(h.sc.APIC.Cluster.Name)
 
 		// Adding custom labels.
-		for l, v := range h.Config.CustomLabels {
+		for l, v := range h.Config.StaticLabels {
 			alert.Labels[l] = v
 		}
 

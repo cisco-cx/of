@@ -47,6 +47,8 @@ const (
 	notificationCycleCount  = "notification_cycle_count"
 )
 
+const staticLabelUsage = "Custom labels to be added with each alert posted to Alertmanager. Expected format : 'label1=value1,label2=value2'"
+
 // Alertmanager alert specific constants.
 const (
 	apicFaultHelpURL        = "https://pubhub.devnetcloud.com/media/apic-mim-ref-411/docs/FAULT-%s.html"
@@ -89,7 +91,7 @@ func cmdACIHandler() *cobra.Command {
 	cmd.Flags().String("alerts-config", "alerts.yaml", "Alerts config file (default: alerts.yaml)")
 	cmd.Flags().String("secrets-config", "secrets.yaml", "Secrets config file (default: secrets.yaml)")
 	cmd.Flags().Duration("aci-timeout", 10*time.Second, "ACI Read/Write timeout  (default: 10s)")
-	cmd.Flags().String("custom-labels", "None", "Custom labels to be added with each alert posted to Alertmanager. Expected format : 'label1=value1,label2=value2'")
+	cmd.Flags().String("static-labels", "None", staticLabelUsage)
 
 	// Enable ENV to set flag values.
 	// Ex: ENV AM_URL will set the value for --am-url.
@@ -134,18 +136,18 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 		log.Fatalf("AM URL must begin with http/https")
 	}
 
-	customLabels := viper.GetString("custom-labels")
-	if customLabels != "" && customLabels != "None" {
+	staticLabels := viper.GetString("static-labels")
+	if staticLabels != "" && staticLabels != "None" {
 		m := make(of.LabelMap)
-		labelItems := strings.Split(customLabels, ",")
+		labelItems := strings.Split(staticLabels, ",")
 		for _, labelItem := range labelItems {
 			kvs := strings.Split(labelItem, "=")
 			if len(kvs) != 2 {
-				log.Fatalf("Custom label's expected format is 'label=value', given : %s", labelItem)
+				log.Fatalf("%s, given : %s", staticLabelUsage, labelItem)
 			}
 			m[of.LabelName(kvs[0])] = of.LabelValue(kvs[1])
 		}
-		cfg.CustomLabels = m
+		cfg.StaticLabels = m
 	}
 
 	t := time.Now()
