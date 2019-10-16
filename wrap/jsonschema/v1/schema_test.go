@@ -75,14 +75,19 @@ func newSchema(t *testing.T) *js.Schema {
 	return schema
 }
 
-// Test Alerts schema.
-func TestAlertsSchema(t *testing.T) {
-	testSchema(t, "alerts.schema", "test/alerts.yaml")
+// Test ACI Alerts schema.
+func TestACIAlertsSchema(t *testing.T) {
+	testSchema(t, "schema/aci/alerts.schema", "sample/aci/alerts.yaml")
 }
 
-// Test Secrets schema.
-func TestSecretsSchema(t *testing.T) {
-	testSchema(t, "secrets.schema", "test/secrets.yaml")
+// Test ACI Secrets schema.
+func TestACISecretsSchema(t *testing.T) {
+	testSchema(t, "schema/aci/secrets.schema", "sample/aci/secrets.yaml")
+}
+
+// Test SNMP Alerts schema.
+func TestSNMPAlertsSchema(t *testing.T) {
+	testSchema(t, "schema/snmp/alerts.schema", "sample/snmp/alerts.yaml")
 }
 
 // Test Alerts schema.

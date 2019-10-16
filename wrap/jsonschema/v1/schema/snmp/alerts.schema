@@ -1,0 +1,75 @@
+{
+   "$schema" : "http://json-schema.org/draft-07/schema#",
+   "$id" : "https://github.com/cisco-cx/of/tree/master/wrap/jsonschema/v1/schema/snmp/alerts.schema",
+   "title" : "SNMP Alerts Schema",
+   "type" : "object",
+   "required" : [
+      "alerts"
+   ],
+   "properties" : {
+      "alerts" : {
+         "$ref" : "#/definitions/alerts"
+      }
+   },
+   "definitions" : {
+      "alert" : {
+   "required" : [
+      "alert_severity",
+      "error_events"
+   ],
+         "properties" : {
+            "alert_severity" : {
+               "$ref" : "#/definitions/alert_severity"
+            },
+            "clear_events" : {
+               "$ref" : "#/definitions/events"
+            },
+            "error_events" : {
+               "$ref" : "#/definitions/events"
+            },
+            "dropped_events" : {
+               "$ref" : "#/definitions/events"
+            }
+         }
+      },
+      "alert_severity" : {
+         "type" : "string",
+         "enum" : [
+				"emergency",
+				"alert",
+				"critical",
+				"error",
+				"warning",
+				"notice",
+				"informational",
+				"debug"
+         ]
+      },
+      "alerts" : {
+         "title" : "Alerts",
+         "type" : "object",
+         "patternProperties" : {
+            ".{1,}" : {
+               "$ref" : "#/definitions/alert"
+            }
+         }
+      },
+      "event" : {
+         "type" : "object",
+         "properties" : {
+            "event_name" : {
+               "type" : "string"
+            }
+         }
+      },
+      "events" : {
+         "title" : "Events",
+         "type" : "object",
+         "patternProperties" : {
+            ".{1,}" : {
+               "$ref" : "#/definitions/event"
+            }
+         }
+      }
+	}
+}
