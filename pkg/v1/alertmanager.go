@@ -38,7 +38,11 @@
 
 package v1
 
-import "time"
+import (
+	"context"
+	"net/http"
+	"time"
+)
 
 // Represents Alertmanager alert.
 type Alert struct {
@@ -47,6 +51,15 @@ type Alert struct {
 	StartsAt     time.Time         `json:"startsAt"`
 	EndsAt       time.Time         `json:"endsAt"`
 	GeneratorURL string            `json:"generatorURL"`
+}
+
+// Represents Alertmanager postAlerts params.
+type PostAlertsParams struct {
+	Alerts []Alert
+
+	timeout    time.Duration
+	Context    context.Context
+	HTTPClient *http.Client
 }
 
 // Interface for fingerprinting alerts.
