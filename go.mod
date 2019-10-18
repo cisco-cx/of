@@ -3,6 +3,8 @@ module github.com/cisco-cx/of
 go 1.12
 
 require (
+	github.com/InVisionApp/go-health v2.1.0+incompatible
+	github.com/InVisionApp/go-logger v1.0.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a
 	github.com/ghodss/yaml v1.0.0
 	github.com/google/go-cmp v0.3.1 // indirect
@@ -10,6 +12,8 @@ require (
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.1.2
+	github.com/onsi/ginkgo v1.10.2 // indirect
+	github.com/onsi/gomega v1.7.0 // indirect
 	github.com/ory/graceful v0.1.1
 	github.com/pkg/profile v1.3.0
 	github.com/prometheus/client_golang v1.1.0

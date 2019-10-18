@@ -27,9 +27,11 @@
 // It is based on `InVisionApp/go-health`
 package v1
 
+import "time"
+
 type HealthChecker interface {
 	Start() error
 	Stop() error
-	AddCheck(map[string]interface{}) error
-	State() error
+	AddURL(name string, urlTarget string, timeout time.Duration) error
+	State(urlTarget string) error
 }
