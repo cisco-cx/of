@@ -23,6 +23,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	of "github.com/cisco-cx/of/pkg/v1"
+	aci_config "github.com/cisco-cx/of/pkg/v1/aci"
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1"
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1"
 	http "github.com/cisco-cx/of/wrap/http/v1"
@@ -294,7 +295,7 @@ func (h *Handler) LoadConfig(cfg of.Decoder, fileName string) {
 	}
 }
 
-func (h *Handler) GetAlertConfig(fault of.ACIFaultRaw) (string, *of.AlertConfig, error) {
+func (h *Handler) GetAlertConfig(fault of.ACIFaultRaw) (string, *aci_config.AlertConfig, error) {
 	// Loop through alerts.yaml:alerts; if an alertConfig mentions the current fault code,
 	// return the alertName and alertConfig and break the loop.
 
@@ -308,7 +309,7 @@ func (h *Handler) GetAlertConfig(fault of.ACIFaultRaw) (string, *of.AlertConfig,
 
 	// We didn't find anything...
 	err := fmt.Errorf("getAlertConfig() was unable to locate a alert map for fault code: %s", fault.Code)
-	return "", &of.AlertConfig{}, err
+	return "", &aci_config.AlertConfig{}, err
 }
 
 func (h *Handler) Shutdown() error {

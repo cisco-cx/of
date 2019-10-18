@@ -21,6 +21,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v1"
+	aci_config "github.com/cisco-cx/of/pkg/v1/aci"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v1"
 )
 
@@ -38,9 +39,9 @@ apic:
   cluster:
     name: lab-aci`)
 
-	expected := of.Secrets{
-		APIC: of.SecretsConfigAPIC{
-			Cluster: of.SecretsConfigAPICCluster{
+	expected := aci_config.Secrets{
+		APIC: aci_config.SecretsConfigAPIC{
+			Cluster: aci_config.SecretsConfigAPICCluster{
 				Name: "lab-aci",
 			},
 		},
@@ -59,8 +60,8 @@ func TestSecretsEncoder(t *testing.T) {
     name: lab-aci`
 
 	cfg := yaml.Secrets{
-		APIC: of.SecretsConfigAPIC{
-			Cluster: of.SecretsConfigAPICCluster{
+		APIC: aci_config.SecretsConfigAPIC{
+			Cluster: aci_config.SecretsConfigAPICCluster{
 				Name: "lab-aci",
 			},
 		},

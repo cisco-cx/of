@@ -20,13 +20,13 @@ github.com/google/go-cmp/cmp/internal/value
 github.com/gorilla/websocket
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
+github.com/hashicorp/hcl/hcl/printer
 github.com/hashicorp/hcl/hcl/ast
 github.com/hashicorp/hcl/hcl/parser
-github.com/hashicorp/hcl/hcl/printer
-github.com/hashicorp/hcl/hcl/scanner
-github.com/hashicorp/hcl/hcl/strconv
 github.com/hashicorp/hcl/hcl/token
 github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/hcl/scanner
+github.com/hashicorp/hcl/hcl/strconv
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/iancoleman/strcase v0.0.0-20190422225806-e506e3ef7365
@@ -55,14 +55,14 @@ github.com/pkg/profile
 github.com/pmezard/go-difflib/difflib
 # github.com/prometheus/client_golang v1.1.0
 github.com/prometheus/client_golang/prometheus
-github.com/prometheus/client_golang/prometheus/internal
 github.com/prometheus/client_golang/prometheus/promhttp
+github.com/prometheus/client_golang/prometheus/internal
 # github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4
 github.com/prometheus/client_model/go
 # github.com/prometheus/common v0.7.0
+github.com/prometheus/common/model
 github.com/prometheus/common/expfmt
 github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg
-github.com/prometheus/common/model
 # github.com/prometheus/procfs v0.0.5
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
@@ -87,13 +87,13 @@ github.com/spf13/pflag
 # github.com/spf13/viper v1.4.0
 github.com/spf13/viper
 # github.com/stretchr/testify v1.4.0
-github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
+github.com/stretchr/testify/assert
 # github.com/udhos/acigo v0.0.0-20190702182318-b04b827bd920
 github.com/udhos/acigo/aci
 # golang.org/x/sys v0.0.0-20190919044723-0c1ff786ef13
-golang.org/x/sys/unix
 golang.org/x/sys/windows
+golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
@@ -102,8 +102,8 @@ gopkg.in/yaml.v2
 # gotest.tools v2.2.0+incompatible
 gotest.tools/assert
 gotest.tools/assert/cmp
-gotest.tools/internal/difflib
 gotest.tools/internal/format
 gotest.tools/internal/source
+gotest.tools/internal/difflib
 # github.com/cisco-cx/informer v0.0.0-20190919211820-a5093ad9e094
 github.com/cisco-cx/informer/v1

@@ -21,6 +21,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v1"
+	aci_config "github.com/cisco-cx/of/pkg/v1/aci"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v1"
 )
 
@@ -52,29 +53,29 @@ dropped_faults:
   F675299:
     fault_name: fsmFailHcloudHealthUpdateSyncHealth`)
 
-	expected := of.Alerts{
-		APIC: of.AlertsConfigAPIC{
+	expected := aci_config.Alerts{
+		APIC: aci_config.AlertsConfigAPIC{
 			AlertSeverityThreshold: "minor",
 		},
-		Defaults: of.AlertsConfigDefaults{
+		Defaults: aci_config.AlertsConfigDefaults{
 			AlertSeverity: "error",
 		},
-		DroppedFaults: map[string]of.AlertsConfigDroppedFault{
-			"F3104": of.AlertsConfigDroppedFault{
+		DroppedFaults: map[string]aci_config.AlertsConfigDroppedFault{
+			"F3104": aci_config.AlertsConfigDroppedFault{
 				FaultName: "xxx",
 			},
-			"F2100": of.AlertsConfigDroppedFault{
+			"F2100": aci_config.AlertsConfigDroppedFault{
 				FaultName: "yyy",
 			},
-			"F675299": of.AlertsConfigDroppedFault{
+			"F675299": aci_config.AlertsConfigDroppedFault{
 				FaultName: "fsmFailHcloudHealthUpdateSyncHealth",
 			},
 		},
-		Alerts: map[string]of.AlertConfig{
+		Alerts: map[string]aci_config.AlertConfig{
 			"apicFabricSelectorIssuesConfig": {
 				AlertSeverity: "error",
-				Faults: map[string]of.AlertConfigFault{
-					"F0020": of.AlertConfigFault{
+				Faults: map[string]aci_config.AlertConfigFault{
+					"F0020": aci_config.AlertConfigFault{
 						FaultName: "fltFabricSelectorIssuesConfig-failed",
 					},
 				},
@@ -110,28 +111,28 @@ alerts:
         fault_name: fltFabricSelectorIssuesConfig-failed`, "\n")
 
 	cfg := yaml.Alerts{
-		APIC: of.AlertsConfigAPIC{
+		APIC: aci_config.AlertsConfigAPIC{
 			AlertSeverityThreshold: "minor",
 		},
-		Defaults: of.AlertsConfigDefaults{
+		Defaults: aci_config.AlertsConfigDefaults{
 			AlertSeverity: "error",
 		},
-		DroppedFaults: map[string]of.AlertsConfigDroppedFault{
-			"F3104": of.AlertsConfigDroppedFault{
+		DroppedFaults: map[string]aci_config.AlertsConfigDroppedFault{
+			"F3104": aci_config.AlertsConfigDroppedFault{
 				FaultName: "xxx",
 			},
-			"F2100": of.AlertsConfigDroppedFault{
+			"F2100": aci_config.AlertsConfigDroppedFault{
 				FaultName: "yyy",
 			},
-			"F675299": of.AlertsConfigDroppedFault{
+			"F675299": aci_config.AlertsConfigDroppedFault{
 				FaultName: "fsmFailHcloudHealthUpdateSyncHealth",
 			},
 		},
-		Alerts: map[string]of.AlertConfig{
+		Alerts: map[string]aci_config.AlertConfig{
 			"apicFabricSelectorIssuesConfig": {
 				AlertSeverity: "error",
-				Faults: map[string]of.AlertConfigFault{
-					"F0020": of.AlertConfigFault{
+				Faults: map[string]aci_config.AlertConfigFault{
+					"F0020": aci_config.AlertConfigFault{
 						FaultName: "fltFabricSelectorIssuesConfig-failed",
 					},
 				},

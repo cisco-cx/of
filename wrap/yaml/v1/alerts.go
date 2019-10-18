@@ -18,10 +18,10 @@ import (
 	"io"
 
 	"gopkg.in/yaml.v2"
-	of "github.com/cisco-cx/of/pkg/v1"
+	aci_config "github.com/cisco-cx/of/pkg/v1/aci"
 )
 
-type Alerts of.Alerts
+type Alerts aci_config.Alerts
 
 func (a *Alerts) Decode(r io.Reader) error {
 	return yaml.NewDecoder(r).Decode(a)

@@ -38,7 +38,11 @@
 
 package v1
 
-import "time"
+import (
+	"time"
+
+	aci_config "github.com/cisco-cx/of/pkg/v1/aci"
+)
 
 // Represents ACI settings.
 type ACIConfig struct {
@@ -53,8 +57,8 @@ type ACIConfig struct {
 	Version        string
 	User           string
 	Pass           string
-	ac             Alerts
-	sc             Secrets
+	ac             aci_config.Alerts
+	sc             aci_config.Secrets
 	SourceHostname string
 	SourceAddress  string
 	StaticLabels   LabelMap

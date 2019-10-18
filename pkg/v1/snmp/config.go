@@ -1,4 +1,4 @@
-package v1
+package snmp
 
 type Event struct {
 	EventName string `json:"event_name" yaml:"event_name"`
