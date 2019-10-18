@@ -88,6 +88,10 @@ func cmdACIHandler() *cobra.Command {
 	cmd.Flags().String("secrets-config", "secrets.yaml", "Secrets config file (default: secrets.yaml)")
 	cmd.Flags().Duration("aci-timeout", 10*time.Second, "ACI Read/Write timeout  (default: 10s)")
 	cmd.Flags().String("static-labels", "None", staticLabelUsage)
+	cmd.Flags().Bool("throttle", true, "Trottle posts to Alertmanager (default: true)")
+	cmd.Flags().Int("post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
+	cmd.Flags().Int("sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
+	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
 
 	// Enable ENV to set flag values.
 	// Ex: ENV AM_URL will set the value for --am-url.
@@ -129,6 +133,11 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 	cfg.SourceHostname, cfg.SourceAddress = VerifiedHost(cfg.ACIHost)
 
 	cfg.ACITimeout = viper.GetDuration("aci-timeout")
+
+	cfg.Throttle = viper.GetBool("throttle")
+	cfg.PostTime = viper.GetInt("post-time")
+	cfg.SleepTime = viper.GetInt("sleep-time")
+	cfg.SendTime = viper.GetInt("send-time")
 
 	if strings.HasPrefix(cfg.AmURL, "http") == false {
 		log.Fatalf("AM URL must begin with http/https")

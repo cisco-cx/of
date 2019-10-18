@@ -152,18 +152,56 @@ func (h *Handler) PushAlerts() {
 
 	// Notify AlertManager. if we have any alerts
 	if len(alerts) > 0 {
-		h.counters[amConnectAttemptCount].Incr()
-		err = h.Ams.Notify(alerts)
-		if err != nil {
-			h.counters[amConnectErrorCount].Incr()
-			h.Log.Errorf("Notification cycle failed. Will retry in %d, %s\n", h.Config.CycleInterval, err.Error())
-			return
+		// Send alerts[start:end] to Alertmanager.
+		sendFunc := func(start int, end int) {
+			h.Log.Debugf("Sending alerts from %d to %d\n", start, end)
+			h.counters[amConnectAttemptCount].Incr()
+			err = h.Ams.Notify(alerts[start:end])
+			if err != nil {
+				h.counters[amConnectErrorCount].Incr()
+				h.Log.Errorf("Notification cycle failed. Will retry in %d, %s\n", h.Config.CycleInterval, err.Error())
+				return
+			}
 		}
+
+		h.Throttle(len(alerts), sendFunc)
 	} else {
 		h.Log.Errorf("No faults found")
 	}
 
 	h.Log.Debugf("Notification cycle succeeded. Sleeping for %d seconds.\n", h.Config.CycleInterval)
+}
+
+// Divide alerts into smaller chunks and spread posting to Alertmanager over h.Config.SendTime milliseconds.
+func (h *Handler) Throttle(totalCount int, f func(int, int)) {
+
+	// Send all alerts in a single post to Alertmanager, if Throttle is disabled
+	// or h.Config.SendTime is less than time needed for a single post.
+	if h.Config.Throttle == false || h.Config.SendTime <= h.Config.PostTime+h.Config.SleepTime {
+		f(0, totalCount)
+		return
+	}
+
+	// Max num. of requests that can be send in h.Config.SendTime.
+	maxRequests := h.Config.SendTime / (h.Config.PostTime + h.Config.SleepTime)
+	start := 0
+	if totalCount > maxRequests {
+		chunkSize := totalCount / maxRequests
+
+		end := chunkSize
+		for end <= totalCount {
+			f(start, end)
+			start = end
+			end = start + chunkSize
+			time.Sleep(time.Duration(h.Config.SleepTime) * time.Millisecond)
+		}
+	}
+
+	// Handle condition where totalCount is not divisible by maxRequests.
+	if start < totalCount {
+		f(start, totalCount)
+		time.Sleep(time.Duration(h.Config.SleepTime) * time.Millisecond)
+	}
 }
 
 // Convert acigo faults to Alertmanager alerts.

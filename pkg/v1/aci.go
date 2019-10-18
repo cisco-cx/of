@@ -62,4 +62,8 @@ type ACIConfig struct {
 	SourceHostname string
 	SourceAddress  string
 	StaticLabels   LabelMap
+	Throttle       bool
+	PostTime       int
+	SleepTime      int
+	SendTime       int
 }

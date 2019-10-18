@@ -36,6 +36,25 @@ func TestFaultToAlerts(t *testing.T) {
 	require.Equal(t, "75d506f347276107b1fe7657b681473b", md5sum)
 }
 
+//Test Throttle
+func TestThrottle(t *testing.T) {
+	c := &of.ACIConfig{}
+	c.Throttle = true
+	c.PostTime = 300
+	c.SleepTime = 100
+	c.SendTime = 30000
+
+	count := 0
+	f := func(start int, end int) {
+		count += 1
+		fmt.Printf("start : %d, end : %d, count : %d\n", start, end, count)
+	}
+	handler := &aci.Handler{Config: c, Log: logger.New()}
+	handler.Throttle(15000, f)
+	fmt.Printf("count : %d\n", count)
+	require.Equal(t, 75, count)
+}
+
 // Returns faults in faultJson file.
 func getFaults(t *testing.T) []of.Map {
 	faults, err := ioutil.ReadFile(faultJson)
