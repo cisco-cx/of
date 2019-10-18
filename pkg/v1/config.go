@@ -16,51 +16,12 @@ package v1
 
 import "io"
 
-type Alerts struct {
-	APIC          AlertsConfigAPIC                    `yaml:"apic,omitempty"`
-	Defaults      AlertsConfigDefaults                `yaml:"defaults,omitempty"`
-	DroppedFaults map[string]AlertsConfigDroppedFault `yaml:"dropped_faults,omitempty"`
-	Alerts        map[string]AlertConfig              `yaml:"alerts,omitempty"`
-}
-
-type AlertsConfigAPIC struct {
-	AlertSeverityThreshold string `yaml:"alert_severity_threshold,omitempty"`
-	DropUnknownAlerts      bool   `yaml:"drop_unknown_alerts,omitempty"`
-}
-
-type AlertsConfigDefaults struct {
-	AlertSeverity string `yaml:"alert_severity,omitempty"`
-}
-
-type AlertsConfigDroppedFault struct {
-	FaultName string `yaml:"fault_name,omitempty"`
-}
-
-type AlertConfig struct {
-	AlertSeverity string                      `yaml:"alert_severity,omitempty"`
-	Faults        map[string]AlertConfigFault `yaml:"faults,omitempty"`
-}
-
-type AlertConfigFault struct {
-	FaultName string `yaml:"fault_name,omitempty"`
-}
-
-type Secrets struct {
-	APIC SecretsConfigAPIC `yaml:"apic,omitempty"`
-}
-
-type SecretsConfigAPIC struct {
-	Cluster SecretsConfigAPICCluster `yaml:"cluster,omitempty"`
-}
-
-type SecretsConfigAPICCluster struct {
-	Name string `yaml:"name,omitempty"`
-}
-
+// Decode configs in *_config.go
 type Decoder interface {
 	Decode(io.Reader) error
 }
 
+// Encode configs in *_config.go
 type Encoder interface {
 	Encode(io.Writer) error
 }
