@@ -1,0 +1,275 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/cisco-cx/of/blob/master/of/wrap/jsonschema/v2/schema/snmp/alerts.schema",
+  "title": "v2Config",
+  "type": "object",
+  "patternProperties": {
+    ".{1,}": {
+      "$ref": "#/definitions/alert_group"
+    }
+  },
+  "definitions": {
+    "alert": {
+      "title": "Alert",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "enabled": {
+          "$ref": "#/definitions/enabled"
+        },
+        "generator_url_prefix": {
+          "$ref": "#/definitions/generator_url_prefix"
+        },
+        "label_mods": {
+          "$ref": "#/definitions/label_mods"
+        },
+        "firing": {
+          "$ref": "#/definitions/firing"
+        },
+        "clearing": {
+          "$ref": "#/definitions/clearing"
+        },
+        "annotation_mods": {
+          "$ref": "#/definitions/annotation_mods"
+        }
+      }
+    },
+    "alert_group": {
+      "title": "AlertGroup",
+      "type": "object",
+      "properties": {
+        "defaults": {
+          "$ref": "#/definitions/defaults"
+        },
+        "alerts": {
+          "$ref": "#/definitions/alerts"
+        }
+      }
+    },
+    "alerts": {
+      "title": "Alerts",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/alert"
+          }
+        ]
+      },
+      "default": []
+    },
+    "annotation_mods": {
+      "title": "AnnotationMods",
+      "$ref": "#/definitions/mods"
+    },
+    "as": {
+      "title": "As",
+      "type": "string",
+      "enum": [
+        "oid",
+        "oid-num",
+        "oid-str",
+        "oid-str-short",
+        "value",
+        "value.oid-num",
+        "value.oid-str",
+        "value.oid-str-short",
+        "value.map"
+      ]
+    },
+    "clearing": {
+      "title": "Clearing",
+      "type": "object",
+      "select": {
+        "$ref": "#/definitions/select"
+      }
+    },
+    "cluster": {
+      "title": "Cluster",
+      "type": "object",
+      "properties": {
+        "source_addresses": {
+          "$ref": "#/definitions/source_addresses"
+        }
+      }
+    },
+    "clusters": {
+      "title": "Clusters",
+      "patternProperties": {
+        ".{1,}": {
+          "$ref": "#/definitions/cluster"
+        }
+      }
+    },
+    "copy": {
+      "title": "Copy",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "copy"
+        },
+        "oid": {
+          "type": "string"
+        },
+        "as": {
+          "$ref": "#/definitions/as"
+        },
+        "to_key": {
+          "type": "string"
+        },
+        "map": {
+          "$ref": "#/definitions/map"
+        },
+        "on_error": {
+          "$ref": "#/definitions/enabled"
+        }
+      }
+    },
+    "defaults": {
+      "title": "Defaults",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "$ref": "#/definitions/enabled"
+        },
+        "source_type": {
+          "$ref": "#/definitions/source_type"
+        },
+        "generator_url_prefix": {
+          "$ref": "#/definitions/generator_url_prefix"
+        },
+        "label_mods": {
+          "$ref": "#/definitions/label_mods"
+        },
+        "annotation_mods": {
+          "$ref": "#/definitions/annotation_mods"
+        }
+      }
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean",
+      "default": true
+    },
+    "equals": {
+      "title": "Equals",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "equals"
+        },
+        "oid": {
+          "type": "string"
+        },
+        "as": {
+          "$ref": "#/definitions/as"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      }
+    },
+    "firing": {
+      "title": "Firing",
+      "type": "object",
+      "select": {
+        "$ref": "#/definitions/select"
+      }
+    },
+    "generator_url_prefix": {
+      "title": "GeneratorUrlPrefix",
+      "type": "string",
+      "format": "uri",
+      "pattern": "^(https?)://"
+    },
+    "label_mods": {
+      "title": "LabelMods",
+      "$ref": "#/definitions/mods"
+    },
+    "map": {
+      "title": "Map",
+      "type": "object",
+      "patternProperties": {
+        ".{1,}": {
+          "type": "string"
+        }
+      }
+    },
+    "mods": {
+      "title": "Mods",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/copy"
+          },
+          {
+            "$ref": "#/definitions/set"
+          }
+        ]
+      },
+      "default": []
+    },
+    "on_error": {
+      "title": "OnError",
+      "type": "string",
+      "enum": [
+        "continue",
+        "break"
+      ],
+      "default": "break"
+    },
+    "select": {
+      "title": "Select",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/equals"
+          }
+        ]
+      },
+      "default": []
+    },
+    "set": {
+      "title": "Set",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "set"
+        },
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "source_addresses": {
+      "title": "SourceAddresses",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "source_type": {
+      "title": "SourceType",
+      "type": "string",
+      "enum": [
+        "host",
+        "cluster"
+      ]
+    }
+  }
+}
