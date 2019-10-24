@@ -5,5 +5,5 @@ import (
 )
 
 type AlertGenerator interface {
-	Alert(string, [string]) v1.Alert // Generate v1.Alert for given OID and array of Config names.
+	Alert(string, []string) v1.Alert // Generate v1.Alert for given OID and array of Config names.
 }
