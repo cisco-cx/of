@@ -114,39 +114,39 @@ var expectedCfg = yaml.Configs{
 	"epc": snmp_config.Config{
 		Defaults: snmp_config.Default{
 			Enabled:            true,
-			SourceType:         snmp_config.HOST,
+			SourceType:         snmp_config.HostType,
 			GeneratorUrlPrefix: "http://www.oid-info.com/get/",
 			LabelMods: []snmp_config.Mod{
 				snmp_config.Mod{
-					Type:  snmp_config.SET,
+					Type:  snmp_config.Set,
 					Key:   "vendor",
 					Value: "cisco",
 				},
 				snmp_config.Mod{
-					Type:  snmp_config.SET,
+					Type:  snmp_config.Set,
 					Key:   "subsystem",
 					Value: "epc",
 				},
 				snmp_config.Mod{
-					Type:    snmp_config.COPY,
+					Type:    snmp_config.Copy,
 					Oid:     ".1.3.6.1.4.1.8164.1.2.1.1.1",
-					As:      snmp_config.VALUE,
+					As:      snmp_config.Value,
 					ToKey:   "star_slot_num",
-					OnError: snmp_config.DROP,
+					OnError: snmp_config.Drop,
 				},
 			},
 			AnnotationMods: []snmp_config.Mod{
 
 				snmp_config.Mod{
-					Type:  snmp_config.COPY,
+					Type:  snmp_config.Copy,
 					Oid:   ".1.3.6.1.6.1.1.1.4.1",
-					As:    snmp_config.VALUE,
+					As:    snmp_config.Value,
 					ToKey: "event_oid",
 				},
 				snmp_config.Mod{
-					Type:  snmp_config.COPY,
+					Type:  snmp_config.Copy,
 					Oid:   ".1.3.6.1.6.1.1.1.4.1",
-					As:    snmp_config.OIDVALUESTRSHORT,
+					As:    snmp_config.OidValueStrShort,
 					ToKey: "event_name",
 				},
 			},
@@ -157,7 +157,7 @@ var expectedCfg = yaml.Configs{
 				Enabled: true,
 				LabelMods: []snmp_config.Mod{
 					snmp_config.Mod{
-						Type:  snmp_config.SET,
+						Type:  snmp_config.Set,
 						Key:   "alert_severity",
 						Value: "error",
 					},
@@ -165,9 +165,9 @@ var expectedCfg = yaml.Configs{
 				Firing: map[string][]snmp_config.Select{
 					"select": []snmp_config.Select{
 						snmp_config.Select{
-							Type: snmp_config.EQUALS,
+							Type: snmp_config.Equals,
 							Oid:  ".1.3.6.1.6.3.1.1.4.1",
-							As:   snmp_config.VALUE,
+							As:   snmp_config.Value,
 							Values: []string{
 								".1.3.6.1.4.1.8164.2.13",
 								".1.3.6.1.4.1.8164.2.4",
@@ -179,9 +179,9 @@ var expectedCfg = yaml.Configs{
 				Clearing: map[string][]snmp_config.Select{
 					"select": []snmp_config.Select{
 						snmp_config.Select{
-							Type: snmp_config.EQUALS,
+							Type: snmp_config.Equals,
 							Oid:  ".1.3.6.1.6.3.1.1.4.1",
-							As:   snmp_config.VALUE,
+							As:   snmp_config.Value,
 							Values: []string{
 								".1.3.6.1.4.1.8164.2.5",
 								".1.3.6.1.4.1.8164.2.55",
@@ -194,7 +194,7 @@ var expectedCfg = yaml.Configs{
 				Name: "starCardBootFailed",
 				LabelMods: []snmp_config.Mod{
 					snmp_config.Mod{
-						Type:  snmp_config.SET,
+						Type:  snmp_config.Set,
 						Key:   "alert_severity",
 						Value: "error",
 					},
@@ -202,9 +202,9 @@ var expectedCfg = yaml.Configs{
 				Firing: map[string][]snmp_config.Select{
 					"select": []snmp_config.Select{
 						snmp_config.Select{
-							Type: snmp_config.EQUALS,
+							Type: snmp_config.Equals,
 							Oid:  ".1.3.6.1.6.3.1.1.4.1",
-							As:   snmp_config.VALUE,
+							As:   snmp_config.Value,
 							Values: []string{
 								".1.3.6.1.4.1.8164.2.9",
 							},
@@ -214,9 +214,9 @@ var expectedCfg = yaml.Configs{
 				Clearing: map[string][]snmp_config.Select{
 					"select": []snmp_config.Select{
 						snmp_config.Select{
-							Type: snmp_config.EQUALS,
+							Type: snmp_config.Equals,
 							Oid:  ".1.3.6.1.6.3.1.1.4.1",
-							As:   snmp_config.VALUE,
+							As:   snmp_config.Value,
 							Values: []string{
 								".1.3.6.1.4.1.8164.2.5",
 								".1.3.6.1.4.1.8164.2.55",
@@ -229,7 +229,7 @@ var expectedCfg = yaml.Configs{
 				Name: "starCardActive",
 				LabelMods: []snmp_config.Mod{
 					snmp_config.Mod{
-						Type:  snmp_config.SET,
+						Type:  snmp_config.Set,
 						Key:   "alert_severity",
 						Value: "informational",
 					},
@@ -237,9 +237,9 @@ var expectedCfg = yaml.Configs{
 				Firing: map[string][]snmp_config.Select{
 					"select": []snmp_config.Select{
 						snmp_config.Select{
-							Type: snmp_config.EQUALS,
+							Type: snmp_config.Equals,
 							Oid:  ".1.3.6.1.6.3.1.1.4.1",
-							As:   snmp_config.VALUE,
+							As:   snmp_config.Value,
 							Values: []string{
 								".1.3.6.1.4.1.8164.2.55",
 							},

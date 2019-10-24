@@ -32,17 +32,17 @@ func (v *Value) ValueAs(oid string, as snmp.As) (string, error) {
 	var err error = nil
 	// As constants
 	switch as {
-	case snmp.VALUE:
+	case snmp.Value:
 		val, err = v.Value(oid)
-	case snmp.VALUESTR:
+	case snmp.ValueStr:
 		val, err = v.ValueStr(oid)
-	case snmp.VALUESTRSHORT:
+	case snmp.ValueStrShort:
 		val, err = v.ValueStrShort(oid)
-	case snmp.OIDVALUE:
+	case snmp.OidValue:
 		val, err = v.OIDValue(oid)
-	case snmp.OIDVALUESTR:
+	case snmp.OidValueStr:
 		val, err = v.OIDValueStr(oid)
-	case snmp.OIDVALUESTRSHORT:
+	case snmp.OidValueStrShort:
 		val, err = v.OIDValueStrShort(oid)
 	default:
 		err = v2.ErrUnknownAs

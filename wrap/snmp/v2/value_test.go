@@ -5,14 +5,14 @@ import (
 
 	"github.com/stretchr/testify/require"
 	v1 "github.com/cisco-cx/of/pkg/v1"
-	of "github.com/cisco-cx/of/pkg/v2/snmp"
+	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 	mib_registry "github.com/cisco-cx/of/wrap/mib/v1"
 	snmp "github.com/cisco-cx/of/wrap/snmp/v2"
 )
 
 // Enforce Lookup interface
 func TestValInterface(t *testing.T) {
-	var _ of.ValueGenerator = &snmp.Value{}
+	var _ of_snmp.ValueGenerator = &snmp.Value{}
 }
 
 // Testing Value
@@ -25,13 +25,13 @@ func TestValue(t *testing.T) {
 
 // Testing Value with given As type.
 func TestValueAs(t *testing.T) {
-	types := map[of.As]string{
-		of.VALUE:            ".1.3.6.1.4.1.8164.2.45",
-		of.VALUESTR:         ".1.3.6.1.4.1.8164.2.oid4",
-		of.VALUESTRSHORT:    "oid4",
-		of.OIDVALUE:         ".1.3.6.1.4.1.65000.1.1.1.1.1",
-		of.OIDVALUESTR:      ".1.3.6.1.4.1.65000.1.1.1.1.oid5",
-		of.OIDVALUESTRSHORT: "oid5",
+	types := map[of_snmp.As]string{
+		of_snmp.Value:            ".1.3.6.1.4.1.8164.2.45",
+		of_snmp.ValueStr:         ".1.3.6.1.4.1.8164.2.oid4",
+		of_snmp.ValueStrShort:    "oid4",
+		of_snmp.OidValue:         ".1.3.6.1.4.1.65000.1.1.1.1.1",
+		of_snmp.OidValueStr:      ".1.3.6.1.4.1.65000.1.1.1.1.oid5",
+		of_snmp.OidValueStrShort: "oid5",
 	}
 	value := newValue(t)
 	for k, v := range types {
@@ -95,18 +95,18 @@ func TestOIDValueStrShort(t *testing.T) {
 	require.Equal(t, "oid5", val)
 }
 
-// Helper to initialize snmp.Value
+// Initialize snmp.Value
 func newValue(t *testing.T) *snmp.Value {
 	return snmp.NewValue(trapVars(), mibRegistry(t))
 }
 
-// Test mibs data
+// Test mibs data.
 func mibRegistry(t *testing.T) *mib_registry.MibRegistry {
 	mibs := map[string]v1.Mib{
 		".1.3.6.1.2.1.1.3.0": v1.Mib{
 			Name: "oid1",
 		},
-		".1.3.6.1.6.3.1.1.4.1.0": v1.Mib{
+		".1.3.6.1.6.3.1.1.4.1.1": v1.Mib{
 			Name: "oid2",
 		},
 		".1.3.6.1.4.1.8164.2.44": v1.Mib{
@@ -126,7 +126,7 @@ func mibRegistry(t *testing.T) *mib_registry.MibRegistry {
 	return mr
 }
 
-// Test trapVars data.
+// Test SNMP trapVars.
 func trapVars() *[]v1.TrapVar {
 	return &[]v1.TrapVar{
 		v1.TrapVar{
@@ -135,7 +135,7 @@ func trapVars() *[]v1.TrapVar {
 			Value: "(123) 0:00:01.23",
 		},
 		v1.TrapVar{
-			Oid:   ".1.3.6.1.6.3.1.1.4.1.0",
+			Oid:   ".1.3.6.1.6.3.1.1.4.1",
 			Type:  "OID",
 			Value: ".1.3.6.1.4.1.8164.2.44",
 		},

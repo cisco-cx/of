@@ -230,13 +230,13 @@ func build(t *testing.T) *snmp.Lookup {
 	cfg := yaml.Configs{}
 	err := cfg.Decode(r)
 	require.NoError(t, err)
-	lookup := snmp.Lookup{Configs: of_snmp.V2Config(cfg), V: newValue(t)}
+	lookup := snmp.Lookup{Configs: of_snmp.V2Config(cfg), V: newValueLookup(t)}
 	lookup.Build()
 	return &lookup
 }
 
-// Helper to initialize snmp.Value
-func newValue(t *testing.T) *snmp.Value {
+// Initialize snmp.Value
+func newValueLookup(t *testing.T) *snmp.Value {
 	return snmp.NewValue(trapVars(), mibRegistry(t))
 }
 

@@ -11,28 +11,28 @@ type URLPrefix string
 
 const (
 	// SourceType constants
-	HOST    SourceType = "host"
-	CLUSTER SourceType = "cluster"
+	HostType    SourceType = "host"
+	ClusterType SourceType = "cluster"
 
 	// ModType constants
-	COPY ModType = "copy"
-	SET  ModType = "set"
+	Copy ModType = "copy"
+	Set  ModType = "set"
 
 	// SelectType constants
-	EQUALS SelectType = "equals"
+	Equals SelectType = "equals"
 
 	// As constants
-	VALUE         As = "value"
-	VALUESTR      As = "value-str"
-	VALUESTRSHORT As = "value-str-short"
+	Value         As = "value"
+	ValueStr      As = "value-str"
+	ValueStrShort As = "value-str-short"
 
-	OIDVALUE         As = "oid.value"
-	OIDVALUESTR      As = "oid.value-str"
-	OIDVALUESTRSHORT As = "oid.value-str-short"
+	OidValue         As = "oid.value"
+	OidValueStr      As = "oid.value-str"
+	OidValueStrShort As = "oid.value-str-short"
 
 	// OnError constants
-	SEND OnError = "send"
-	DROP OnError = "drop"
+	Send OnError = "send"
+	Drop OnError = "drop"
 )
 
 // Represents map of configs from different files in conf.d

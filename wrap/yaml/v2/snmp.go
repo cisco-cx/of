@@ -27,7 +27,6 @@ type Configs snmp_config.V2Config
 
 // Implements snmp v2 config Decoder.
 func (a *Configs) Decode(r io.Reader) error {
-	//return yaml.NewDecoder(r).Decode(a)
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
 		return err
@@ -38,7 +37,6 @@ func (a *Configs) Decode(r io.Reader) error {
 
 // Implements snmp v2 config Encoder.
 func (a *Configs) Encode(w io.Writer) error {
-	//return yaml.NewEncoder(w).Encode(a)
 	data, err := yaml.Marshal(a)
 	if err != nil {
 		return err
