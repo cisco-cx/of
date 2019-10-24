@@ -42,7 +42,7 @@ func (mib *MibRegistry) Mib(oid string) of.Mib {
 
 // Return the last node to its name. Ex: 1.3.6.1.2.1.11.19 -> snmpInTraps.
 func (mib *MibRegistry) ShortString(oid string) string {
-	return mib.regs[oid].Name
+	return mib.Mib(oid).Name
 }
 
 // Return display string for given OID.
@@ -56,27 +56,23 @@ func (mib *MibRegistry) String(oid string) string {
 
 func (mib *MibRegistry) getStrOid(oid string) []string {
 	mibReg := mib.Mib(oid)
+	if len(mibReg.Name) > 0 {
+		idx := strings.LastIndex(oid, ".")
+		if idx == -1 {
+			return []string{mibReg.Name}
+		}
+
+		strOid := mib.getStrOid(oid[:idx])
+		return append(strOid, mibReg.Name)
+	}
+
 	idx := strings.LastIndex(oid, ".")
 	if idx == -1 {
-		// if first oid element is not loaded then empty string to display
-		if len(mibReg.Name) <= 0 {
-			return []string{}
-		}
-		return []string{mibReg.Name}
+		return []string{oid}
 	}
 
 	strOid := mib.getStrOid(oid[:idx])
-	if len(strOid) <= 0 {
-		return []string{}
-	}
-
-	// if not loaded but previous elements then we show the best effort
-	// e.g. 1st-Name.2nd-Name.5.6. See tests for more examples
-	name := mibReg.Name
-	if len(name) <= 0 {
-		name = oid[idx+1:]
-	}
-	return append(strOid, name)
+	return append(strOid, oid[idx+1:])
 }
 
 // Load given map[oid]Mib into registry.
