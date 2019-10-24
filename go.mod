@@ -31,7 +31,7 @@ require (
 	golang.org/x/sys v0.0.0-20190919044723-0c1ff786ef13 // indirect
 	golang.org/x/text v0.3.2 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	gopkg.in/yaml.v2 v2.2.2
+	gopkg.in/yaml.v2 v2.2.4
 	gotest.tools v2.2.0+incompatible
 	github.com/cisco-cx/informer v0.0.0-20190919211820-a5093ad9e094
 )

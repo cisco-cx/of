@@ -1,0 +1,97 @@
+package snmp
+
+type SourceType string
+type ModType string
+type SelectType string
+type As string
+type OnError string
+
+type Enabled bool
+type URLPrefix string
+
+const (
+	// SourceType constants
+	HOST    SourceType = "host"
+	CLUSTER SourceType = "cluster"
+
+	// ModType constants
+	COPY ModType = "copy"
+	SET  ModType = "set"
+
+	// SelectType constants
+	EQUALS SelectType = "equals"
+
+	// As constants
+	VALUE         As = "value"
+	VALUESTR      As = "value-str"
+	VALUESTRSHORT As = "value-str-short"
+
+	OIDVALUE         As = "oid.value"
+	OIDVALUESTR      As = "oid.value-str"
+	OIDVALUESTRSHORT As = "oid.value-str-short"
+
+	// OnError constants
+	SEND OnError = "send"
+	DROP OnError = "drop"
+)
+
+// Represents map of configs from different files in conf.d
+// key in the map is the top-level name of the respective configs.
+type V2Config map[string]Config
+
+// Represents version v2 of SNMP config
+type Config struct {
+	Defaults Default `yaml:"defaults,omitempty"`
+	Alerts   []Alert `yaml:"alerts,omitempty"`
+}
+
+// Represents Default attributes to be addded to Labels and Annotations.
+type Default struct {
+	Enabled            Enabled            `yaml:"enabled,omitempty"`
+	SourceType         SourceType         `yaml:"source_type,omitempty"`
+	Clusters           map[string]Cluster `yaml:"clusters,omitempty"`
+	GeneratorUrlPrefix URLPrefix          `yaml:"generator_url_prefix,omitempty"`
+	LabelMods          []Mod              `yaml:"label_mods,omitempty"`
+	AnnotationMods     []Mod              `yaml:"annotation_mods,omitempty"`
+}
+
+// Maps IPaddresses to there cluster name.
+type Cluster struct {
+	SourceAddresses []string `yaml:"source_addresses,omitempty"`
+}
+
+// Represents
+type Mod struct {
+	Type ModType `yaml:"type,omitempty"`
+
+	// Set specific keys
+	Key   string `yaml:"key,omitempty"`
+	Value string `yaml:"value,omitempty"`
+
+	// Copy specific keys
+	Oid     string            `yaml:"oid,omitempty"` // OID can be replaced with Key while removing SNMP specific details from v2 config.
+	As      As                `yaml:"as,omitempty"`
+	ToKey   string            `yaml:"to_key,omitempty"`
+	OnError OnError           `yaml:"on_error,omitempty"`
+	Map     map[string]string `yaml:"map,omitempty"`
+}
+
+// Represents an alert group under v2 config
+type Alert struct {
+	Name               string              `yaml:"name,omitempty"`
+	Enabled            Enabled             `yaml:"enabled,omitempty"`
+	GeneratorUrlPrefix URLPrefix           `yaml:"generator_url_prefix,omitempty"`
+	LabelMods          []Mod               `yaml:"label_mods,omitempty"`
+	AnnotationMods     []Mod               `yaml:"annotation_mods,omitempty"`
+	Firing             map[string][]Select `yaml:"firing,omitempty"`
+	Clearing           map[string][]Select `yaml:"clearing,omitempty"`
+}
+
+// Represents the alert selection criteria.
+type Select struct {
+	Type           SelectType `yaml:"type,omitempty"`
+	Oid            string     `yaml:"oid,omitempty"` // OID can be replaced with Key while removing SNMP specific details from v2 config.
+	As             As         `yaml:"as,omitempty"`
+	Values         []string   `yaml:"values,omitempty"`
+	AnnotationMods []Mod      `yaml:"annotation_mods,omitempty"`
+}
