@@ -7,6 +7,15 @@ platform:
   arch: amd64
 
 steps:
+- name: run_unittests
+  image: golang:1.13.1-stretch
+  when:
+    event:
+      - pull_request
+      - push
+  commands:
+    - make test
+
 - name: of_PR
   image: plugins/gcr
   settings:
@@ -47,5 +56,9 @@ steps:
   when:
     status:
     - failure
+    ref:
+    - refs/heads/master
+    - refs/tags/*
+
 
 ...
