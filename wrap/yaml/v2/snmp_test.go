@@ -28,7 +28,6 @@ import (
 // Sample EPC config with comments removed for comparison.
 var yamlContent = `epc:
   defaults:
-    enabled: true
     source_type: host
     generator_url_prefix: http://www.oid-info.com/get/
     label_mods:
@@ -113,7 +112,7 @@ var yamlContent = `epc:
 var expectedCfg = yaml.Configs{
 	"epc": snmp_config.Config{
 		Defaults: snmp_config.Default{
-			Enabled:            true,
+			Enabled:            nil,
 			SourceType:         snmp_config.HostType,
 			GeneratorUrlPrefix: "http://www.oid-info.com/get/",
 			LabelMods: []snmp_config.Mod{
@@ -154,7 +153,7 @@ var expectedCfg = yaml.Configs{
 		Alerts: []snmp_config.Alert{
 			snmp_config.Alert{
 				Name:    "starCard",
-				Enabled: true,
+				Enabled: func() *bool { b := true; return &b }(),
 				LabelMods: []snmp_config.Mod{
 					snmp_config.Mod{
 						Type:  snmp_config.Set,

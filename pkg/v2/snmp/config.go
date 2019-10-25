@@ -6,7 +6,7 @@ type SelectType string
 type As string
 type OnError string
 
-type Enabled bool
+type Enabled *bool // Need *bool to differentiate between Enabled being set to false and not being defined in config.
 type URLPrefix string
 
 const (
