@@ -13,9 +13,6 @@ const (
 	// Mod errors.
 	ErrInvalidOperation = Error("Operation not possible for given Mod.")
 	ErrKeyMissing       = Error("Key missing in mod.")
-
-	// Concatenate errors.
-	ErrPathIsNotDir = Error("Path is not a directory.")
 )
 
 // Error represents an OF error.

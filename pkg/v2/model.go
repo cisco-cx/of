@@ -17,25 +17,18 @@ package v2
 // This package represents snmptrap data.
 
 type Agent struct {
-	Hostname string `json:"hostname,omitempty"`
-
-	Id string `json:"id,omitempty"`
-
-	EphemeralId string `json:"ephemeral_id,omitempty"`
-
-	Type string `json:"type,omitempty"`
-
-	Version string `json:"version,omitempty"`
+	Hostname    string `json:"hostname,omitempty"`
+	ID          string `json:"id,omitempty"`
+	EphemeralID string `json:"ephemeral_id,omitempty"`
+	Type        string `json:"type,omitempty"`
+	Version     string `json:"version,omitempty"`
 }
 
 type AppStatus struct {
-	ApiVersion string `json:"apiVersion"`
-
-	Description string `json:"description"`
-
-	Links AppStatusLinks `json:"links"`
-
-	Status string `json:"status"`
+	ApiVersion  string         `json:"apiVersion"`
+	Description string         `json:"description"`
+	Links       AppStatusLinks `json:"links"`
+	Status      string         `json:"status"`
 }
 
 type AppStatusLinks struct {
@@ -43,11 +36,9 @@ type AppStatusLinks struct {
 }
 
 type Document struct {
-	ApiVersion string `json:"apiVersion,omitempty"`
-
-	Kind string `json:"kind,omitempty"`
-
-	Receipts Receipts `json:"receipts,omitempty"`
+	ApiVersion string   `json:"apiVersion,omitempty"`
+	Kind       string   `json:"kind,omitempty"`
+	Receipts   Receipts `json:"receipts,omitempty"`
 }
 
 type Ecs struct {
@@ -55,21 +46,14 @@ type Ecs struct {
 }
 
 type Filebeat struct {
-	Agent Agent `json:"agent,omitempty"`
-
-	Ecs Ecs `json:"ecs,omitempty"`
-
-	Input PostableEventInput `json:"input,omitempty"`
-
-	Host Host `json:"host,omitempty"`
-
-	Log Log `json:"log,omitempty"`
-
-	Message string `json:"message,omitempty"`
-
-	Version string `json:"@version,omitempty"`
-
-	Timestamp string `json:"@timestamp,omitempty"`
+	Agent     Agent              `json:"agent,omitempty"`
+	Ecs       Ecs                `json:"ecs,omitempty"`
+	Input     PostableEventInput `json:"input,omitempty"`
+	Host      Host               `json:"host,omitempty"`
+	Log       Log                `json:"log,omitempty"`
+	Message   string             `json:"message,omitempty"`
+	Version   string             `json:"@version,omitempty"`
+	Timestamp string             `json:"@timestamp,omitempty"`
 }
 
 type Host struct {
@@ -77,9 +61,8 @@ type Host struct {
 }
 
 type Log struct {
-	Offset int32 `json:"offset,omitempty"`
-
-	File LogFile `json:"file,omitempty"`
+	Offset int32   `json:"offset,omitempty"`
+	File   LogFile `json:"file,omitempty"`
 }
 
 type LogFile struct {
@@ -91,27 +74,17 @@ type Logstash struct {
 }
 
 type PostableEvent struct {
-	Agent Agent `json:"agent,omitempty"`
-
-	ApiVersion string `json:"apiVersion,omitempty"`
-
-	Document Document `json:"document,omitempty"`
-
-	Ecs Ecs `json:"ecs,omitempty"`
-
-	Input PostableEventInput `json:"input,omitempty"`
-
-	Host Host `json:"host,omitempty"`
-
-	Log Log `json:"log,omitempty"`
-
-	Message string `json:"message,omitempty"`
-
-	Version string `json:"@version,omitempty"`
-
-	Tags []string `json:"tags,omitempty"`
-
-	Timestamp string `json:"@timestamp,omitempty"`
+	Agent      Agent              `json:"agent,omitempty"`
+	ApiVersion string             `json:"apiVersion,omitempty"`
+	Document   Document           `json:"document,omitempty"`
+	Ecs        Ecs                `json:"ecs,omitempty"`
+	Input      PostableEventInput `json:"input,omitempty"`
+	Host       Host               `json:"host,omitempty"`
+	Log        Log                `json:"log,omitempty"`
+	Message    string             `json:"message,omitempty"`
+	Version    string             `json:"@version,omitempty"`
+	Tags       []string           `json:"tags,omitempty"`
+	Timestamp  string             `json:"@timestamp,omitempty"`
 }
 
 type PostableEventInput struct {
@@ -119,39 +92,28 @@ type PostableEventInput struct {
 }
 
 type Receipts struct {
-	Filebeat Filebeat `json:"filebeat,omitempty"`
-
-	Logstash Logstash `json:"logstash,omitempty"`
-
+	Filebeat  Filebeat  `json:"filebeat,omitempty"`
+	Logstash  Logstash  `json:"logstash,omitempty"`
 	Snmptrapd Snmptrapd `json:"snmptrapd,omitempty"`
 }
 
 type Snmptrapd struct {
-	Timestamp string `json:"timestamp,omitempty"`
-
-	Source TrapSource `json:"source,omitempty"`
-
-	Vars []TrapVar `json:"vars,omitempty"`
-
-	PduSecurity string `json:"pduSecurity,omitempty"`
+	Timestamp   string     `json:"timestamp,omitempty"`
+	Source      TrapSource `json:"source,omitempty"`
+	Vars        []TrapVar  `json:"vars,omitempty"`
+	PduSecurity string     `json:"pduSecurity,omitempty"`
 }
 
 type TrapSource struct {
-	Address string `json:"address"`
-
-	Hostname string `json:"hostname"`
-
-	InternetLayerProtocol string `json:"internetLayerProtocol"`
-
-	Port string `json:"port"`
-
+	Address                string `json:"address"`
+	Hostname               string `json:"hostname"`
+	InternetLayerProtocol  string `json:"internetLayerProtocol"`
+	Port                   string `json:"port"`
 	TransportLayerProtocol string `json:"transportLayerProtocol"`
 }
 
 type TrapVar struct {
 	Value string `json:"value"`
-
-	Type string `json:"type"`
-
-	Oid string `json:"oid"`
+	Type  string `json:"type"`
+	Oid   string `json:"oid"`
 }
