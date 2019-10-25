@@ -7,6 +7,9 @@ const (
 	ErrUnknownAs        = Error("Unknown v2.snmp.As type.")
 	ErrNoneNumericalOID = Error("Numerical OID expected..")
 
+	// Concatenate errors.
+	ErrPathIsNotDir = Error("Path is not a directory.")
+
 	// Mod errors.
 	ErrInvalidOperation = Error("Operation not possible for given Mod.")
 	ErrKeyMissing       = Error("Key missing in mod.")
