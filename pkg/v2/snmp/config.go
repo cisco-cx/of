@@ -5,6 +5,7 @@ type ModType string
 type SelectType string
 type As string
 type OnError string
+type EventType string
 
 type Enabled *bool // Need *bool to differentiate between Enabled being set to false and not being defined in config.
 type URLPrefix string
@@ -33,6 +34,11 @@ const (
 	// OnError constants
 	Send OnError = "send"
 	Drop OnError = "drop"
+
+	// EventType constants
+	Firing        EventType = "error"
+	Clearing      EventType = "clear"
+	EventTypeText string    = "event_type"
 )
 
 // Represents map of configs from different files in conf.d

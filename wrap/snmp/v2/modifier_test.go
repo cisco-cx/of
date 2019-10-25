@@ -94,7 +94,7 @@ func TestModCopyWithMap(t *testing.T) {
 		ToKey: "OidValueStrShort",
 		As:    of_snmp.OidValueStrShort,
 		Map: map[string]string{
-			"Found in map": "oid5",
+			"oid5": "Found in map",
 		},
 	}
 

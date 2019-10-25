@@ -77,14 +77,11 @@ func (m *Modifier) Copy(mod of_snmp.Mod) error {
 		return nil
 	}
 
-	// Check if value is in map,
-	for k, v := range mod.Map {
-
-		// copy key in map, if value is present in the map.
-		if v == value {
-			(*m.Map)[mod.ToKey] = k
-			return nil
-		}
+	// Check if value is a key in map,
+	if v, ok := mod.Map[value]; ok == true {
+		(*m.Map)[mod.ToKey] = v
+		return nil
 	}
+
 	return nil
 }

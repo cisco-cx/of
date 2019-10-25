@@ -13,6 +13,11 @@ const (
 	// Mod errors.
 	ErrInvalidOperation = Error("Operation not possible for given Mod.")
 	ErrKeyMissing       = Error("Key missing in mod.")
+
+	// Alert Generator errors.
+	ErrConfigNotFound   = Error("Unknown config.")
+	ErrNoMatch          = Error("No alert matched in alert config.")
+	ErrUnknownEventType = Error("Unknown event type specified.")
 )
 
 // Error represents an OF error.
