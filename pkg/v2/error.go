@@ -1,10 +1,15 @@
 package v2
 
-// Value errors.
 const (
+
+	// Value errors.
 	ErrOIDNotFound      = Error("OID not present in trap vars.")
 	ErrUnknownAs        = Error("Unknown v2.snmp.As type.")
 	ErrNoneNumericalOID = Error("Numerical OID expected..")
+
+	// Mod errors.
+	ErrInvalidOperation = Error("Operation not possible for given Mod.")
+	ErrKeyMissing       = Error("Key missing in mod.")
 )
 
 // Error represents an OF error.
