@@ -1,10 +1,14 @@
 package v2
 
-// Value errors.
 const (
+
+	// Value errors.
 	ErrOIDNotFound      = Error("OID not present in trap vars.")
 	ErrUnknownAs        = Error("Unknown v2.snmp.As type.")
 	ErrNoneNumericalOID = Error("Numerical OID expected..")
+
+	// Concatenate errors.
+	ErrPathIsNotDir = Error("Path is not a directory.")
 )
 
 // Error represents an OF error.

@@ -60,7 +60,7 @@ type Cluster struct {
 	SourceAddresses []string `yaml:"source_addresses,omitempty"`
 }
 
-// Represents
+// Represents a mod operation to be preformed on labels and annotations.
 type Mod struct {
 	Type ModType `yaml:"type,omitempty"`
 

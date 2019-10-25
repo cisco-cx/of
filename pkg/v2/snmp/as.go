@@ -1,5 +1,6 @@
 package snmp
 
+// Interface to handle different types of MIB resolutions.
 type ValueGenerator interface {
 	ValueAs(string, As) (string, error)      // Compute value as `As` for given OID.
 	Value(string) (string, error)            // Literal value for given OID.

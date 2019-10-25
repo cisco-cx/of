@@ -1,0 +1,102 @@
+epc:
+  defaults:
+    enabled: false  # This is possible. The default value is true if undefined.
+    source_type: host  # (host|cluster)...
+      # if cluster, you must define defaults.clusters.
+    generator_url_prefix: http://www.oid-info.com/get/
+      # numerical OID is appended automatically
+    label_mods:
+      # Allows promotion from snmpTrapOID information to labels.
+      # You cannot promote from annotations to labels.
+    - type: set
+      key: vendor
+      value: cisco
+    - type: set
+      key: subsystem
+      value: epc
+    - type: copy
+      oid: .1.3.6.1.4.1.8164.1.2.1.1.1 # starSlotNum.
+        # http://oid-info.com/get/1.3.6.1.4.1.8164.1.2.1.1.1
+      as: value
+      to_key: star_slot_num
+      on_error: continue  # (continue|break)
+        # default is to break.
+        # continue is to ignore the error and proceed.
+        # log level determines if continue is logged.
+    annotation_mods:
+    - type: copy
+      oid: .1.3.6.1.6.1.1.1.4.1 # snmpTrapOID
+      as: value
+      to_key: event_oid
+    - type: copy
+      oid: .1.3.6.1.6.1.1.1.4.1 # snmpTrapOID
+      as: value.oid-str-short
+      to_key: event_name
+    # The service automatically sets annotations.event_type
+    # For firing events, annotations.event_type='firing'
+    # For clearing events, annotations.event_type='clearing'
+    # to_key: event_type
+  alerts:
+  - name: starCard
+    enabled: false  # The default value is true if undefined.
+    label_mods:
+      # Allows promotion from snmpTrapOID information to labels.
+      # You cannot promote from annotations to labels.
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1 # snmpTrapOID
+        as: value
+        values:  # this is always an implicit OR
+        - .1.3.6.1.4.1.8164.2.13  # starCardMismatch
+        - .1.3.6.1.4.1.8164.2.4   # starCardRebootRequest
+        - .1.3.6.1.4.1.8164.2.7   # starCardRemoved
+      annotation_mods: []  # this is allowed
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1 # snmpTrapOID
+        as: value
+        values:  # this is always an implicit OR
+        - .1.3.6.1.4.1.8164.2.5   # starCardUp
+        - .1.3.6.1.4.1.8164.2.55  # starCardActive
+      annotation_mods: []  # this is allowed
+  - name: starCardBootFailed
+    label_mods:
+      # Allows promotion from snmpTrapOID information to labels.
+      # You cannot promote from annotations to labels.
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1 # snmpTrapOID
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.9   # starCardBootFailed
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1 # snmpTrapOID
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5   # starCardUp
+        - .1.3.6.1.4.1.8164.2.55  # starCardActive
+  - name: starCardActive
+    label_mods:
+      # Allows promotion from snmpTrapOID information to labels.
+      # You cannot promote from annotations to labels.
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1 # snmpTrapOID
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.55  # starCardActive

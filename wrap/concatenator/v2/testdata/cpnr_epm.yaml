@@ -1,0 +1,134 @@
+cpnr_epm:
+  defaults:
+    source_type: cluster   # (host|cluster)...
+      # if cluster, you must define defaults.clusters.
+    clusters:
+      nso1.example.org:  # cluster_name
+        source_addresses:
+        - 192.168.1.28
+        - dead:beef::1
+    generator_url_prefix: http://www.oid-info.com/get/
+      # numerical OID is appended automatically
+    label_mods:
+      # Allows promotion from snmpTrapOID information to labels.
+      # You cannot promote from annotations to labels.
+    - type: set
+      key: vendor
+      value: cisco
+    - type: set
+      key: subsystem
+      value: cpnr-epm
+    - type: copy
+      oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.9  # cenAlarmCategory
+        # CHECK: A lack of documentation leads us to assume that
+        #  cenAlarmCategory is a 'fault_code'.
+      as: value
+      to_key: alertname
+      map:  ## is non null, so we're looking up in a map
+        # CHECK: Values not real.  Update when documentation located.
+        0: AlertName1
+        1: AlertName2
+    - type: copy
+      oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.9  # cenAlarmCategory
+        # CHECK: A lack of documentation leads us to assume that
+        #  cenAlarmCategory is a 'fault_code'.
+      as: value
+      to_key: alert_severity
+      map:  ## is non null, so we're looking up in a map
+        # CHECK: Values not real.  Update when documentation located.
+        0: major # AlertName1
+        1: minor # AlertName2
+    - type: copy
+      oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.5  # cenAlarmInstanceID
+        # CHECK: MIB says "The Unique Alarm Instance ID".  Seems like a UUID.
+        # This field uniquely identifies an alarm instance
+      as: value
+      to_key: alarm_id
+    annotation_mods:
+    - type: copy
+      oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.7  # cenAlarmStatusDefinition
+        # https://github.com/cisco-kusanagi/mibs.snmplabs.com/blob/master/asn1/CISCO-EPM-NOTIFICATION-MIB#L254
+        # The MIB says: The string is formatted in
+        #   '<integer>,<alarmStatus description>' tuples.
+        # We include this OID instead of cenAlarmStatus,
+        #   which is in undecodable integer.
+        # If we receive the documentation, we may use cenAlarmStatus instead.
+      as: value
+      to_key: alarm_status_definition
+    - type: copy
+      oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.10  # cenAlarmCategoryDefinition
+        # https://github.com/cisco-kusanagi/mibs.snmplabs.com/blob/master/asn1/CISCO-EPM-NOTIFICATION-MIB#L299
+        # The MIB says: The String is formatted in
+        #   '<integer>,<alarmCategory description>' tuples.
+        # We include this OID instead of cenAlarmStatus,
+        #   which is in undecodable integer.
+        # If we receive the documentation, we may use cenAlarmStatus instead.
+      as: value
+      to_key: alarm_category_definition
+    - type: copy
+      oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.12  # cenAlarmServerAddress
+        # https://github.com/cisco-kusanagi/mibs.snmplabs.com/blob/master/asn1/CISCO-EPM-NOTIFICATION-MIB#L322
+        # The sender of THIS trap is sending the trap on behalf of the
+        #   entity represented by cenAlarmServerAddress.
+      as: value
+      to_key: alarm_server_address
+    - type: copy
+      oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.13  # cenAlarmManagedObjectClass
+         # https://github.com/cisco-kusanagi/mibs.snmplabs.com/blob/master/asn1/CISCO-EPM-NOTIFICATION-MIB#L331
+         # For example, Router, Switch, GateKeeper and VoicePort
+      as: value
+      to_key: alarm_managed_object_class
+    - type: copy
+      oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.15  # cenAlarmManagedObjectAddress
+        # https://github.com/cisco-kusanagi/mibs.snmplabs.com/blob/master/asn1/CISCO-EPM-NOTIFICATION-MIB#L322
+        # The sender of THIS trap is sending the trap on behalf of the
+        #   entity represented by cenAlarmServerAddress.  The
+        #   cenAlarmServeraddress is monitoring the entity represented by
+        #   cenAlarmManagedObjectAddress.
+      as: value
+      to_key: alarm_managed_object_address
+    # The service automatically sets annotations.event_type
+    # For firing events, annotations.event_type='firing'
+    # For clearing events, annotations.event_type='clearing'
+    # to_key: event_type
+  alerts:
+  - name: null  # Auto-set by default.label_mods, need not define
+    label_mods: []
+      # allow promotion from snmpTrapOID information to labels
+      # You cannot promote from annotations to labels.
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1 # snmpTrapOID
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.311.0.2  # ciscoEpmNotificationAlarmRev1
+      - type: equals
+        oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.17   #  cenAlarmSeverity
+          # CHECK: Assuming that a specific alarm instance's cenAlarmSeverity
+          #   changes over the lifecycle of the specific alarm
+        as: value
+        values:
+        # CHECK: Values not real.  Update when documentation located.
+        - 3 # minor
+        - 4 # major
+        - 5 # critical
+      annotation_mods: []
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1 # snmpTrapOID
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.311.0.2  # ciscoEpmNotificationAlarmRev1
+      - type: equals
+        oid: .1.3.6.1.4.1.9.9.311.1.1.2.1.17   #  cenAlarmSeverity
+          # CHECK: Assuming that a specific alarm instance's cenAlarmSeverity
+          #   changes over the lifecycle of the specific alarm
+        as: value
+        values:
+        # CHECK: Values not real.  Update when documentation located.
+        - 0 # clear
+        - 1 # informational
+        - 2 # warning
+      annotation_mods: []
