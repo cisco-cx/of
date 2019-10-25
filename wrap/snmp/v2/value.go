@@ -4,20 +4,19 @@ import (
 	"strconv"
 	"strings"
 
-	v1 "github.com/cisco-cx/of/pkg/v1"
-	v2 "github.com/cisco-cx/of/pkg/v2"
-	snmp "github.com/cisco-cx/of/pkg/v2/snmp"
-	mib_registry "github.com/cisco-cx/of/wrap/mib/v1"
+	of "github.com/cisco-cx/of/pkg/v2"
+	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
+	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
 )
 
-// Implements snmp.ValueGenerator
+// Implements of_snmp.ValueGenerator
 type Value struct {
 	vars map[string]string
 	mr   *mib_registry.MibRegistry
 }
 
 // Initialize Value. trapVars are converted into a map[oid]value
-func NewValue(trapVars *[]v1.TrapVar, mr *mib_registry.MibRegistry) *Value {
+func NewValue(trapVars *[]of.TrapVar, mr *mib_registry.MibRegistry) *Value {
 	vars := make(map[string]string)
 	for _, v := range *trapVars {
 		vars[v.Oid] = v.Value
@@ -26,26 +25,26 @@ func NewValue(trapVars *[]v1.TrapVar, mr *mib_registry.MibRegistry) *Value {
 }
 
 // Compute value as `As` for given OID.
-func (v *Value) ValueAs(oid string, as snmp.As) (string, error) {
+func (v *Value) ValueAs(oid string, as of_snmp.As) (string, error) {
 
 	var val string = ""
 	var err error = nil
 	// As constants
 	switch as {
-	case snmp.Value:
+	case of_snmp.Value:
 		val, err = v.Value(oid)
-	case snmp.ValueStr:
+	case of_snmp.ValueStr:
 		val, err = v.ValueStr(oid)
-	case snmp.ValueStrShort:
+	case of_snmp.ValueStrShort:
 		val, err = v.ValueStrShort(oid)
-	case snmp.OidValue:
+	case of_snmp.OidValue:
 		val, err = v.OIDValue(oid)
-	case snmp.OidValueStr:
+	case of_snmp.OidValueStr:
 		val, err = v.OIDValueStr(oid)
-	case snmp.OidValueStrShort:
+	case of_snmp.OidValueStrShort:
 		val, err = v.OIDValueStrShort(oid)
 	default:
-		err = v2.ErrUnknownAs
+		err = of.ErrUnknownAs
 	}
 	return val, err
 }
@@ -55,7 +54,7 @@ func (v *Value) Value(oid string) (string, error) {
 	var val string
 	var ok bool
 	if val, ok = v.vars[oid]; ok == false {
-		return val, v2.ErrOIDNotFound
+		return val, of.ErrOIDNotFound
 	}
 	return val, nil
 }
@@ -115,12 +114,12 @@ func (v *Value) numOid(oid string) (string, error) {
 	}
 	nodes := strings.Split(val, ".")[1:]
 	if len(nodes) <= 1 {
-		return val, v2.ErrNoneNumericalOID
+		return val, of.ErrNoneNumericalOID
 	}
 	for _, n := range nodes {
 		_, err = strconv.ParseInt(n, 10, 0)
 		if err != nil {
-			return val, v2.ErrNoneNumericalOID
+			return val, of.ErrNoneNumericalOID
 		}
 	}
 	return val, nil

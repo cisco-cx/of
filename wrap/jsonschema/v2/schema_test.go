@@ -1,4 +1,4 @@
-package v1_test
+package v2_test
 
 import (
 	"io/ioutil"
@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	of "github.com/cisco-cx/of/pkg/v1"
-	js "github.com/cisco-cx/of/wrap/jsonschema/v1"
+	of "github.com/cisco-cx/of/pkg/v2"
+	js "github.com/cisco-cx/of/wrap/jsonschema/v2"
 )
 
 var schemaBytes = []byte(`{

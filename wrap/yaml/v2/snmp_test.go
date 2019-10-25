@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v1_test
+package v2_test
 
 import (
 	"bytes"
@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	of "github.com/cisco-cx/of/pkg/v1"
+	of "github.com/cisco-cx/of/pkg/v2"
 	snmp_config "github.com/cisco-cx/of/pkg/v2/snmp"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v2"
 )

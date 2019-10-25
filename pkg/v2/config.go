@@ -14,37 +14,14 @@
 
 package v2
 
-import (
-	"bytes"
-	"io"
-	"io/ioutil"
+import "io"
 
-	"gopkg.in/yaml.v2"
-	snmp_config "github.com/cisco-cx/of/pkg/v2/snmp"
-)
-
-type Configs snmp_config.V2Config
-
-// Implements snmp v2 config Decoder.
-func (a *Configs) Decode(r io.Reader) error {
-	data, err := ioutil.ReadAll(r)
-	if err != nil {
-		return err
-	}
-
-	return yaml.Unmarshal(data, a)
+// Decode configs in *_config.go
+type Decoder interface {
+	Decode(io.Reader) error
 }
 
-// Implements snmp v2 config Encoder.
-func (a *Configs) Encode(w io.Writer) error {
-	data, err := yaml.Marshal(a)
-	if err != nil {
-		return err
-	}
-	r := bytes.NewReader(data)
-	if _, err = io.Copy(w, r); err != nil {
-		return err
-	}
-
-	return nil
+// Encode configs in *_config.go
+type Encoder interface {
+	Encode(io.Writer) error
 }
