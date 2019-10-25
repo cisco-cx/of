@@ -240,9 +240,6 @@ func TestModMissingKey(t *testing.T) {
 	require.Error(t, err)
 }
 
-func modData() {
-}
-
 // Initialize snmp.Value.
 func newValueModifier(t *testing.T) *snmp.Value {
 	return snmp.NewValue(trapVars(), mibRegistry(t))
