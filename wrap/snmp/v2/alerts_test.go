@@ -46,13 +46,14 @@ func TestAlertFire(t *testing.T) {
 	expectedAlert := []of.Alert{
 		of.Alert{
 			Labels: map[string]string{
-				"alert_name":      "starCard",
-				"alert_severity":  "error",
-				"source_address":  "192.168.1.28",
-				"source_hostname": "localhost",
-				"star_slot_num":   "14",
-				"subsystem":       "epc",
-				"vendor":          "cisco",
+				"alert_name":        "starCard",
+				"alert_severity":    "error",
+				"source_address":    "192.168.1.28",
+				"source_hostname":   "localhost",
+				"star_slot_num":     "14",
+				"subsystem":         "epc",
+				"vendor":            "cisco",
+				"alert_fingerprint": "39a7842eabe0437a",
 			},
 			Annotations: map[string]string{
 				"alert_name":      "starCard",
@@ -97,12 +98,13 @@ func TestAlertClear(t *testing.T) {
 
 	expectedAlert := of.Alert{
 		Labels: map[string]string{
-			"alert_severity":  "error",
-			"alertname":       "nsoPackageLoadFailure",
-			"source_address":  "nso1.example.org",
-			"source_hostname": "nso1.example.org",
-			"subsystem":       "nso",
-			"vendor":          "cisco",
+			"alert_severity":    "error",
+			"alertname":         "nsoPackageLoadFailure",
+			"source_address":    "nso1.example.org",
+			"source_hostname":   "nso1.example.org",
+			"subsystem":         "nso",
+			"alert_fingerprint": "362a7c9e679338f1",
+			"vendor":            "cisco",
 		},
 		Annotations: map[string]string{
 			"alert_severity":  "error",

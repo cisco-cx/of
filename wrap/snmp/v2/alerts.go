@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	prommodel "github.com/prometheus/common/model"
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
@@ -139,6 +140,9 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 		}
 	}
 
+	// Finger print the alert.
+	fingerprint := a.fingerprint(alert)
+	alert.Labels[of_snmp.FingerprintText] = fingerprint
 	return alert, nil
 }
 
@@ -301,4 +305,13 @@ func (a *Alerter) enabled(defEnabled *bool, alertEnabled *bool) bool {
 
 	// If defEnabled is true.
 	return *alertEnabled
+}
+
+// Fingerprint the alert.
+func (a *Alerter) fingerprint(al of.Alert) string {
+	labels := make(prommodel.LabelSet)
+	for k, v := range al.Labels {
+		labels[prommodel.LabelName(k)] = prommodel.LabelValue(v)
+	}
+	return labels.Fingerprint().String()
 }

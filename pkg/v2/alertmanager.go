@@ -64,8 +64,3 @@ type PostAlertsParams struct {
 	Context    context.Context
 	HTTPClient *http.Client
 }
-
-// Interface for fingerprinting alerts.
-type Fingerprinter interface {
-	Fingerprint() string
-}

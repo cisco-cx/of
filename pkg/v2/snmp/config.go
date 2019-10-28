@@ -35,10 +35,11 @@ const (
 	Send OnError = "send"
 	Drop OnError = "drop"
 
-	// EventType constants
-	Firing        EventType = "error"
-	Clearing      EventType = "clear"
-	EventTypeText string    = "event_type"
+	// Alert related constants
+	Firing          EventType = "error"
+	Clearing        EventType = "clear"
+	EventTypeText   string    = "event_type"
+	FingerprintText string    = "alert_fingerprint"
 )
 
 // Represents map of configs from different files in conf.d
