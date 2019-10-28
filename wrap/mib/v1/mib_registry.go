@@ -22,12 +22,12 @@ import (
 )
 
 type MibRegistry struct {
-	regs  map[string]of.Mib
+	regs  map[string]*of.Mib
 	index map[string][]string
 }
 
 func New() *MibRegistry {
-	regs := make(map[string]of.Mib)
+	regs := make(map[string]*of.Mib)
 	index := make(map[string][]string)
 	return &MibRegistry{
 		regs:  regs,
@@ -36,13 +36,16 @@ func New() *MibRegistry {
 }
 
 // Return Mib for given OID.
-func (mib *MibRegistry) Mib(oid string) of.Mib {
+func (mib *MibRegistry) Mib(oid string) *of.Mib {
 	return mib.regs[oid]
 }
 
 // Return the last node to its name. Ex: 1.3.6.1.2.1.11.19 -> snmpInTraps.
 func (mib *MibRegistry) ShortString(oid string) string {
-	return mib.Mib(oid).Name
+	if r := mib.Mib(oid); r != nil {
+		return r.Name
+	}
+	return ""
 }
 
 // Return display string for given OID.
@@ -56,7 +59,7 @@ func (mib *MibRegistry) String(oid string) string {
 
 func (mib *MibRegistry) getStrOid(oid string) []string {
 	mibReg := mib.Mib(oid)
-	if len(mibReg.Name) > 0 {
+	if mibReg != nil {
 		idx := strings.LastIndex(oid, ".")
 		if idx == -1 {
 			return []string{mibReg.Name}
@@ -81,7 +84,9 @@ func (mib *MibRegistry) Load(src map[string]of.Mib) error {
 		if len(v.Name) <= 0 {
 			return of.Error(fmt.Sprintf("Name can't be empty: '%+v'", v))
 		}
-		mib.regs[k] = v
+		v_copy_ptr := new(of.Mib)
+		*v_copy_ptr = v
+		mib.regs[k] = v_copy_ptr
 	}
 	return nil
 }
