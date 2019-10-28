@@ -21,53 +21,53 @@ import (
 	of "github.com/cisco-cx/of/pkg/v1"
 )
 
-// MibRegistry keeps the data for building the (OID, strings) map
-type MibRegistry struct {
-	regs  map[string]*of.Mib
+// MIBRegistry keeps the data for building the (OID, strings) map
+type MIBRegistry struct {
+	regs  map[string]*of.MIB
 	index map[string][]string
 }
 
-// Return a new MibRegistry pointer
-func New() *MibRegistry {
-	regs := make(map[string]*of.Mib)
+// Return a new MIBRegistry pointer
+func New() *MIBRegistry {
+	regs := make(map[string]*of.MIB)
 	index := make(map[string][]string)
-	return &MibRegistry{
+	return &MIBRegistry{
 		regs:  regs,
 		index: index,
 	}
 }
 
-// Return Mib for given OID.
-func (mib *MibRegistry) Mib(oid string) *of.Mib {
-	return mib.regs[oid]
+// Return MIB for given OID.
+func (MIB *MIBRegistry) MIB(oid string) *of.MIB {
+	return MIB.regs[oid]
 }
 
 // Return the last node to its name. Ex: 1.3.6.1.2.1.11.19 -> snmpInTraps.
-func (mib *MibRegistry) ShortString(oid string) string {
-	if r := mib.Mib(oid); r != nil {
+func (MIB *MIBRegistry) ShortString(oid string) string {
+	if r := MIB.MIB(oid); r != nil {
 		return r.Name
 	}
 	return ""
 }
 
 // Return display string for given OID.
-func (mib *MibRegistry) String(oid string) string {
-	if value, hasValue := mib.index[oid]; hasValue == true {
+func (MIB *MIBRegistry) String(oid string) string {
+	if value, hasValue := MIB.index[oid]; hasValue == true {
 		return strings.Join(value, ".")
 	}
-	mib.index[oid] = mib.getStrOID(oid)
-	return mib.String(oid)
+	MIB.index[oid] = MIB.getStrOID(oid)
+	return MIB.String(oid)
 }
 
-func (mib *MibRegistry) getStrOID(oid string) []string {
-	mibReg := mib.Mib(oid)
+func (MIB *MIBRegistry) getStrOID(oid string) []string {
+	mibReg := MIB.MIB(oid)
 	if mibReg != nil {
 		idx := strings.LastIndex(oid, ".")
 		if idx == -1 {
 			return []string{mibReg.Name}
 		}
 
-		strOid := mib.getStrOID(oid[:idx])
+		strOid := MIB.getStrOID(oid[:idx])
 		return append(strOid, mibReg.Name)
 	}
 
@@ -76,19 +76,19 @@ func (mib *MibRegistry) getStrOID(oid string) []string {
 		return []string{oid}
 	}
 
-	strOid := mib.getStrOID(oid[:idx])
+	strOid := MIB.getStrOID(oid[:idx])
 	return append(strOid, oid[idx+1:])
 }
 
-// Load given map[oid]Mib into registry.
-func (mib *MibRegistry) Load(src map[string]of.Mib) error {
+// Load given map[oid]MIB into registry.
+func (MIB *MIBRegistry) Load(src map[string]of.MIB) error {
 	for k, v := range src {
 		if len(v.Name) <= 0 {
 			return of.Error(fmt.Sprintf("Name can't be empty: '%+v'", v))
 		}
-		v_copy_ptr := new(of.Mib)
+		v_copy_ptr := new(of.MIB)
 		*v_copy_ptr = v
-		mib.regs[k] = v_copy_ptr
+		MIB.regs[k] = v_copy_ptr
 	}
 	return nil
 }
