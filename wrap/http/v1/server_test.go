@@ -29,7 +29,7 @@ func TestServer(t *testing.T) {
 
 	addr := "localhost:54931"
 
-	c := &of.ACIConfig{ListenAddress: addr}
+	c := &of.HTTPConfig{ListenAddress: addr}
 
 	srv := http.NewServer(c)
 
@@ -47,7 +47,7 @@ func TestServer(t *testing.T) {
 func TestHandleFunc(t *testing.T) {
 	response_text := "HandleFunc called."
 	addr := "localhost:54932"
-	c := &of.ACIConfig{ListenAddress: addr}
+	c := &of.HTTPConfig{ListenAddress: addr}
 
 	srv := http.NewServer(c)
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
@@ -66,7 +66,7 @@ func TestHandleFunc(t *testing.T) {
 // Test http.Handle
 func TestHandle(t *testing.T) {
 	addr := "localhost:54933"
-	c := &of.ACIConfig{ListenAddress: addr}
+	c := &of.HTTPConfig{ListenAddress: addr}
 
 	srv := http.NewServer(c)
 	srv.Handle("/", &testHandler{})

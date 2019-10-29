@@ -16,10 +16,17 @@ package v1
 
 import (
 	"net/http"
+	"time"
 )
 
 type ResponseWriter http.ResponseWriter
 type Request *http.Request
+
+type HTTPConfig struct {
+	ListenAddress string
+	ReadTimeout   time.Duration
+	WriteTimeout  time.Duration
+}
 
 type Server struct {
 	Srv *http.Server

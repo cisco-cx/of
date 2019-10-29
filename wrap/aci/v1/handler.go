@@ -75,7 +75,12 @@ func (h *Handler) Run() {
 		}
 	}()
 
-	h.server = http.NewServer(h.Config)
+	httpConfig := of.HTTPConfig{
+		ListenAddress: h.Config.ListenAddress,
+		ReadTimeout:   h.Config.ACITimeout,
+		WriteTimeout:  h.Config.ACITimeout,
+	}
+	h.server = http.NewServer(&httpConfig)
 
 	h.server.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, h.Config.Version)

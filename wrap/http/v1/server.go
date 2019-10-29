@@ -25,12 +25,12 @@ import (
 type Server of.Server
 
 // Initialize a server.
-func NewServer(config *of.ACIConfig) *Server {
+func NewServer(config *of.HTTPConfig) *Server {
 
 	srv := &http.Server{
 		Addr:         config.ListenAddress,
-		ReadTimeout:  config.ACITimeout,
-		WriteTimeout: config.ACITimeout,
+		ReadTimeout:  config.ReadTimeout,
+		WriteTimeout: config.WriteTimeout,
 	}
 
 	m := http.NewServeMux()

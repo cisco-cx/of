@@ -31,7 +31,7 @@ func TestGet(t *testing.T) {
 func startServer(t *testing.T, server_addr string) *http.Server {
 	response_text := "HandleFunc called."
 
-	c := &of.ACIConfig{ListenAddress: server_addr}
+	c := &of.HTTPConfig{ListenAddress: server_addr}
 
 	srv := http.NewServer(c)
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
