@@ -130,7 +130,7 @@ func newAlerter(t *testing.T) *snmp.Alerter {
 		Configs:  &configs,
 		Receipts: TrapReceipts(),
 		Value:    snmp.NewValue(trapVars(), mr),
-		Mr:       mr,
+		MR:       mr,
 		U:        &uuid.FixedUUID{},
 	}
 }
