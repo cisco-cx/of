@@ -1,6 +1,7 @@
 package v2
 
 import (
+	"encoding/json"
 	"strings"
 	"time"
 
@@ -8,19 +9,24 @@ import (
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
+	mibs "github.com/cisco-cx/of/wrap/mib/v2"
 )
 
 // Implements of_snmp.AlertGenerator
 type Alerter struct {
-	Log     *logger.Logger
-	Configs *of_snmp.V2Config
-	Source  *of.TrapSource
-	Value   *Value
+	Log      *logger.Logger
+	Configs  *of_snmp.V2Config
+	Receipts *of.Receipts
+	Value    *Value
+	Mr       *mibs.MIBRegistry
+	U        of.UUIDGen
 }
 
 // Iterate through configs in configNames and generate all possible Alerts.
 func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 
+	// Fixed annotionations for this set of Trap vars.
+	fixedAnnotations := a.fixedAnnotations()
 	var allAlerts = make([]of.Alert, 0)
 	for _, cfgName := range cfgNames {
 
@@ -44,14 +50,14 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 			}
 
 			// Check if trap Vars have any alert matching firing conditions.
-			fAlert, err := a.matchAlerts(cfg, alertCfg, of_snmp.Firing)
+			fAlert, err := a.matchAlerts(cfg, alertCfg, of_snmp.Firing, fixedAnnotations)
 			if err == nil {
 				fAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Firing)
 				allAlerts = append(allAlerts, fAlert)
 			}
 
 			// Check if trap Vars have any alerts matching clearing conditions.
-			cAlert, err := a.matchAlerts(cfg, alertCfg, of_snmp.Clearing)
+			cAlert, err := a.matchAlerts(cfg, alertCfg, of_snmp.Clearing, fixedAnnotations)
 			if err == nil {
 				// Add end time to clearing alerts.
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
@@ -65,7 +71,7 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 }
 
 // match trapVars with alerts in config.
-func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertType of_snmp.EventType) (of.Alert, error) {
+func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertType of_snmp.EventType, fixedAnnotations map[string]string) (of.Alert, error) {
 
 	var alert = of.Alert{}
 
@@ -92,16 +98,27 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 	}
 
 	a.Log.WithField("alertType", alertType).Debugf("Alert matched.")
+
 	// Prepare alert since the selects have matched.
 
+	// Init new Alert
+	alert.Labels = make(map[string]string)
+	alert.Annotations = make(map[string]string)
+
+	// Apply fixed annotionations.
+	for k, v := range fixedAnnotations {
+		alert.Annotations[k] = v
+	}
+
 	// Preparing base alert.
-	alert, err = a.prepareBaseAlert(&cfg)
+	err = a.prepareBaseAlert(&alert, &cfg)
 	if err != nil {
 		a.Log.WithError(err).Errorf("Error while preparing base alert.")
 		return alert, err
 	}
 
 	// Apply alert specific labels.
+	alert.Labels["event_id"] = a.U.UUID()
 	err = a.applyMod(&alert.Labels, alertCfg.LabelMods)
 	if err != nil {
 		a.Log.WithError(err).Errorf("Error while applying alert mods to labels.")
@@ -177,11 +194,7 @@ func (a *Alerter) selected(selects []of_snmp.Select) (bool, error) {
 }
 
 // Prepares the base alert based on keys under of_snmp.Config.Defaults
-func (a *Alerter) prepareBaseAlert(cfg *of_snmp.Config) (of.Alert, error) {
-	// Init new Alert
-	alert := of.Alert{}
-	alert.Labels = make(map[string]string)
-	alert.Annotations = make(map[string]string)
+func (a *Alerter) prepareBaseAlert(alert *of.Alert, cfg *of_snmp.Config) error {
 
 	// Update source info.
 	var found = false
@@ -189,7 +202,7 @@ func (a *Alerter) prepareBaseAlert(cfg *of_snmp.Config) (of.Alert, error) {
 		// Iterate through clusters to check if IP matches with available IP.
 		for clusterName, cluster := range cfg.Defaults.Clusters {
 			for _, ip := range cluster.SourceAddresses {
-				if ip == a.Source.Address {
+				if ip == a.Receipts.Snmptrapd.Source.Address {
 					a.Log.Debugf("Found cluster name %s, for source IP : %s", clusterName, ip)
 					found = true
 					alert.Labels["source_address"] = clusterName
@@ -205,25 +218,77 @@ func (a *Alerter) prepareBaseAlert(cfg *of_snmp.Config) (of.Alert, error) {
 
 	// If no cluster is found or host type is not cluster.
 	if found == false {
-		a.Log.Debugf("Setting default source info for IP : %s", a.Source.Address)
-		a.updateSource(&alert)
+		a.Log.Debugf("Setting default source info for IP : %s", a.Receipts.Snmptrapd.Source.Address)
+		a.updateSource(alert)
 	}
 
 	// Apply default mods to Labels
-	err := a.applyMod(&alert.Labels, cfg.Defaults.LabelMods)
+	err := a.applyMod(&(alert.Labels), cfg.Defaults.LabelMods)
 	if err != nil {
 		a.Log.WithError(err).Errorf("Failed to apply default mods to labels.")
-		return alert, err
+		return err
 	}
 
 	// Apply default mods to Annotations
-	err = a.applyMod(&alert.Annotations, cfg.Defaults.AnnotationMods)
+	err = a.applyMod(&(alert.Annotations), cfg.Defaults.AnnotationMods)
 	if err != nil {
 		a.Log.WithError(err).Errorf("Failed to apply default mods to annotations.")
-		return alert, err
+		return err
 	}
 
-	return alert, nil
+	return nil
+}
+
+// Annotations that don't change for a SNMP trap event.
+func (a *Alerter) fixedAnnotations() map[string]string {
+
+	enrichedVars := make([]map[string]string, len(a.Receipts.Snmptrapd.Vars))
+	var oid string
+	for i, v := range a.Receipts.Snmptrapd.Vars {
+		if v.Oid == of_snmp.SNMPTrapOID {
+			oid = v.Value
+		}
+
+		enrichedVar := make(map[string]string)
+		enrichedVar["oid"] = v.Oid
+		enrichedVar["type"] = v.Type
+		enrichedVar["value"] = v.Value
+
+		varOid := v.Oid[1:]
+		object := a.Mr.MIB(varOid)
+		if object != nil {
+			enrichedVar["name"] = object.Name
+			enrichedVar["description"] = object.Description
+			enrichedVar["units"] = object.Units
+		}
+		enrichedVar["oid_string"] = a.Mr.String(varOid)
+		enrichedVar["oid_uri"] = "http://www.oid-info.com/get/" + varOid
+		enrichedVars[i] = enrichedVar
+	}
+
+	enrichedVarsJson, _ := json.Marshal(enrichedVars)
+
+	eventOid := oid[1:]
+	eventObj := a.Mr.MIB(eventOid)
+	var eventStrOid, eventDesc string
+	if eventObj != nil {
+		eventDesc = eventObj.Description
+		eventStrOid = a.Mr.String(eventOid)
+	}
+
+	fixedAnnotations := map[string]string{
+		"event_filebeat_timestamp":  a.Receipts.Filebeat.Timestamp,
+		"event_name":                "unknown",
+		"event_oid":                 oid,
+		"event_oid_string":          eventStrOid,
+		"event_rawtext":             a.Receipts.Filebeat.Message,
+		"event_snmptrapd_timestamp": a.Receipts.Snmptrapd.Timestamp,
+		"event_type":                "unknown",
+		"event_vars_json":           string(enrichedVarsJson),
+		"event_description":         eventDesc,
+	}
+
+	return fixedAnnotations
 }
 
 func (a *Alerter) applyMod(mapPtr *map[string]string, mods []of_snmp.Mod) error {
@@ -244,10 +309,10 @@ func (a *Alerter) applyMod(mapPtr *map[string]string, mods []of_snmp.Mod) error 
 
 // Update source info based on of.TrapSource
 func (a *Alerter) updateSource(alert *of.Alert) {
-	alert.Labels["source_address"] = a.Source.Address
-	alert.Labels["source_hostname"] = a.Source.Hostname
-	alert.Annotations["source_address"] = a.Source.Address
-	alert.Annotations["source_hostname"] = a.Source.Hostname
+	alert.Labels["source_address"] = a.Receipts.Snmptrapd.Source.Address
+	alert.Labels["source_hostname"] = a.Receipts.Snmptrapd.Source.Hostname
+	alert.Annotations["source_address"] = a.Receipts.Snmptrapd.Source.Address
+	alert.Annotations["source_hostname"] = a.Receipts.Snmptrapd.Source.Hostname
 }
 
 // Overwrite with alert specific prefix if available.

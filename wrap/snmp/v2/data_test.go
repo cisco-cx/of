@@ -289,3 +289,17 @@ func TrapSource() *of.TrapSource {
 		Hostname: "localhost",
 	}
 }
+
+func TrapReceipts() *of.Receipts {
+	return &of.Receipts{
+		Snmptrapd: of.Snmptrapd{
+			Timestamp: "2019-04-26T03:46:57Z",
+			Source:    *TrapSource(),
+			Vars:      *trapVars(),
+		},
+		Filebeat: of.Filebeat{
+			Message:   "SNMPTRAP timestamp=[2019-04-26T03:46:57Z] hostname=[localhost] address=[UDP/IPv6: [::1]:48381] pdu_security=[TRAP2, SNMP v3, user user-sha-aes128, context ] vars[.1.3.6.1.2.1.1.3.0 = Timeticks: (123) 0:00:01.23\t.1.3.6.1.6.3.1.1.4.1.0 = OID: .1.3.6.1.6.3.1.1.5.1\t.1.3.6.1.4.1.65000.1.1.1.1.1 = STRING: \"foo\"\t.1.3.6.1.4.1.65000.1.1.1.1.1 = STRING: \"bar\"]",
+			Timestamp: "2019-04-26T03:46:57.941Z",
+		},
+	}
+}
