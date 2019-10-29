@@ -110,7 +110,7 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 	config := ACIConfig(cmd)
 	handler := &aci.Handler{Config: config, Log: log}
 	handler.Aci = &acigo.ACIService{ACIConfig: config, Logger: log}
-	handler.Ams = &alertmanager.AlertService{ACIConfig: config}
+	handler.Ams = &alertmanager.AlertService{AmURL: config.AmURL, Version: config.Version}
 	handler.Run()
 }
 

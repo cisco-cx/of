@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	of "github.com/cisco-cx/of/pkg/v1"
 	http "github.com/cisco-cx/of/wrap/http/v1"
 )
 
 type AlertService struct {
-	*of.ACIConfig
+	Version string
+	AmURL   string
 }
 
 // Send alerts to Alertmanager
