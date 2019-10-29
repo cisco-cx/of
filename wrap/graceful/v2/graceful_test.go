@@ -46,7 +46,7 @@ func TestInterface(t *testing.T) {
 // Test gracefully starting a server.
 func TestGraceStart(t *testing.T) {
 	server := &http.Server{
-		Addr:    "localhost:54951",
+		Addr:    "localhost:64951",
 		Handler: &testServer{timeout: time.Second * 0},
 	}
 
@@ -56,7 +56,7 @@ func TestGraceStart(t *testing.T) {
 	}()
 	time.Sleep(time.Second)
 
-	res, err := http.Get("http://localhost:54951/")
+	res, err := http.Get("http://localhost:64951/")
 
 	require.NoError(t, err)
 	assert.Equal(t, http.StatusOK, res.StatusCode)
@@ -71,7 +71,7 @@ func TestGraceStart(t *testing.T) {
 // Test gracefully shuting down a server.
 func TestGraceStop(t *testing.T) {
 	server := &http.Server{
-		Addr:    "localhost:54952",
+		Addr:    "localhost:64952",
 		Handler: &testServer{timeout: time.Second * 10},
 	}
 
@@ -83,14 +83,14 @@ func TestGraceStop(t *testing.T) {
 
 	require.NoError(t, g.Stop())
 
-	_, err := http.Get("http://localhost:54952/")
+	_, err := http.Get("http://localhost:64952/")
 	require.Error(t, err)
 }
 
 // Test with SIGINT a server.
 func TestKill(t *testing.T) {
 	server := &http.Server{
-		Addr:    "localhost:54953",
+		Addr:    "localhost:64953",
 		Handler: &testServer{timeout: time.Second * 10},
 	}
 
@@ -100,7 +100,7 @@ func TestKill(t *testing.T) {
 	}()
 	time.Sleep(time.Second)
 
-	_, err := http.Get("http://localhost:54953/")
+	_, err := http.Get("http://localhost:64953/")
 	require.Error(t, err)
 	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 }
