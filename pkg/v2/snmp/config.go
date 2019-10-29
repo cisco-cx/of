@@ -40,6 +40,7 @@ const (
 	Clearing        EventType = "clear"
 	EventTypeText   string    = "event_type"
 	FingerprintText string    = "alert_fingerprint"
+	SNMPTrapOID     string    = ".1.3.6.1.6.3.1.1.4.1"
 )
 
 // Represents map of configs from different files in conf.d

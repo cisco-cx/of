@@ -1,7 +1,7 @@
 package v2
 
 import (
-	"fmt"
+	"strings"
 	"time"
 
 	prommodel "github.com/prometheus/common/model"
@@ -116,7 +116,11 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 	}
 
 	// Generator URL prefix.
-	generatorURLPrefix := a.generatorURLPrefix(cfg.Defaults.GeneratorUrlPrefix, alertCfg.GeneratorUrlPrefix)
+	alert.GeneratorURL = string(a.generatorURLPrefix(cfg.Defaults.GeneratorUrlPrefix, alertCfg.GeneratorUrlPrefix))
+	SNMPTrapOIDValue, err := a.Value.Value(of_snmp.SNMPTrapOID)
+	if err == nil {
+		alert.GeneratorURL += strings.Replace(SNMPTrapOIDValue, ".", "", 1)
+	}
 
 	// Apply select specfic changes.
 	for _, sel := range selects {
@@ -128,16 +132,6 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 			return alert, err
 		}
 
-		// TODO : Decide on how to handle OIDs from multiple selects.
-		// Update generator URL.
-		if generatorURLPrefix != "" {
-			// Prepend comma from second select onwards.
-			seperator := ","
-			if alert.GeneratorURL == "" {
-				seperator = ""
-			}
-			alert.GeneratorURL += fmt.Sprintf("%s%s%s", seperator, generatorURLPrefix, sel.Oid)
-		}
 	}
 
 	// Finger print the alert.

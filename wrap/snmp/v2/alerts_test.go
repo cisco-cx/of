@@ -63,7 +63,7 @@ func TestAlertFire(t *testing.T) {
 				"source_address":  "192.168.1.28",
 				"source_hostname": "localhost",
 			},
-			GeneratorURL: "http://www.oid-info.com/get/.1.3.6.1.6.3.1.1.4.1",
+			GeneratorURL: "http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.13",
 		},
 	}
 
@@ -113,7 +113,7 @@ func TestAlertClear(t *testing.T) {
 			"source_hostname": "nso1.example.org",
 		},
 		EndsAt:       time.Now().Format(of.AMTimeFormat),
-		GeneratorURL: "http://www.oid-info.com/get/.1.3.6.1.6.3.1.1.4.1",
+		GeneratorURL: "http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.13",
 	}
 
 	// EndsAt is time.Now, so individually matching other components.
