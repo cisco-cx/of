@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 	snmp "github.com/cisco-cx/of/wrap/snmp/v2"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v2"
@@ -24,7 +25,13 @@ func TestBuild(t *testing.T) {
 func TestFind(t *testing.T) {
 	// Prepare snmp.V2Config
 	lookup := build(t)
-	configs, err := lookup.Find(".1.3.6.1.6.3.1.1.4.1")
+	vars := []of.TrapVar{
+		of.TrapVar{
+			Oid: ".1.3.6.1.6.3.1.1.4.1",
+		},
+	}
+
+	configs, err := lookup.Find(vars)
 	require.NoError(t, err)
 	require.ElementsMatch(t, []string{"epc", "nso"}, configs)
 }

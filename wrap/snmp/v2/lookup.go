@@ -1,6 +1,7 @@
 package v2
 
 import (
+	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 )
 
@@ -99,39 +100,42 @@ func (l *Lookup) buildFromSelects(configName string, selects []of_snmp.Select) {
 }
 
 // Lookup configs that are applicable for given oid.
-func (l *Lookup) Find(oid string) ([]string, error) {
+func (l *Lookup) Find(vars []of.TrapVar) ([]string, error) {
 	var configList = make([]string, 0)
 	var configNames = make(configs)
 	var as asMap
 	var ok bool
 
-	// Checking if `oid` is present in lookupMap
-	if as, ok = l.lm[oid]; ok == false {
-		return configList, nil
-	}
-
-	// iterate through applicable of_snmp.As types for given oid
-	// asType : of_snmp.As
-	// values : values mentioned under select for given oid.
-	for asType, values := range as {
-
-		// Compute interested value of the oid based on of_snmp.As type.
-		value, err := l.V.ValueAs(oid, asType)
-		if err != nil {
+	for _, v := range vars {
+		oid := v.Oid
+		// Checking if `oid` is present in lookupMap
+		if as, ok = l.lm[oid]; ok == false {
 			continue
 		}
 
-		// Check if configs are available where given oid is in select and computed value is among the values.
-		var cfgs configs
-		if cfgs, ok = values[value]; ok == false {
-			continue
-		}
+		// iterate through applicable of_snmp.As types for given oid
+		// asType : of_snmp.As
+		// values : values mentioned under select for given oid.
+		for asType, values := range as {
 
-		// If configs are available add them to the list.
-		for cfgName, _ := range cfgs {
-			if _, ok := configNames[cfgName]; ok == false {
-				configNames[cfgName] = true
-				configList = append(configList, cfgName)
+			// Compute interested value of the oid based on of_snmp.As type.
+			value, err := l.V.ValueAs(oid, asType)
+			if err != nil {
+				continue
+			}
+
+			// Check if configs are available where given oid is in select and computed value is among the values.
+			var cfgs configs
+			if cfgs, ok = values[value]; ok == false {
+				continue
+			}
+
+			// If configs are available add them to the list.
+			for cfgName, _ := range cfgs {
+				if _, ok := configNames[cfgName]; ok == false {
+					configNames[cfgName] = true
+					configList = append(configList, cfgName)
+				}
 			}
 		}
 	}
