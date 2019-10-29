@@ -18,7 +18,7 @@ type Alerter struct {
 	Configs  *of_snmp.V2Config
 	Receipts *of.Receipts
 	Value    *Value
-	Mr       *mibs.MIBRegistry
+	MR       *mibs.MIBRegistry
 	U        of.UUIDGen
 }
 
@@ -255,13 +255,13 @@ func (a *Alerter) fixedAnnotations() map[string]string {
 		enrichedVar["value"] = v.Value
 
 		varOid := v.Oid[1:]
-		object := a.Mr.MIB(varOid)
+		object := a.MR.MIB(varOid)
 		if object != nil {
 			enrichedVar["name"] = object.Name
 			enrichedVar["description"] = object.Description
 			enrichedVar["units"] = object.Units
 		}
-		enrichedVar["oid_string"] = a.Mr.String(varOid)
+		enrichedVar["oid_string"] = a.MR.String(varOid)
 		enrichedVar["oid_uri"] = "http://www.oid-info.com/get/" + varOid
 		enrichedVars[i] = enrichedVar
 	}
@@ -269,11 +269,11 @@ func (a *Alerter) fixedAnnotations() map[string]string {
 	enrichedVarsJson, _ := json.Marshal(enrichedVars)
 
 	eventOid := oid[1:]
-	eventObj := a.Mr.MIB(eventOid)
+	eventObj := a.MR.MIB(eventOid)
 	var eventStrOid, eventDesc string
 	if eventObj != nil {
 		eventDesc = eventObj.Description
-		eventStrOid = a.Mr.String(eventOid)
+		eventStrOid = a.MR.String(eventOid)
 	}
 
 	fixedAnnotations := map[string]string{
