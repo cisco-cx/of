@@ -119,7 +119,7 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 	alert.GeneratorURL = string(a.generatorURLPrefix(cfg.Defaults.GeneratorUrlPrefix, alertCfg.GeneratorUrlPrefix))
 	SNMPTrapOIDValue, err := a.Value.Value(of_snmp.SNMPTrapOID)
 	if err == nil {
-		alert.GeneratorURL += strings.Replace(SNMPTrapOIDValue, ".", "", 1)
+		alert.GeneratorURL += strings.TrimPrefix(SNMPTrapOIDValue, ".")
 	}
 
 	// Apply select specfic changes.
