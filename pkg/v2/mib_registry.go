@@ -22,7 +22,7 @@ type MIB struct {
 
 type MIBRegistry interface {
 	// Return MIB for given OID.
-	MIB(string) MIB
+	MIB(string) *MIB
 
 	// Return MIB for given OID.
 	// Translate each node in OID to its corresponding name, if MIB has its definition, else use the number.
