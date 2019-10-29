@@ -26,7 +26,6 @@ func TestFind(t *testing.T) {
 	lookup := build(t)
 	configs, err := lookup.Find(".1.3.6.1.6.3.1.1.4.1")
 	require.NoError(t, err)
-	require.Equal(t, []string{"epc", "nso"}, configs)
 	require.ElementsMatch(t, []string{"epc", "nso"}, configs)
 }
 
