@@ -12,11 +12,11 @@ import (
 // Implements of_snmp.ValueGenerator
 type Value struct {
 	vars map[string]string
-	mr   *mib_registry.MibRegistry
+	mr   *mib_registry.MIBRegistry
 }
 
 // Initialize Value. trapVars are converted into a map[oid]value
-func NewValue(trapVars *[]of.TrapVar, mr *mib_registry.MibRegistry) *Value {
+func NewValue(trapVars *[]of.TrapVar, mr *mib_registry.MIBRegistry) *Value {
 	vars := make(map[string]string)
 	for _, v := range *trapVars {
 		vars[v.Oid] = v.Value

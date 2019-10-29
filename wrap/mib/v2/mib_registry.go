@@ -21,32 +21,32 @@ import (
 	of "github.com/cisco-cx/of/pkg/v2"
 )
 
-type MibRegistry struct {
-	regs  map[string]of.Mib
+type MIBRegistry struct {
+	regs  map[string]of.MIB
 	index map[string][]string
 }
 
-func New() *MibRegistry {
-	regs := make(map[string]of.Mib)
+func New() *MIBRegistry {
+	regs := make(map[string]of.MIB)
 	index := make(map[string][]string)
-	return &MibRegistry{
+	return &MIBRegistry{
 		regs:  regs,
 		index: index,
 	}
 }
 
-// Return Mib for given OID.
-func (mib *MibRegistry) Mib(oid string) of.Mib {
+// Return MIB for given OID.
+func (mib *MIBRegistry) MIB(oid string) of.MIB {
 	return mib.regs[oid]
 }
 
 // Return the last node to its name. Ex: 1.3.6.1.2.1.11.19 -> snmpInTraps.
-func (mib *MibRegistry) ShortString(oid string) string {
-	return mib.Mib(oid).Name
+func (mib *MIBRegistry) ShortString(oid string) string {
+	return mib.MIB(oid).Name
 }
 
 // Return display string for given OID.
-func (mib *MibRegistry) String(oid string) string {
+func (mib *MIBRegistry) String(oid string) string {
 	if value, hasValue := mib.index[oid]; hasValue == true {
 		return strings.Join(value, ".")
 	}
@@ -54,8 +54,8 @@ func (mib *MibRegistry) String(oid string) string {
 	return mib.String(oid)
 }
 
-func (mib *MibRegistry) getStrOid(oid string) []string {
-	mibReg := mib.Mib(oid)
+func (mib *MIBRegistry) getStrOid(oid string) []string {
+	mibReg := mib.MIB(oid)
 	if len(mibReg.Name) > 0 {
 		idx := strings.LastIndex(oid, ".")
 		if idx == -1 {
@@ -75,8 +75,8 @@ func (mib *MibRegistry) getStrOid(oid string) []string {
 	return append(strOid, oid[idx+1:])
 }
 
-// Load given map[oid]Mib into registry.
-func (mib *MibRegistry) Load(src map[string]of.Mib) error {
+// Load given map[oid]MIB into registry.
+func (mib *MIBRegistry) Load(src map[string]of.MIB) error {
 	for k, v := range src {
 		if len(v.Name) <= 0 {
 			return of.Error(fmt.Sprintf("Name can't be empty: '%+v'", v))

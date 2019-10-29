@@ -205,21 +205,21 @@ nso:
       annotation_mods: []  # this is allowed`
 
 // Test mibs data.
-func mibRegistry(t *testing.T) *mib_registry.MibRegistry {
-	mibs := map[string]of.Mib{
-		".1.3.6.1.2.1.1.3.0": of.Mib{
+func mibRegistry(t *testing.T) *mib_registry.MIBRegistry {
+	mibs := map[string]of.MIB{
+		".1.3.6.1.2.1.1.3.0": of.MIB{
 			Name: "oid1",
 		},
-		".1.3.6.1.6.3.1.1.4.1.0": of.Mib{
+		".1.3.6.1.6.3.1.1.4.1.0": of.MIB{
 			Name: "oid2",
 		},
-		".1.3.6.1.4.1.8164.2.44": of.Mib{
+		".1.3.6.1.4.1.8164.2.44": of.MIB{
 			Name: "oid3",
 		},
-		".1.3.6.1.4.1.8164.2.45": of.Mib{
+		".1.3.6.1.4.1.8164.2.45": of.MIB{
 			Name: "oid4",
 		},
-		".1.3.6.1.4.1.65000.1.1.1.1.1": of.Mib{
+		".1.3.6.1.4.1.65000.1.1.1.1.1": of.MIB{
 			Name: "oid5",
 		},
 	}
