@@ -50,11 +50,11 @@ func (mib *MIBRegistry) String(oid string) string {
 	if value, hasValue := mib.index[oid]; hasValue == true {
 		return strings.Join(value, ".")
 	}
-	mib.index[oid] = mib.getStrOid(oid)
+	mib.index[oid] = mib.getStrOID(oid)
 	return mib.String(oid)
 }
 
-func (mib *MIBRegistry) getStrOid(oid string) []string {
+func (mib *MIBRegistry) getStrOID(oid string) []string {
 	mibReg := mib.MIB(oid)
 	if len(mibReg.Name) > 0 {
 		idx := strings.LastIndex(oid, ".")
@@ -62,7 +62,7 @@ func (mib *MIBRegistry) getStrOid(oid string) []string {
 			return []string{mibReg.Name}
 		}
 
-		strOid := mib.getStrOid(oid[:idx])
+		strOid := mib.getStrOID(oid[:idx])
 		return append(strOid, mibReg.Name)
 	}
 
@@ -71,7 +71,7 @@ func (mib *MIBRegistry) getStrOid(oid string) []string {
 		return []string{oid}
 	}
 
-	strOid := mib.getStrOid(oid[:idx])
+	strOid := mib.getStrOID(oid[:idx])
 	return append(strOid, oid[idx+1:])
 }
 
