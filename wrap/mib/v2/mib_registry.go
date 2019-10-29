@@ -21,11 +21,13 @@ import (
 	of "github.com/cisco-cx/of/pkg/v2"
 )
 
+// MIBRegistry keeps the data for building the (OID, strings) map
 type MIBRegistry struct {
 	regs  map[string]of.MIB
 	index map[string][]string
 }
 
+// Return a new MIBRegistry pointer
 func New() *MIBRegistry {
 	regs := make(map[string]of.MIB)
 	index := make(map[string][]string)
