@@ -156,3 +156,8 @@ func (l *Logger) LogLevel() string {
 func (l *Logger) SetOutput(w io.Writer) {
 	l.entry.Logger.SetOutput(w)
 }
+
+// Change output. Default output is os.Stderr.
+func (l *Logger) Logger() *logrus.Logger {
+	return l.entry.Logger
+}
