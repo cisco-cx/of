@@ -47,7 +47,6 @@ func startServer(t *testing.T, server_addr string) *http.Server {
 			"data": "This is a post request.",
 		}
 		require.Equal(t, expectedData, data)
-		fmt.Printf("%+v\n", data)
 		fmt.Fprint(w, "Post test called.")
 	})
 	go func() {
