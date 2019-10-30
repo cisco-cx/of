@@ -10,7 +10,7 @@ type Writer struct {
 	h *herodot.JSONWriter
 }
 
-func New(l logger.Logger) *Writer {
+func New(l *logger.Logger) *Writer {
 	hero := herodot.NewJSONWriter(l.Logger())
 	hero.ErrorEnhancer = nil
 	return &Writer{h: hero}
