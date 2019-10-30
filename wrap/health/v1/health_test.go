@@ -112,8 +112,10 @@ func TestHealthChecker_State(t *testing.T) {
 	assert.EqualError(t, err, "HealthCheck entry 'foo' not found")
 
 	err = wrapHealth.AddURL("foo", "http://randomurl/somerandomurl", 1)
+	require.NoError(t, err)
 
-	wrapHealth.Start()
+	err = wrapHealth.Start()
+	require.NoError(t, err)
 	time.Sleep(500 * time.Millisecond)
 
 	err = wrapHealth.State("foo")
