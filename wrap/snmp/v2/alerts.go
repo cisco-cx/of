@@ -268,12 +268,14 @@ func (a *Alerter) fixedAnnotations() map[string]string {
 
 	enrichedVarsJson, _ := json.Marshal(enrichedVars)
 
-	eventOid := oid[1:]
-	eventObj := a.MR.MIB(eventOid)
 	var eventStrOid, eventDesc string
-	if eventObj != nil {
-		eventDesc = eventObj.Description
-		eventStrOid = a.MR.String(eventOid)
+	if oid != "" {
+		eventOid := oid[1:]
+		eventObj := a.MR.MIB(eventOid)
+		if eventObj != nil {
+			eventDesc = eventObj.Description
+			eventStrOid = a.MR.String(eventOid)
+		}
 	}
 
 	fixedAnnotations := map[string]string{

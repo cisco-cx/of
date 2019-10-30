@@ -39,32 +39,16 @@
 package v2
 
 import (
-	"context"
-	"net/http"
 	"time"
 )
 
-// RFC3339 with milliseconds. Time format expected by Alertmanager.
-const AMTimeFormat = "2006-01-02T15:04:05.000Z07:00"
-
-// Represents Alertmanager alert.
-type Alert struct {
-	Labels       map[string]string `json:"labels"`
-	Annotations  map[string]string `json:"annotations"`
-	StartsAt     string            `json:"startsAt"`
-	EndsAt       string            `json:"endsAt"`
-	GeneratorURL string            `json:"generatorURL"`
-}
-
-// Represents Alertmanager postAlerts params.
-type PostAlertsParams struct {
-	Alerts []Alert
-
-	timeout    time.Duration
-	Context    context.Context
-	HTTPClient *http.Client
-}
-
-type Notifier interface {
-	Notify(*[]Alert) error
+// Represents SNMP settings.
+type SNMPConfig struct {
+	AMAddress     string
+	AMTimeout     time.Duration
+	SNMPMibsDir   string
+	CacheFile     string
+	ListenAddress string
+	AlertsCFGDir  string
+	Version       string
 }
