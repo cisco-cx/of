@@ -18,6 +18,10 @@ const (
 	ErrConfigNotFound   = Error("Unknown config.")
 	ErrNoMatch          = Error("No alert matched in alert config.")
 	ErrUnknownEventType = Error("Unknown event type specified.")
+
+	// Counter errors.
+	ErrCounterCreateFailed  = Error("Failed to create counter.")
+	ErrCounterDestroyFailed = Error("Failed to remove counter.")
 )
 
 // Error represents an OF error.
