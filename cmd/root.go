@@ -17,18 +17,22 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/cisco-cx/of/info"
 	homedir "github.com/cisco-cx/of/wrap/go-homedir/v1"
 	informer "github.com/cisco-cx/of/wrap/informer/v1"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
+	loggerv2 "github.com/cisco-cx/of/wrap/logrus/v2"
 )
 
 var cfgFile string
 var log = logger.New()
+var logv2 = loggerv2.New()
 
 // Start a shared info service.
 var infoSvc = informer.NewInfoService(
@@ -51,6 +55,7 @@ var rootCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		logLevel := viper.GetString("log-level")
 		log.SetLevel(logLevel)
+		logv2.SetLevel(logLevel)
 		log.Infof("Logging Enabled. Level : %s", log.LogLevel())
 	},
 }
@@ -117,4 +122,32 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+// Check if all flags are set and print the values for each flag.
+func checkRequiredFlags(cmd *cobra.Command) {
+	fmt.Println("=============== Current Setting ===============")
+	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		log.Debugf("flag : %s\n", f.Name)
+		if f.Name != "help" {
+			if isFlagSet(f) == false {
+				cmd.Usage()
+				fmt.Printf("Required : %s\n", f.Name)
+				os.Exit(1)
+			}
+			fmt.Printf("%16s : %-24v // %s\n", f.Name, viper.Get(f.Name), f.Usage)
+		}
+	})
+	fmt.Println("===============================================")
+}
+
+// Check if flag is set.
+func isFlagSet(f *pflag.Flag) bool {
+	// If flag value is not set return false
+	val := viper.Get(f.Name)
+	if val == reflect.Zero(reflect.TypeOf(val)).Interface() {
+		return false
+	}
+
+	return true
 }

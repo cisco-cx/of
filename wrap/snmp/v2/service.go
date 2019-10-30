@@ -29,12 +29,12 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 
 	// Concatenate configs files.
 	c := concatenator.Files{
-		Path: cfg.AlertsCFGDir,
+		Path: cfg.ConfigDir,
 	}
 
 	r, err := c.Concat()
 	if err != nil {
-		l.WithError(err).Errorf("Failed to concat config files in %s.", cfg.AlertsCFGDir)
+		l.WithError(err).Errorf("Failed to concat config files in %s.", cfg.ConfigDir)
 		return nil, err
 	}
 
@@ -42,7 +42,7 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 	configs := yaml.Configs{}
 	err = configs.Decode(r)
 	if err != nil {
-		l.WithError(err).Errorf("Failed to decode config files in %s.", cfg.AlertsCFGDir)
+		l.WithError(err).Errorf("Failed to decode config files in %s.", cfg.ConfigDir)
 		return nil, err
 	}
 
@@ -55,7 +55,7 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 		MapMIB: make(map[string]of.MIB),
 	}
 
-	if cfg.CacheFile != "" {
+	if cfg.CacheFile != "none" {
 		err = readerMIB.LoadCacheFromFile(cfg.CacheFile)
 		if err != nil {
 			l.WithError(err).Fatalf("Failed to load MIBs from cache.")

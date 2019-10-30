@@ -35,7 +35,7 @@ func (h *Handler) Run() {
 	healthUrl, _ := url.Parse("/-/healthy")
 	err = hc.AddURL("health_check", amUrl.ResolveReference(healthUrl).String(), h.Config.AMTimeout)
 	if err != nil {
-		h.Log.WithError(err).Fatalf("Failed to parse the Alerts manager address: %s", h.Config.AMAddress)
+		h.Log.WithError(err).Fatalf("Failed to add health check.")
 	}
 
 	// Configure HTTP server to handle various requests.

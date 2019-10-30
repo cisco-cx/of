@@ -50,7 +50,7 @@ type SNMPConfig struct {
 	SNMPMibsDir   string
 	CacheFile     string
 	ListenAddress string
-	AlertsCFGFile string
+	ConfigDir     string
 }
 
 // Interface to publish snmpd traps to Alertmanager.

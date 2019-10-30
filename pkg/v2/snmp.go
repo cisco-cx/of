@@ -49,6 +49,10 @@ type SNMPConfig struct {
 	SNMPMibsDir   string
 	CacheFile     string
 	ListenAddress string
-	AlertsCFGDir  string
+	ConfigDir     string
 	Version       string
+	Throttle      bool
+	PostTime      int
+	SleepTime     int
+	SendTime      int
 }
