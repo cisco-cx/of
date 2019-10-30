@@ -1,8 +1,10 @@
 package v2_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"strings"
 	"testing"
 	"time"
 
@@ -37,6 +39,17 @@ func startServer(t *testing.T, server_addr string) *http.Server {
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, response_text)
 	})
+	srv.HandleFunc("/posttest", func(w of.ResponseWriter, r of.Request) {
+		data := make(map[string]string)
+		err := json.NewDecoder(r.Body).Decode(&data)
+		require.NoError(t, err)
+		expectedData := map[string]string{
+			"data": "This is a post request.",
+		}
+		require.Equal(t, expectedData, data)
+		fmt.Printf("%+v\n", data)
+		fmt.Fprint(w, "Post test called.")
+	})
 	go func() {
 		err := srv.ListenAndServe()
 		require.NoError(t, err)
@@ -64,4 +77,25 @@ func TestDo(t *testing.T) {
 	all, err := ioutil.ReadAll(res.Body)
 	require.NoError(t, err)
 	assert.Equal(t, "HandleFunc called.", string(all))
+}
+
+// Test client.Do request.
+func TestDoPost(t *testing.T) {
+	server_addr := "localhost:64942"
+	srv := startServer(t, server_addr)
+	defer srv.Shutdown()
+	c := http.NewClient()
+	data := strings.NewReader(`{"data":"This is a post request."}`)
+	req, err := http.NewRequest("Post", "http://"+server_addr+"/posttest", data)
+	require.NoError(t, err)
+	req.Header.Set("User-Agent", "test")
+	req.Header.Set("Content-Type", "application/json")
+
+	res, err := c.Do(req)
+	require.NoError(t, err)
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+
+	all, err := ioutil.ReadAll(res.Body)
+	require.NoError(t, err)
+	assert.Equal(t, "Post test called.", string(all))
 }
