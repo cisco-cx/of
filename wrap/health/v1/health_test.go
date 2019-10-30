@@ -114,7 +114,7 @@ func TestHealthChecker_State(t *testing.T) {
 	err = wrapHealth.AddURL("foo", "http://randomurl/somerandomurl", 1)
 
 	wrapHealth.Start()
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 
 	err = wrapHealth.State("foo")
 	assert.Contains(t, err, "Ran into error while performing")
