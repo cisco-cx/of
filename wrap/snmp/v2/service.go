@@ -25,9 +25,7 @@ type Service struct {
 	As      of.Notifier
 }
 
-func NewService(cfg of.SNMPConfig) *Service {
-	// Logger
-	l := logger.New()
+func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 
 	// Concatenate configs files.
 	c := concatenator.Files{
@@ -37,7 +35,7 @@ func NewService(cfg of.SNMPConfig) *Service {
 	r, err := c.Concat()
 	if err != nil {
 		l.WithError(err).Errorf("Failed to concat config files in %s.", cfg.AlertsCFGDir)
-		return nil
+		return nil, err
 	}
 
 	// Decode configs files.
@@ -45,7 +43,7 @@ func NewService(cfg of.SNMPConfig) *Service {
 	err = configs.Decode(r)
 	if err != nil {
 		l.WithError(err).Errorf("Failed to decode config files in %s.", cfg.AlertsCFGDir)
-		return nil
+		return nil, err
 	}
 
 	v2Config := of_snmp.V2Config(configs)
@@ -88,7 +86,7 @@ func NewService(cfg of.SNMPConfig) *Service {
 	err = lookup.Build()
 	if err != nil {
 		l.WithError(err).Errorf("Failed to build lookup.")
-		return nil
+		return nil, err
 	}
 
 	// INIT SNMP service.
@@ -101,7 +99,7 @@ func NewService(cfg of.SNMPConfig) *Service {
 		As:      &as,
 		Lookup:  &lookup,
 	}
-	return s
+	return s, nil
 }
 
 // Search lookup to find configs that match Trap Vars values.
