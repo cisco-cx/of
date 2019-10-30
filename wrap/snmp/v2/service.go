@@ -52,8 +52,30 @@ func NewService(cfg of.SNMPConfig) *Service {
 
 	// Prepare MIBS registry
 	mr := mib_registry.New()
-	// TODO : Load mibs from dir or cache, when preprocessor code is ready.
-	//  err := mr.Load(mibs)
+
+	readerMIB := &mib_registry.MIBHandler{
+		MapMIB: make(map[string]of.MIB),
+	}
+
+	if cfg.CacheFile != "" {
+		err = readerMIB.LoadCacheFromFile(cfg.CacheFile)
+		if err != nil {
+			l.WithError(err).Fatalf("Failed to load MIBs from cache.")
+		}
+	} else {
+		if cfg.SNMPMibsDir == "" {
+			l.Fatalf("Failed to load MIBs, no cache path or SNMP MIBs Dir.")
+		}
+		err = readerMIB.LoadJSONFromDir(cfg.SNMPMibsDir)
+		if err != nil {
+			l.WithError(err).Fatalf("Failed to load MIBs from MIBS dir.")
+		}
+	}
+
+	err = mr.Load(readerMIB.MapMIB)
+	if err != nil {
+		l.WithError(err).Fatalf("Failed to load MIBs.")
+	}
 
 	// Setup alert service.
 	as := am.AlertService{
