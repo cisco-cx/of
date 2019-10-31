@@ -50,7 +50,7 @@ COPY --from=build /usr/local/bin/jsonnetfmt .
 ## Install of.
 COPY --from=build /src/of .
 COPY --from=build /src/demo .
-COPY --from=build /src/alerts.yaml.example alerts.yaml
+COPY --from=build /src/example/snmp/v2/alerts.yaml alerts.yaml
 COPY --from=build /src/secrets.yaml.example secrets.yaml
 
 ## Install a copy of the source code (re: licensing).
