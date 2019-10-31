@@ -77,8 +77,13 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 
 	// Setup alert service.
 	as := am.AlertService{
-		Version: cfg.Version,
-		AmURL:   cfg.AMAddress,
+		Version:   cfg.Version,
+		AmURL:     cfg.AMAddress,
+		Throttle:  cfg.Throttle,
+		PostTime:  cfg.PostTime,
+		SleepTime: cfg.SleepTime,
+		SendTime:  cfg.SendTime,
+		Log:       l,
 	}
 
 	// Prepare lookup.
