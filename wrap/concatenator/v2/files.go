@@ -45,6 +45,15 @@ func (f *Files) Concat() (io.Reader, error) {
 	// Add each file to the io.Reader buffer.
 	data := bytes.NewBuffer(nil)
 	for _, f := range files {
+		// only work on files, not directories
+		fi, err := os.Stat(f)
+		if err != nil {
+			return data, err
+		}
+		if fi.Mode().IsDir() {
+			continue
+		}
+
 		handle, err := os.Open(f)
 		if err != nil {
 			return data, err
