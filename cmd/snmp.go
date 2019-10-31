@@ -32,9 +32,6 @@ func cmdSNMP() *cobra.Command {
 		Use:   "snmp",
 		Short: "Commands for the SNMP integration",
 	}
-	// Define flags and configuration settings.
-	// cmd.PersistentFlags().String("foo", "", "A help for foo")
-	// cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	return cmd
 }
 
@@ -47,8 +44,6 @@ func cmdSNMPHandler() *cobra.Command {
 	}
 
 	// Define flags and configuration settings.
-	// cmd.PersistentFlags().String("foo", "", "A help for foo")
-	// cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	cmd.Flags().String("listen-address", "localhost:80", "host:port on which to listen, for SNMP trap events.")
 	cmd.Flags().String("am-address", "http://localhost:9093", "AlertManager's URL")
 	cmd.Flags().Duration("am-timeout", 1*time.Second, "Alertmanager timeout  (default: 10s)")
@@ -76,8 +71,6 @@ func cmdSNMPMIBsProcessor() *cobra.Command {
 	}
 
 	// Define flags and configuration settings.
-	// cmd.PersistentFlags().String("foo", "", "A help for foo")
-	// cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	cmd.Flags().String("mibs-dir", "", "Path to MIBs directory.")
 	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
 

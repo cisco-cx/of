@@ -77,20 +77,11 @@ func Execute() {
 // source: https://golang.org/doc/effective_go.html#init
 func init() {
 	// Define flags and configuration settings.
-	// rootCmd.PersistentFlags().String("foo", "", "A help for foo")
-	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 	rootCmd.PersistentFlags().String("log-level", "info", "Log Level")
 	viper.BindPFlags(rootCmd.PersistentFlags())
 	// Define configuration settings.
 	cobra.OnInitialize(initConfig)
 
-	// TODO: Decide if we want a global config file.
-	// Define persistent flags that run upon calling any action.
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.of.yaml)")
-
-	// Define local flags that only run upon calling this action.
-	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.

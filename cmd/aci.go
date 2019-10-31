@@ -29,27 +29,7 @@ import (
 	profile "github.com/cisco-cx/of/wrap/profile/v1"
 )
 
-// Counters names.
-const (
-	amConnectAttemptCount   = "am_connect_attempt_total"
-	amConnectErrorCount     = "am_connect_error_count"
-	apicConnectAttemptCount = "apic_connect_attempt_total"
-	apicConnectErrorCount   = "apic_connect_error_count"
-	alertsGeneratedCount    = "alerts_generated_count"
-	faultsDroppedCount      = "faults_dropped_count"
-	faultsScrapedCount      = "faults_scraped_count"
-	faultsMatchedCount      = "faults_matched_count"
-	faultsUnmatchedCount    = "faults_unmatched_count"
-	notificationCycleCount  = "notification_cycle_count"
-)
-
 const staticLabelUsage = "Static labels to be added with each alert posted to Alertmanager. Expected format : 'label1=value1,label2=value2'"
-
-// Alertmanager alert specific constants.
-const (
-	apicFaultHelpURL        = "https://pubhub.devnetcloud.com/media/apic-mim-ref-411/docs/FAULT-%s.html"
-	amAlertFingerprintLabel = "alert_fingerprint"
-)
 
 // cmdACI returns the `aci` command.
 func cmdACI() *cobra.Command {
@@ -57,9 +37,6 @@ func cmdACI() *cobra.Command {
 		Use:   "aci",
 		Short: "Commands for the ACI integration",
 	}
-	// Define flags and configuration settings.
-	// cmd.PersistentFlags().String("foo", "", "A help for foo")
-	// cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	return cmd
 }
 
@@ -71,9 +48,6 @@ func cmdACIHandler() *cobra.Command {
 		Run:   runACIHandler,
 	}
 
-	// Define flags and configuration settings.
-	// cmd.PersistentFlags().String("foo", "", "A help for foo")
-	// cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	cmd.Flags().String("listen-address", "localhost:9011", "host:port on which to listen, for metrics scraping")
 	cmd.Flags().Int("cycle-interval", 60, "Number of seconds to sleep between APIC -> AM notification cycles (default: 60)")
 	cmd.Flags().String("am-url", "", "AlertManager's URL")
