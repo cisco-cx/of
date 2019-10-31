@@ -71,8 +71,8 @@ func cmdSNMPMIBsProcessor() *cobra.Command {
 	}
 
 	// Define flags and configuration settings.
-	cmd.Flags().String("mibs-dir", "", "Path to MIBs directory.")
-	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
+	cmd.Flags().String("input-dir", "", "Path to MIBs directory.")
+	cmd.Flags().String("output-file", "none", "Path to MIBs cache file.")
 
 	// Enable ENV to set flag values.
 	// Ex: ENV AM_URL will set the value for --am-url.
@@ -90,8 +90,8 @@ func runMibsPreProcess(cmd *cobra.Command, args []string) {
 
 	checkRequiredFlags(cmd)
 
-	SNMPMIBsDir := viper.GetString("mibs-dir")
-	cacheFile := viper.GetString("cache-file")
+	SNMPMIBsDir := viper.GetString("input-dir")
+	cacheFile := viper.GetString("output-file")
 
 	if SNMPMIBsDir == "" || cacheFile == "none" {
 		logv2.Errorf("Please specify a mibs-dir and cache-file.")
