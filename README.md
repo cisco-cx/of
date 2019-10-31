@@ -14,7 +14,7 @@ Observability Framework
 
 ```bash
 of help
-# INFO[0000]root.go:38 Logging Enabled. Level : info
+# INFO[0000]root.go:59 Logging Enabled. Level : info
 # Observability Framework
 #
 # Usage:
@@ -23,6 +23,7 @@ of help
 # Available Commands:
 #   aci         Commands for the ACI integration
 #   help        Help about any command
+#   snmp        Commands for the SNMP integration
 #   version     Display version information
 #
 # Flags:
@@ -49,6 +50,16 @@ of aci handler
 ```
 
 This subcommand starts a daemon that scrapes APIC servers in Cisco ACI clusters for their fault lists and then notifies Prometheus Alertmanager to fire and resolve Alertmanager alerts.
+
+### SNMP
+
+#### SNMP Handler
+
+```bash
+of snmp handler
+```
+
+Starts a daemon for processing SNMP trap notifications into Alertmanager alerts.
 
 ## Docker Image
 
@@ -184,7 +195,7 @@ Each package matching this pattern MAY:
 
 We embed subcommands in the `of` executable for all Observability Framework use cases. The `cmd` package and any subpackages in it contain the source code for the `of` executable. In the `cmd` package we wire together named-version packages in `/wrap` with those in `/pkg`.
 
-For example, `of snmp handler` would start the OF's handler API server for processing SNMP notifications into Alertmanager alerts. That is, `of snmp handler` would do effectively the same thing as `am-client-snmp` or `am-snmp-client-go` have done for us in the past.
+For example, `of snmp handler` starts the OF's handler API server for processing SNMP notifications into Alertmanager alerts. That is, `of snmp handler` does effectively the same thing as `am-client-snmp` or `am-snmp-client-go` have done for us in the past.
 
 The `cmd` package and any subpackages for it pattern MAY:
 - Import a couple of external dependencies to simplify the building of a CLI. For example, we chose to directly import [cobra](https://github.com/spf13/cobra) and not wrap it to simplify our lives.
