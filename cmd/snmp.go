@@ -47,7 +47,7 @@ func cmdSNMPHandler() *cobra.Command {
 	cmd.Flags().String("listen-address", "localhost:80", "host:port on which to listen, for SNMP trap events.")
 	cmd.Flags().String("am-address", "http://localhost:9093", "AlertManager's URL")
 	cmd.Flags().Duration("am-timeout", 1*time.Second, "Alertmanager timeout  (default: 10s)")
-	cmd.Flags().String("mibs-dir", "", "Path to MIBs directory.")
+	cmd.Flags().String("mibs-dir", "none", "Path to MIBs directory.")
 	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
 	cmd.Flags().String("config-dir", "", "Path to directory containing configs.")
 	cmd.Flags().Bool("throttle", true, "Trottle posts to Alertmanager (default: true)")
@@ -94,7 +94,7 @@ func runMibsPreProcess(cmd *cobra.Command, args []string) {
 	cacheFile := viper.GetString("output-file")
 
 	if SNMPMIBsDir == "" || cacheFile == "none" {
-		logv2.Errorf("Please specify a mibs-dir and cache-file.")
+		logv2.Errorf("Please specify a input-dir and output-file.")
 		return
 	}
 
@@ -153,6 +153,10 @@ func SNMPConfig(cmd *cobra.Command) *of_v2.SNMPConfig {
 
 	if strings.HasPrefix(cfg.AMAddress, "http") == false {
 		logv2.Fatalf("AM URL must begin with http/https")
+	}
+
+	if cfg.SNMPMibsDir == "none" && cfg.CacheFile == "none" {
+		logv2.Fatalf("Please specify a mibs-dir or cache-file.")
 	}
 
 	return cfg
