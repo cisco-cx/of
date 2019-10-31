@@ -1,0 +1,4533 @@
+v1alpha1:
+  defaults:
+    source_type: host
+  alerts:
+  - name: starECSreaddressServerDown
+    label_mods:
+    - type: set
+      key: alertname
+      value: starECSreaddressServerDown
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1237
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1237: starECSreaddressServerDown
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starOverloadSystemClear
+    label_mods:
+    - type: set
+      key: alertname
+      value: starOverloadSystemClear
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.168
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.168: starOverloadSystemClear
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCLISessionStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCLISessionStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.52
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.52: starCLISessionStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCPUMemoryFail
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCPUMemoryFail
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.28
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.28: starCPUMemoryFailed
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.5":{"event_name":"starCardUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+  - name: starCdrStreamingStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCdrStreamingStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1240
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1240: starCdrStreamingStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starNTPSyncEstablished
+    label_mods:
+    - type: set
+      key: alertname
+      value: starNTPSyncEstablished
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.106
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.106: starNTPSyncEstablished
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSAEGWServiceStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSAEGWServiceStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1191
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1191: starSAEGWServiceStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshCPUMemUsage
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshCPUMemUsage
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.244
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.244: starThreshCPUMemUsage
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.245":{"event_name":"starThreshClearCPUMemUsage"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.245
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.245: starThreshClearCPUMemUsage
+  - name: starCardSwitchover
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardSwitchover
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1253
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1253: starCardSwitchoverStart
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.20":{"event_name":"starCardSPCSwitchoverComplete"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.20
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.20: starCardSPCSwitchoverComplete
+  - name: starECSreaddressServerUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: starECSreaddressServerUp
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1238
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1238: starECSreaddressServerUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starMMEServiceStop
+    label_mods:
+    - type: set
+      key: alertname
+      value: starMMEServiceStop
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1092
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1092: starMMEServiceStop
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1091":{"event_name":"starMMEServiceStart"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1091
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1091: starMMEServiceStart
+  - name: starEgtpcPathFailureClear
+    label_mods:
+    - type: set
+      key: alertname
+      value: starEgtpcPathFailureClear
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1113
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1113: starEgtpcPathFailureClear
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSGWServiceStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSGWServiceStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1083
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1083: starSGWServiceStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCPUMemory
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCPUMemory
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.27
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.27: starCPUMemoryLow
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1096":{"event_name":"starCPUMemoryLowClear"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1096
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1096: starCPUMemoryLowClear
+  - name: starCPUWatchDog
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCPUWatchDog
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.30
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.30: starCPUWatchDogExpired
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.5":{"event_name":"starCardUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+  - name: starLicenseExpired
+    label_mods:
+    - type: set
+      key: alertname
+      value: starLicenseExpired
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1126
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1126: starLicenseExpired
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starMMES1AssocSetup
+    label_mods:
+    - type: set
+      key: alertname
+      value: starMMES1AssocSetup
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1168
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1168: starMMES1AssocSetup
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starNTPPeerReachable
+    label_mods:
+    - type: set
+      key: alertname
+      value: starNTPPeerReachable
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.105
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.105: starNTPPeerReachable
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starNTPPeerUnreachable
+    label_mods:
+    - type: set
+      key: alertname
+      value: starNTPPeerUnreachable
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.90
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.90: starNTPPeerUnreachable
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.105":{"event_name":"starNTPPeerReachable"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.105
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.105: starNTPPeerReachable
+  - name: starRMCPUOver
+    label_mods:
+    - type: set
+      key: alertname
+      value: starRMCPUOver
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1219
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1219: starRMCPUOver
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1220":{"event_name":"starRMCPUOverClear"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1220
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1220: starRMCPUOverClear
+  - name: starThreshLicense
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshLicense
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.204
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.204: starThreshLicense
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.205":{"event_name":"starThreshClearLicense"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.205
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.205: starThreshClearLicense
+  - name: starBFDSes
+    label_mods:
+    - type: set
+      key: alertname
+      value: starBFDSes
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1277
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1277: starBFDSessDown
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1276":{"event_name":"starBFDSessUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1276
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1276: starBFDSessUp
+  - name: starCPUFail
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCPUFail
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.29
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.29: starCPUFailed
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.5":{"event_name":"starCardUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+  - name: starCardStandby
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardStandby
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.93
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.93: starCardStandby
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starLicenseAboutToExpire
+    label_mods:
+    - type: set
+      key: alertname
+      value: starLicenseAboutToExpire
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1125
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1125: starLicenseAboutToExpire
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshPortHighActivity
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshPortHighActivity
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.214
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.214: starThreshPortHighActivity
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.215":{"event_name":"starThreshClearPortHighActivity"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.215
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.215: starThreshClearPortHighActivity
+  - name: starSAEGWService
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSAEGWService
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1192
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1192: starSAEGWServiceStop
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1191":{"event_name":"starSAEGWServiceStart"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1191
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1191: starSAEGWServiceStart
+  - name: starSessCapReached
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSessCapReached
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1298
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1298: starSessCapReached
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshClearCPUMemory
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearCPUMemory
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.203
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.203: starThreshClearCPUMemory
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCPUMemoryLowClear
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCPUMemoryLowClear
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1096
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1096: starCPUMemoryLowClear
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starFTPPushFail
+    label_mods:
+    - type: set
+      key: alertname
+      value: starFTPPushFail
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1046
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1046: starFTPPushFail
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starMMES1Assoc
+    label_mods:
+    - type: set
+      key: alertname
+      value: starMMES1Assoc
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1167
+        - .1.3.6.1.4.1.8164.2.1189
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1167: starMMES1AssocFail
+            .1.3.6.1.4.1.8164.2.1189: starMMES1PathFail
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1168":{"event_name":"starMMES1AssocSetup"},".1.3.6.1.4.1.8164.2.1190":{"event_name":"starMMES1PathSetup"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1168
+        - .1.3.6.1.4.1.8164.2.1190
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1168: starMMES1AssocSetup
+            .1.3.6.1.4.1.8164.2.1190: starMMES1PathSetup
+  - name: starSLSServiceStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSLSServiceStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1266
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1266: starSLSServiceStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSRPConnUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSRPConnUp
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1038
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1038: starSRPConnUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshClearLicense
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearLicense
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.205
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.205: starThreshClearLicense
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCardDown
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardDown
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.60
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.60: starCardDown
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.5":{"event_name":"starCardUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+  - name: starEGTPServiceStop
+    label_mods:
+    - type: set
+      key: alertname
+      value: starEGTPServiceStop
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1086
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1086: starEGTPServiceStop
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1085":{"event_name":"starEGTPServiceStart"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1085
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1085: starEGTPServiceStart
+  - name: starL3AddrUnreachable
+    label_mods:
+    - type: set
+      key: alertname
+      value: starL3AddrUnreachable
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.114
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.114: starL3AddrUnreachable
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starStatFilesizeClear
+    label_mods:
+    - type: set
+      key: alertname
+      value: starStatFilesizeClear
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1313
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1313: starStatFilesizeClear
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starBGPPeerSession
+    label_mods:
+    - type: set
+      key: alertname
+      value: starBGPPeerSession
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.119
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.119: starBGPPeerSessionDown
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.118":{"event_name":"starBGPPeerSessionUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.118
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.118: starBGPPeerSessionUp
+  - name: starDiameterPeerUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: starDiameterPeerUp
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.185
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.185: starDiameterPeerUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSystemStartup
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSystemStartup
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1028
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1028: starSystemStartup
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshCPUUtilization10Sec
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshCPUUtilization10Sec
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.240
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.240: starThreshCPUUtilization10Sec
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.241":{"event_name":"starThreshClearCPUUtilization10Sec"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.241
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.241: starThreshClearCPUUtilization10Sec
+  - name: starThreshClearSAEGWSessions
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearSAEGWSessions
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1214
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1214: starThreshClearSAEGWSessions
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starBGPPeerSessionIPv6
+    label_mods:
+    - type: set
+      key: alertname
+      value: starBGPPeerSessionIPv6
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1289
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1289: starBGPPeerSessionIPv6Down
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1288":{"event_name":"starBGPPeerSessionIPv6Up"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1288
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1288: starBGPPeerSessionIPv6Up
+  - name: starBGPPeerSessionIPv6Up
+    label_mods:
+    - type: set
+      key: alertname
+      value: starBGPPeerSessionIPv6Up
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1288
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1288: starBGPPeerSessionIPv6Up
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCardMigrate
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardMigrate
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1256
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1256: starCardMigrateStart
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1257":{"event_name":"starCardMigrateComplete"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1257
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1257: starCardMigrateComplete
+  - name: starCardMigrateComplete
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardMigrateComplete
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1257
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1257: starCardMigrateComplete
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starStorageNotFound
+    label_mods:
+    - type: set
+      key: alertname
+      value: starStorageNotFound
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1226
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1226: starStorageNotFound
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1225":{"event_name":"starStorageFound"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1225
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1225: starStorageFound
+  - name: starThreshClearCPUUtilization
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearCPUUtilization
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.201
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.201: starThreshClearCPUUtilization
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starAlertsEnabled
+    label_mods:
+    - type: set
+      key: alertname
+      value: starAlertsEnabled
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.38
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.38: starAlertsEnabled
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCdrHDDStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCdrHDDStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1239
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1239: starCdrHDDStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starManagerFailure
+    label_mods:
+    - type: set
+      key: alertname
+      value: starManagerFailure
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.73
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.73: starManagerFailure
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1099":{"event_name":"starManagerRestart"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1099
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1099: starManagerRestart
+  - name: starManagerRestart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starManagerRestart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1099
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1099: starManagerRestart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starNTPSyncLost
+    label_mods:
+    - type: set
+      key: alertname
+      value: starNTPSyncLost
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.91
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.91: starNTPSyncLost
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.106":{"event_name":"starNTPSyncEstablished"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.106
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.106: starNTPSyncEstablished
+  - name: starCongestionClear
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCongestionClear
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.82
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.82: starCongestionClear
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starEGTPServiceStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starEGTPServiceStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1085
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1085: starEGTPServiceStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starRaidDegraded
+    label_mods:
+    - type: set
+      key: alertname
+      value: starRaidDegraded
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1079
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1079: starRaidDegraded
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1080":{"event_name":"starRaidRecovered"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1080
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1080: starRaidRecovered
+  - name: starCardSPOFClear
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardSPOFClear
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.140
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.140: starCardSPOFClear
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starLicenseExceeded
+    label_mods:
+    - type: set
+      key: alertname
+      value: starLicenseExceeded
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.65
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.65: starLicenseExceeded
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.94":{"event_name":"starLicenseUnderLimit"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.94
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.94: starLicenseUnderLimit
+  - name: starPGWServiceStop
+    label_mods:
+    - type: set
+      key: alertname
+      value: starPGWServiceStop
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1082
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1082: starPGWServiceStop
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1081":{"event_name":"starPGWServiceStart"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1081
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1081: starPGWServiceStart
+  - name: starPortUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: starPortUp
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1025
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1025: starPortUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSLSService
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSLSService
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1267
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1267: starSLSServiceStop
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1266":{"event_name":"starSLSServiceStart"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1266
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1266: starSLSServiceStart
+  - name: starSRPConnDown
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSRPConnDown
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1037
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1037: starSRPConnDown
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1038":{"event_name":"starSRPConnUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1038
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1038: starSRPConnUp
+  - name: starAAAAccServer
+    label_mods:
+    - type: set
+      key: alertname
+      value: starAAAAccServer
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.44
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.44: starAAAAccServerMisconfigured
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.43":{"event_name":"starAAAAccServerReachable"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.43
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.43: starAAAAccServerReachable
+  - name: starMMES1PathSetup
+    label_mods:
+    - type: set
+      key: alertname
+      value: starMMES1PathSetup
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1190
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1190: starMMES1PathSetup
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshClearPortHighActivity
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearPortHighActivity
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.215
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.215: starThreshClearPortHighActivity
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCPUBusyClear
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCPUBusyClear
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1095
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1095: starCPUBusyClear
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCardSwitchoverIssue
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardSwitchoverIssue
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1255
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1255: starCardSwitchoverFailed
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.5":{"event_name":"starCardUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+  - name: starOverloadSystem
+    label_mods:
+    - type: set
+      key: alertname
+      value: starOverloadSystem
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.167
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.167: starOverloadSystem
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.168":{"event_name":"starOverloadSystemClear"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.168
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.168: starOverloadSystemClear
+  - name: starPortDown
+    label_mods:
+    - type: set
+      key: alertname
+      value: starPortDown
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1024
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1024: starPortDown
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1025":{"event_name":"starPortUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1025
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1025: starPortUp
+  - name: starStorageFound
+    label_mods:
+    - type: set
+      key: alertname
+      value: starStorageFound
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1225
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1225: starStorageFound
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshCPUMemory
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshCPUMemory
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.202
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.202: starThreshCPUMemory
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.203":{"event_name":"starThreshClearCPUMemory"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.203
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.203: starThreshClearCPUMemory
+  - name: starThreshCPUUtilization
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshCPUUtilization
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.200
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.200: starThreshCPUUtilization
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.203":{"event_name":"starThreshClearCPUMemory"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.203
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.203: starThreshClearCPUMemory
+  - name: starRaidStarted
+    label_mods:
+    - type: set
+      key: alertname
+      value: starRaidStarted
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1078
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1078: starRaidStarted
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starTaskFailure
+    label_mods:
+    - type: set
+      key: alertname
+      value: starTaskFailure
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.150
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.150: starTaskFailed
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.151":{"event_name":"starTaskRestart"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.151
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.151: starTaskRestart
+  - name: starThreshClearCPUUtilization10Sec
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearCPUUtilization10Sec
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.241
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.241: starThreshClearCPUUtilization10Sec
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCongestion
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCongestion
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.81
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.81: starCongestion
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.82":{"event_name":"starCongestionClear"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.82
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.82: starCongestionClear
+  - name: starSWUpgradeAborted
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSWUpgradeAborted
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.117
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.117: starSWUpgradeAborted
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshClearPortRxUtil
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearPortRxUtil
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.211
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.211: starThreshClearPortRxUtil
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starBGPPeerSessionUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: starBGPPeerSessionUp
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.118
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.118: starBGPPeerSessionUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCardUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardUp
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starDiameterCapabilitiesExchangeFailure
+    label_mods:
+    - type: set
+      key: alertname
+      value: starDiameterCapabilitiesExchangeFailure
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1035
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1035: starDiameterCapabilitiesExchangeFailure
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1036":{"event_name":"starDiameterCapabilitiesExchangeSuccess"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1036
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1036: starDiameterCapabilitiesExchangeSuccess
+  - name: starNPUARPPoolExhausted
+    label_mods:
+    - type: set
+      key: alertname
+      value: starNPUARPPoolExhausted
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.31
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.31: starNPUARPPoolExhausted
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshClearCPUMemUsage
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearCPUMemUsage
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.245
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.245: starThreshClearCPUMemUsage
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshPortRxUtil
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshPortRxUtil
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.210
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.210: starThreshPortRxUtil
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.211":{"event_name":"starThreshClearPortRxUtil"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.211
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.211: starThreshClearPortRxUtil
+  - name: starCdrStreamingComplete
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCdrStreamingComplete
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1241
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1241: starCdrStreamingComplete
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starDiameterCapabilitiesExchangeSuccess
+    label_mods:
+    - type: set
+      key: alertname
+      value: starDiameterCapabilitiesExchangeSuccess
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1036
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1036: starDiameterCapabilitiesExchangeSuccess
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshClearPortTxUtil
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshClearPortTxUtil
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.213
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.213: starThreshClearPortTxUtil
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCardInserted
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardInserted
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.8
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.8: starCardInserted
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCardSwitchoverComplete
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardSwitchoverComplete
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1254
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1254: starCardSwitchoverComplete
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSystemReboot
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSystemReboot
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1124
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1124: starSystemReboot
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1028":{"event_name":"starSystemStartup"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1028
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1028: starSystemStartup
+  - name: starAlerts
+    label_mods:
+    - type: set
+      key: alertname
+      value: starAlerts
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.37
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.37: starAlertsDisabled
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.38":{"event_name":"starAlertsEnabled"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.38
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.38: starAlertsEnabled
+  - name: starBFDSessUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: starBFDSessUp
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1276
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1276: starBFDSessUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starMMEServiceStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starMMEServiceStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1091
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1091: starMMEServiceStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starRaidRecovered
+    label_mods:
+    - type: set
+      key: alertname
+      value: starRaidRecovered
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1080
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1080: starRaidRecovered
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshSAEGWSessions
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshSAEGWSessions
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1213
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1213: starThreshSAEGWSessions
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1214":{"event_name":"starThreshClearSAEGWSessions"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1214
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1214: starThreshClearSAEGWSessions
+  - name: starDiameterPeer
+    label_mods:
+    - type: set
+      key: alertname
+      value: starDiameterPeer
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.184
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.184: starDiameterPeerDown
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.185":{"event_name":"starDiameterPeerUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.185
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.185: starDiameterPeerUp
+  - name: starPGWServiceStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starPGWServiceStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1081
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1081: starPGWServiceStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starRaidFailed
+    label_mods:
+    - type: set
+      key: alertname
+      value: starRaidFailed
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1077
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1077: starRaidFailed
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1078":{"event_name":"starRaidStarted"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1078
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1078: starRaidStarted
+  - name: starSessMgrRecoveryComplete
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSessMgrRecoveryComplete
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.183
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.183: starSessMgrRecoveryComplete
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starDiameterIpv6PeerDown
+    label_mods:
+    - type: set
+      key: alertname
+      value: starDiameterIpv6PeerDown
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1039
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1039: starDiameterIpv6PeerDown
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1040":{"event_name":"starDiameterIpv6PeerUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1040
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1040: starDiameterIpv6PeerUp
+  - name: starStatFilesizeExceeded
+    label_mods:
+    - type: set
+      key: alertname
+      value: starStatFilesizeExceeded
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1312
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1312: starStatFilesizeExceeded
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCLISessionEnd
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCLISessionEnd
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.53
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.53: starCLISessionEnd
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCardBootFailed
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardBootFailed
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.9
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.9: starCardBootFailed
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.5":{"event_name":"starCardUp"},".1.3.6.1.4.1.8164.2.55":{"event_name":"starCardActive"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        - .1.3.6.1.4.1.8164.2.55
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+            .1.3.6.1.4.1.8164.2.55: starCardActive
+  - name: starRMCPUOverClear
+    label_mods:
+    - type: set
+      key: alertname
+      value: starRMCPUOverClear
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1220
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1220: starRMCPUOverClear
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSWUpgradeComplete
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSWUpgradeComplete
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.116
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.116: starSWUpgradeComplete
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSubscriberLimit
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSubscriberLimit
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.66
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.66: starSubscriberLimit
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starCardSPOFAlarm
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardSPOFAlarm
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.139
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.139: starCardSPOFAlarm
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.140":{"event_name":"starCardSPOFClear"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.140
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.140: starCardSPOFClear
+  - name: starCritTask
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCritTask
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.54
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.54: starCritTaskFailed
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.5":{"event_name":"starCardUp"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+  - name: starDiameterIpv6PeerUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: starDiameterIpv6PeerUp
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1040
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1040: starDiameterIpv6PeerUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starEgtpcPathFailure
+    label_mods:
+    - type: set
+      key: alertname
+      value: starEgtpcPathFailure
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1112
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1112: starEgtpcPathFailure
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1113":{"event_name":"starEgtpcPathFailureClear"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1113
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1113: starEgtpcPathFailureClear
+  - name: starFTPServSwitch
+    label_mods:
+    - type: set
+      key: alertname
+      value: starFTPServSwitch
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1047
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1047: starFTPServSwitch
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starThreshPortTxUtil
+    label_mods:
+    - type: set
+      key: alertname
+      value: starThreshPortTxUtil
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.212
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.212: starThreshPortTxUtil
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.213":{"event_name":"starThreshClearPortTxUtil"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.213
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.213: starThreshClearPortTxUtil
+  - name: starCPUBusy
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCPUBusy
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.26
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.26: starCPUBusy
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1095":{"event_name":"starCPUBusyClear"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1095
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1095: starCPUBusyClear
+  - name: starCard
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCard
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.13
+        - .1.3.6.1.4.1.8164.2.4
+        - .1.3.6.1.4.1.8164.2.7
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.4: starCardRebootRequest
+            .1.3.6.1.4.1.8164.2.7: starCardRemoved
+            .1.3.6.1.4.1.8164.2.13: starCardMismatch
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.5":{"event_name":"starCardUp"},".1.3.6.1.4.1.8164.2.55":{"event_name":"starCardActive"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        - .1.3.6.1.4.1.8164.2.55
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.5: starCardUp
+            .1.3.6.1.4.1.8164.2.55: starCardActive
+  - name: starSGWServiceStop
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSGWServiceStop
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1084
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1084: starSGWServiceStop
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.1083":{"event_name":"starSGWServiceStart"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1083
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1083: starSGWServiceStart
+  - name: starSessionRejectNoResource
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSessionRejectNoResource
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.67
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.67: starSessionRejectNoResource
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starStorageFailed
+    label_mods:
+    - type: set
+      key: alertname
+      value: starStorageFailed
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.1076
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.1076: starStorageFailed
+        - type: set
+          key: compatible_clear_events
+          value: '{".1.3.6.1.4.1.8164.2.7":{"event_name":"starCardRemoved"}}'
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.7
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.7: starCardRemoved
+  - name: starCardActive
+    label_mods:
+    - type: set
+      key: alertname
+      value: starCardActive
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.55
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.55: starCardActive
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starLicenseUnderLimit
+    label_mods:
+    - type: set
+      key: alertname
+      value: starLicenseUnderLimit
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.94
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.94: starLicenseUnderLimit
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starSWUpgradeStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starSWUpgradeStart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.115
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.115: starSWUpgradeStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+  - name: starTaskRestart
+    label_mods:
+    - type: set
+      key: alertname
+      value: starTaskRestart
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.151
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8164.2.151: starTaskRestart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name

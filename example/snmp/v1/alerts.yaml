@@ -1,0 +1,2176 @@
+kind: SnmpTrapClientForAlertManager
+version: v1
+alerts:
+  starAAAAccServer:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.43:
+        event_name: starAAAAccServerReachable
+    error_events:
+      .1.3.6.1.4.1.8164.2.44:
+        event_name: starAAAAccServerMisconfigured
+  starAlerts:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.38:
+        event_name: starAlertsEnabled
+    error_events:
+      .1.3.6.1.4.1.8164.2.37:
+        event_name: starAlertsDisabled
+  starAlertsEnabled:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.38:
+        event_name: starAlertsEnabled
+  starBFDSes:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1276:
+        event_name: starBFDSessUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.1277:
+        event_name: starBFDSessDown
+  starBFDSessUp:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1276:
+        event_name: starBFDSessUp
+  starBGPPeerSession:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.118:
+        event_name: starBGPPeerSessionUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.119:
+        event_name: starBGPPeerSessionDown
+  starBGPPeerSessionIPv6:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1288:
+        event_name: starBGPPeerSessionIPv6Up
+    error_events:
+      .1.3.6.1.4.1.8164.2.1289:
+        event_name: starBGPPeerSessionIPv6Down
+  starBGPPeerSessionIPv6Up:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1288:
+        event_name: starBGPPeerSessionIPv6Up
+  starBGPPeerSessionUp:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.118:
+        event_name: starBGPPeerSessionUp
+  starCLISessionEnd:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.53:
+        event_name: starCLISessionEnd
+  starCLISessionStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.52:
+        event_name: starCLISessionStart
+  starCPUBusy:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1095:
+        event_name: starCPUBusyClear
+    error_events:
+      .1.3.6.1.4.1.8164.2.26:
+        event_name: starCPUBusy
+  starCPUBusyClear:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1095:
+        event_name: starCPUBusyClear
+  starCPUFail:
+    alert_severity: critical
+    clear_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.29:
+        event_name: starCPUFailed
+  starCPUMemory:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1096:
+        event_name: starCPUMemoryLowClear
+    error_events:
+      .1.3.6.1.4.1.8164.2.27:
+        event_name: starCPUMemoryLow
+  starCPUMemoryFail:
+    alert_severity: critical
+    clear_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.28:
+        event_name: starCPUMemoryFailed
+  starCPUMemoryLowClear:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1096:
+        event_name: starCPUMemoryLowClear
+  starCPUWatchDog:
+    alert_severity: critical
+    clear_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.30:
+        event_name: starCPUWatchDogExpired
+  starCard:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+      .1.3.6.1.4.1.8164.2.55:
+        event_name: starCardActive
+    error_events:
+      .1.3.6.1.4.1.8164.2.13:
+        event_name: starCardMismatch
+      .1.3.6.1.4.1.8164.2.4:
+        event_name: starCardRebootRequest
+      .1.3.6.1.4.1.8164.2.7:
+        event_name: starCardRemoved
+  starCardBootFailed:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+      .1.3.6.1.4.1.8164.2.55:
+        event_name: starCardActive
+    error_events:
+      .1.3.6.1.4.1.8164.2.9:
+        event_name: starCardBootFailed
+  starCardActive:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.55:
+        event_name: starCardActive
+  starCardDown:
+    alert_severity: critical
+    clear_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.60:
+        event_name: starCardDown
+  starCardInserted:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.8:
+        event_name: starCardInserted
+  starCardMigrate:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1257:
+        event_name: starCardMigrateComplete
+    error_events:
+      .1.3.6.1.4.1.8164.2.1256:
+        event_name: starCardMigrateStart
+  starCardMigrateComplete:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1257:
+        event_name: starCardMigrateComplete
+  starCardSPOFAlarm:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.140:
+        event_name: starCardSPOFClear
+    error_events:
+      .1.3.6.1.4.1.8164.2.139:
+        event_name: starCardSPOFAlarm
+  starCardSPOFClear:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.140:
+        event_name: starCardSPOFClear
+  starCardStandby:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.93:
+        event_name: starCardStandby
+  starCardSwitchover:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.20:
+        event_name: starCardSPCSwitchoverComplete
+    error_events:
+      .1.3.6.1.4.1.8164.2.1253:
+        event_name: starCardSwitchoverStart
+  starCardSwitchoverComplete:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1254:
+        event_name: starCardSwitchoverComplete
+  starCardSwitchoverIssue:
+    alert_severity: critical
+    clear_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.1255:
+        event_name: starCardSwitchoverFailed
+  starCardUp:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+  starCdrHDDStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1239:
+        event_name: starCdrHDDStart
+  starCdrStreamingComplete:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1241:
+        event_name: starCdrStreamingComplete
+  starCdrStreamingStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1240:
+        event_name: starCdrStreamingStart
+  starCongestion:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.82:
+        event_name: starCongestionClear
+    error_events:
+      .1.3.6.1.4.1.8164.2.81:
+        event_name: starCongestion
+  starCongestionClear:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.82:
+        event_name: starCongestionClear
+  starCritTask:
+    alert_severity: critical
+    clear_events:
+      .1.3.6.1.4.1.8164.2.5:
+        event_name: starCardUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.54:
+        event_name: starCritTaskFailed
+  starDiameterCapabilitiesExchangeFailure:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1036:
+        event_name: starDiameterCapabilitiesExchangeSuccess
+    error_events:
+      .1.3.6.1.4.1.8164.2.1035:
+        event_name: starDiameterCapabilitiesExchangeFailure
+  starDiameterCapabilitiesExchangeSuccess:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1036:
+        event_name: starDiameterCapabilitiesExchangeSuccess
+  starDiameterIpv6PeerDown:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1040:
+        event_name: starDiameterIpv6PeerUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.1039:
+        event_name: starDiameterIpv6PeerDown
+  starDiameterIpv6PeerUp:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1040:
+        event_name: starDiameterIpv6PeerUp
+  starDiameterPeer:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.185:
+        event_name: starDiameterPeerUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.184:
+        event_name: starDiameterPeerDown
+  starDiameterPeerUp:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.185:
+        event_name: starDiameterPeerUp
+  starECSreaddressServerDown:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1237:
+        event_name: starECSreaddressServerDown
+  starECSreaddressServerUp:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1238:
+        event_name: starECSreaddressServerUp
+  starEGTPServiceStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1085:
+        event_name: starEGTPServiceStart
+  starEGTPServiceStop:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1085:
+        event_name: starEGTPServiceStart
+    error_events:
+      .1.3.6.1.4.1.8164.2.1086:
+        event_name: starEGTPServiceStop
+  starEgtpcPathFailure:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1113:
+        event_name: starEgtpcPathFailureClear
+    error_events:
+      .1.3.6.1.4.1.8164.2.1112:
+        event_name: starEgtpcPathFailure
+  starEgtpcPathFailureClear:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1113:
+        event_name: starEgtpcPathFailureClear
+  starFTPPushFail:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1046:
+        event_name: starFTPPushFail
+  starFTPServSwitch:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1047:
+        event_name: starFTPServSwitch
+  starL3AddrUnreachable:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.114:
+        event_name: starL3AddrUnreachable
+  starLicenseAboutToExpire:
+    alert_severity: critical
+    error_events:
+      .1.3.6.1.4.1.8164.2.1125:
+        event_name: starLicenseAboutToExpire
+  starLicenseExpired:
+    alert_severity: critical
+    error_events:
+      .1.3.6.1.4.1.8164.2.1126:
+        event_name: starLicenseExpired
+  starLicenseExceeded:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.94:
+        event_name: starLicenseUnderLimit
+    error_events:
+      .1.3.6.1.4.1.8164.2.65:
+        event_name: starLicenseExceeded
+  starLicenseUnderLimit:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.94:
+        event_name: starLicenseUnderLimit
+  starMMES1Assoc:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1168:
+        event_name: starMMES1AssocSetup
+      .1.3.6.1.4.1.8164.2.1190:
+        event_name: starMMES1PathSetup
+    error_events:
+      .1.3.6.1.4.1.8164.2.1167:
+        event_name: starMMES1AssocFail
+      .1.3.6.1.4.1.8164.2.1189:
+        event_name: starMMES1PathFail
+  starMMES1AssocSetup:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1168:
+        event_name: starMMES1AssocSetup
+  starMMES1PathSetup:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1190:
+        event_name: starMMES1PathSetup
+  starMMEServiceStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1091:
+        event_name: starMMEServiceStart
+  starMMEServiceStop:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1091:
+        event_name: starMMEServiceStart
+    error_events:
+      .1.3.6.1.4.1.8164.2.1092:
+        event_name: starMMEServiceStop
+  starManagerFailure:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1099:
+        event_name: starManagerRestart
+    error_events:
+      .1.3.6.1.4.1.8164.2.73:
+        event_name: starManagerFailure
+  starManagerRestart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1099:
+        event_name: starManagerRestart
+  starNPUARPPoolExhausted:
+    alert_severity: error
+    error_events:
+      .1.3.6.1.4.1.8164.2.31:
+        event_name: starNPUARPPoolExhausted
+  starNTPPeerReachable:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.105:
+        event_name: starNTPPeerReachable
+  starNTPPeerUnreachable:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.105:
+        event_name: starNTPPeerReachable
+    error_events:
+      .1.3.6.1.4.1.8164.2.90:
+        event_name: starNTPPeerUnreachable
+  starNTPSyncEstablished:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.106:
+        event_name: starNTPSyncEstablished
+  starNTPSyncLost:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.106:
+        event_name: starNTPSyncEstablished
+    error_events:
+      .1.3.6.1.4.1.8164.2.91:
+        event_name: starNTPSyncLost
+  starOverloadSystem:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.168:
+        event_name: starOverloadSystemClear
+    error_events:
+      .1.3.6.1.4.1.8164.2.167:
+        event_name: starOverloadSystem
+  starOverloadSystemClear:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.168:
+        event_name: starOverloadSystemClear
+  starPGWServiceStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1081:
+        event_name: starPGWServiceStart
+  starPGWServiceStop:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1081:
+        event_name: starPGWServiceStart
+    error_events:
+      .1.3.6.1.4.1.8164.2.1082:
+        event_name: starPGWServiceStop
+  starPortDown:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1025:
+        event_name: starPortUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.1024:
+        event_name: starPortDown
+  starPortUp:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1025:
+        event_name: starPortUp
+  starRMCPUOver:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1220:
+        event_name: starRMCPUOverClear
+    error_events:
+      .1.3.6.1.4.1.8164.2.1219:
+        event_name: starRMCPUOver
+  starRMCPUOverClear:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1220:
+        event_name: starRMCPUOverClear
+  starRaidDegraded:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1080:
+        event_name: starRaidRecovered
+    error_events:
+      .1.3.6.1.4.1.8164.2.1079:
+        event_name: starRaidDegraded
+  starRaidFailed:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1078:
+        event_name: starRaidStarted
+    error_events:
+      .1.3.6.1.4.1.8164.2.1077:
+        event_name: starRaidFailed
+  starRaidRecovered:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1080:
+        event_name: starRaidRecovered
+  starRaidStarted:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1078:
+        event_name: starRaidStarted
+  starSAEGWService:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1191:
+        event_name: starSAEGWServiceStart
+    error_events:
+      .1.3.6.1.4.1.8164.2.1192:
+        event_name: starSAEGWServiceStop
+  starSAEGWServiceStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1191:
+        event_name: starSAEGWServiceStart
+  starSGWServiceStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1083:
+        event_name: starSGWServiceStart
+  starSGWServiceStop:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1083:
+        event_name: starSGWServiceStart
+    error_events:
+      .1.3.6.1.4.1.8164.2.1084:
+        event_name: starSGWServiceStop
+  starSLSService:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1266:
+        event_name: starSLSServiceStart
+    error_events:
+      .1.3.6.1.4.1.8164.2.1267:
+        event_name: starSLSServiceStop
+  starSLSServiceStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1266:
+        event_name: starSLSServiceStart
+  starSRPConnDown:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1038:
+        event_name: starSRPConnUp
+    error_events:
+      .1.3.6.1.4.1.8164.2.1037:
+        event_name: starSRPConnDown
+  starSRPConnUp:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1038:
+        event_name: starSRPConnUp
+  starSWUpgradeAborted:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.117:
+        event_name: starSWUpgradeAborted
+  starSWUpgradeComplete:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.116:
+        event_name: starSWUpgradeComplete
+  starSWUpgradeStart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.115:
+        event_name: starSWUpgradeStart
+  starSessCapReached:
+    alert_severity: critical
+    error_events:
+      .1.3.6.1.4.1.8164.2.1298:
+        event_name: starSessCapReached
+  starSessMgrRecoveryComplete:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.183:
+        event_name: starSessMgrRecoveryComplete
+  starSessionRejectNoResource:
+    alert_severity: error
+    error_events:
+      .1.3.6.1.4.1.8164.2.67:
+        event_name: starSessionRejectNoResource
+  starStatFilesizeClear:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1313:
+        event_name: starStatFilesizeClear
+  starStatFilesizeExceeded:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1312:
+        event_name: starStatFilesizeExceeded
+  starStorageFailed:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.7:
+        event_name: starCardRemoved
+    error_events:
+      .1.3.6.1.4.1.8164.2.1076:
+        event_name: starStorageFailed
+  starStorageFound:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1225:
+        event_name: starStorageFound
+  starStorageNotFound:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1225:
+        event_name: starStorageFound
+    error_events:
+      .1.3.6.1.4.1.8164.2.1226:
+        event_name: starStorageNotFound
+  starSubscriberLimit:
+    alert_severity: error
+    error_events:
+      .1.3.6.1.4.1.8164.2.66:
+        event_name: starSubscriberLimit
+  starSystemReboot:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1028:
+        event_name: starSystemStartup
+    error_events:
+      .1.3.6.1.4.1.8164.2.1124:
+        event_name: starSystemReboot
+  starSystemStartup:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1028:
+        event_name: starSystemStartup
+  starTaskFailure:
+    alert_severity: error
+    clear_events:
+      .1.3.6.1.4.1.8164.2.151:
+        event_name: starTaskRestart
+    error_events:
+      .1.3.6.1.4.1.8164.2.150:
+        event_name: starTaskFailed
+  starTaskRestart:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.151:
+        event_name: starTaskRestart
+  starThreshCPUMemUsage:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.245:
+        event_name: starThreshClearCPUMemUsage
+    error_events:
+      .1.3.6.1.4.1.8164.2.244:
+        event_name: starThreshCPUMemUsage
+  starThreshCPUMemory:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.203:
+        event_name: starThreshClearCPUMemory
+    error_events:
+      .1.3.6.1.4.1.8164.2.202:
+        event_name: starThreshCPUMemory
+  starThreshCPUUtilization:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.203:
+        event_name: starThreshClearCPUMemory
+    error_events:
+      .1.3.6.1.4.1.8164.2.200:
+        event_name: starThreshCPUUtilization
+  starThreshCPUUtilization10Sec:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.241:
+        event_name: starThreshClearCPUUtilization10Sec
+    error_events:
+      .1.3.6.1.4.1.8164.2.240:
+        event_name: starThreshCPUUtilization10Sec
+  starThreshClearCPUMemUsage:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.245:
+        event_name: starThreshClearCPUMemUsage
+  starThreshClearCPUMemory:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.203:
+        event_name: starThreshClearCPUMemory
+  starThreshClearCPUUtilization:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.201:
+        event_name: starThreshClearCPUUtilization
+  starThreshClearCPUUtilization10Sec:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.241:
+        event_name: starThreshClearCPUUtilization10Sec
+  starThreshClearLicense:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.205:
+        event_name: starThreshClearLicense
+  starThreshClearPortHighActivity:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.215:
+        event_name: starThreshClearPortHighActivity
+  starThreshClearPortRxUtil:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.211:
+        event_name: starThreshClearPortRxUtil
+  starThreshClearPortTxUtil:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.213:
+        event_name: starThreshClearPortTxUtil
+  starThreshClearSAEGWSessions:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.8164.2.1214:
+        event_name: starThreshClearSAEGWSessions
+  starThreshLicense:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.205:
+        event_name: starThreshClearLicense
+    error_events:
+      .1.3.6.1.4.1.8164.2.204:
+        event_name: starThreshLicense
+  starThreshPortHighActivity:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.215:
+        event_name: starThreshClearPortHighActivity
+    error_events:
+      .1.3.6.1.4.1.8164.2.214:
+        event_name: starThreshPortHighActivity
+  starThreshPortRxUtil:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.211:
+        event_name: starThreshClearPortRxUtil
+    error_events:
+      .1.3.6.1.4.1.8164.2.210:
+        event_name: starThreshPortRxUtil
+  starThreshPortTxUtil:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.213:
+        event_name: starThreshClearPortTxUtil
+    error_events:
+      .1.3.6.1.4.1.8164.2.212:
+        event_name: starThreshPortTxUtil
+  starThreshSAEGWSessions:
+    alert_severity: warning
+    clear_events:
+      .1.3.6.1.4.1.8164.2.1214:
+        event_name: starThreshClearSAEGWSessions
+    error_events:
+      .1.3.6.1.4.1.8164.2.1213:
+        event_name: starThreshSAEGWSessions
+dropped_events:
+  .1.3.6.1.4.1.8164.2.1:
+    event_name: starCardTempOverheat
+  .1.3.6.1.4.1.8164.2.10:
+    event_name: starCardFailed
+  .1.3.6.1.4.1.8164.2.100:
+    event_name: starIPSECTunSwitchComplete
+  .1.3.6.1.4.1.8164.2.1001:
+    event_name: starOSPFNeighborDown
+  .1.3.6.1.4.1.8164.2.1002:
+    event_name: starOSPFNeighborFull
+  .1.3.6.1.4.1.8164.2.1004:
+    event_name: starM3UAPSDown
+  .1.3.6.1.4.1.8164.2.1005:
+    event_name: starM3UAPSActive
+  .1.3.6.1.4.1.8164.2.1006:
+    event_name: starM3UAPSPDown
+  .1.3.6.1.4.1.8164.2.1007:
+    event_name: starM3UAPSPUp
+  .1.3.6.1.4.1.8164.2.1008:
+    event_name: starSCCPSspRcvd
+  .1.3.6.1.4.1.8164.2.1009:
+    event_name: starSCCPSspClear
+  .1.3.6.1.4.1.8164.2.101:
+    event_name: starNwReachServerAlive
+  .1.3.6.1.4.1.8164.2.1010:
+    event_name: starSGSNRNCReset
+  .1.3.6.1.4.1.8164.2.1011:
+    event_name: starSGSNHLRReset
+  .1.3.6.1.4.1.8164.2.1012:
+    event_name: starSGSNGtpcPathFailure
+  .1.3.6.1.4.1.8164.2.1013:
+    event_name: starSGSNGtpcPathFailureClear
+  .1.3.6.1.4.1.8164.2.1014:
+    event_name: starSGSNGtpuPathFailure
+  .1.3.6.1.4.1.8164.2.1015:
+    event_name: starSGSNGtpuPathFailureClear
+  .1.3.6.1.4.1.8164.2.1016:
+    event_name: starMTP3LinkOutOfService
+  .1.3.6.1.4.1.8164.2.1017:
+    event_name: starMTP3LinkInService
+  .1.3.6.1.4.1.8164.2.1018:
+    event_name: starMTP3LinkSetUnAvailable
+  .1.3.6.1.4.1.8164.2.1019:
+    event_name: starMTP3LinkSetAvailable
+  .1.3.6.1.4.1.8164.2.102:
+    event_name: starNwReachServerDead
+  .1.3.6.1.4.1.8164.2.1020:
+    event_name: starSCTPAssociationFail
+  .1.3.6.1.4.1.8164.2.1021:
+    event_name: starSCTPAssociationEstablished
+  .1.3.6.1.4.1.8164.2.1022:
+    event_name: starSCTPPathDown
+  .1.3.6.1.4.1.8164.2.1023:
+    event_name: starSCTPPathUp
+  .1.3.6.1.4.1.8164.2.1026:
+    event_name: starBSReachable
+  .1.3.6.1.4.1.8164.2.1027:
+    event_name: starBSUnreachable
+  .1.3.6.1.4.1.8164.2.1029:
+    event_name: starMTP3PCUnavailable
+  .1.3.6.1.4.1.8164.2.103:
+    event_name: starStorageServerUnackedGcdrVolPurge
+  .1.3.6.1.4.1.8164.2.1030:
+    event_name: starMTP3PCAvailable
+  .1.3.6.1.4.1.8164.2.1031:
+    event_name: starSS7PCUnavailable
+  .1.3.6.1.4.1.8164.2.1032:
+    event_name: starSS7PCAvailable
+  .1.3.6.1.4.1.8164.2.1033:
+    event_name: starASNPCServiceStart
+  .1.3.6.1.4.1.8164.2.1034:
+    event_name: starASNPCServiceStop
+  .1.3.6.1.4.1.8164.2.104:
+    event_name: starStorageServerUnackedGcdrFileGen
+  .1.3.6.1.4.1.8164.2.1041:
+    event_name: starIPMSServerUnreachable
+  .1.3.6.1.4.1.8164.2.1042:
+    event_name: starIPMSServerReachable
+  .1.3.6.1.4.1.8164.2.1043:
+    event_name: starCertShortLifetime
+  .1.3.6.1.4.1.8164.2.1044:
+    event_name: starCertExpired
+  .1.3.6.1.4.1.8164.2.1045:
+    event_name: starCertValid
+  .1.3.6.1.4.1.8164.2.1048:
+    event_name: starSDHSectionDown
+  .1.3.6.1.4.1.8164.2.1049:
+    event_name: starSDHSectionUp
+  .1.3.6.1.4.1.8164.2.1050:
+    event_name: starSDHPathHopDown
+  .1.3.6.1.4.1.8164.2.1051:
+    event_name: starSDHPathHopUp
+  .1.3.6.1.4.1.8164.2.1052:
+    event_name: starSDHLopDown
+  .1.3.6.1.4.1.8164.2.1053:
+    event_name: starSDHLopUp
+  .1.3.6.1.4.1.8164.2.1056:
+    event_name: starSS7PCCongested
+  .1.3.6.1.4.1.8164.2.1057:
+    event_name: starSS7PCCongestionCleared
+  .1.3.6.1.4.1.8164.2.1058:
+    event_name: starPHSGWServiceStart
+  .1.3.6.1.4.1.8164.2.1059:
+    event_name: starPHSGWServiceStop
+  .1.3.6.1.4.1.8164.2.1060:
+    event_name: starGPRSServiceStart
+  .1.3.6.1.4.1.8164.2.1061:
+    event_name: starGPRSServiceStop
+  .1.3.6.1.4.1.8164.2.1062:
+    event_name: starGPRSNseDown
+  .1.3.6.1.4.1.8164.2.1063:
+    event_name: starGPRSNseUp
+  .1.3.6.1.4.1.8164.2.1064:
+    event_name: starGPRSNsvcDown
+  .1.3.6.1.4.1.8164.2.1065:
+    event_name: starGPRSNsvcUp
+  .1.3.6.1.4.1.8164.2.1066:
+    event_name: starGPRSBvcDown
+  .1.3.6.1.4.1.8164.2.1067:
+    event_name: starGPRSBvcUp
+  .1.3.6.1.4.1.8164.2.1068:
+    event_name: starSDHE1TribDown
+  .1.3.6.1.4.1.8164.2.1069:
+    event_name: starSDHE1TribUp
+  .1.3.6.1.4.1.8164.2.107:
+    event_name: starSIPServiceStart
+  .1.3.6.1.4.1.8164.2.1070:
+    event_name: starSDHFractE1LMIDown
+  .1.3.6.1.4.1.8164.2.1071:
+    event_name: starSDHFractE1LMIUp
+  .1.3.6.1.4.1.8164.2.1072:
+    event_name: starPHSPCServiceStart
+  .1.3.6.1.4.1.8164.2.1073:
+    event_name: starPHSPCServiceStop
+  .1.3.6.1.4.1.8164.2.1074:
+    event_name: starM3UAPSPCongested
+  .1.3.6.1.4.1.8164.2.1075:
+    event_name: starM3UAPSPCongestionCleared
+  .1.3.6.1.4.1.8164.2.108:
+    event_name: starSIPServiceStop
+  .1.3.6.1.4.1.8164.2.1087:
+    event_name: starLMAServiceStart
+  .1.3.6.1.4.1.8164.2.1088:
+    event_name: starLMAServiceStop
+  .1.3.6.1.4.1.8164.2.1089:
+    event_name: starMAGServiceStart
+  .1.3.6.1.4.1.8164.2.109:
+    event_name: starVIMServiceStart
+  .1.3.6.1.4.1.8164.2.1090:
+    event_name: starMAGServiceStop
+  .1.3.6.1.4.1.8164.2.1093:
+    event_name: starHSGWServiceStart
+  .1.3.6.1.4.1.8164.2.1094:
+    event_name: starHSGWServiceStop
+  .1.3.6.1.4.1.8164.2.1097:
+    event_name: starFNGServiceStart
+  .1.3.6.1.4.1.8164.2.1098:
+    event_name: starFNGServiceStop
+  .1.3.6.1.4.1.8164.2.11:
+    event_name: starCardSWFailed
+  .1.3.6.1.4.1.8164.2.110:
+    event_name: starVIMServiceStop
+  .1.3.6.1.4.1.8164.2.1100:
+    event_name: starConfigurationUpdate
+  .1.3.6.1.4.1.8164.2.1101:
+    event_name: starPDGServiceStart
+  .1.3.6.1.4.1.8164.2.1102:
+    event_name: starPDGServiceStop
+  .1.3.6.1.4.1.8164.2.1103:
+    event_name: starDynPkgLoadError
+  .1.3.6.1.4.1.8164.2.1104:
+    event_name: starDynPkgLoadErrorClear
+  .1.3.6.1.4.1.8164.2.1105:
+    event_name: starDynPkgUpgradeError
+  .1.3.6.1.4.1.8164.2.1106:
+    event_name: starDynPkgUpgradeErrorClear
+  .1.3.6.1.4.1.8164.2.1107:
+    event_name: starCSCFPeerServerUnavailable
+  .1.3.6.1.4.1.8164.2.1108:
+    event_name: starCSCFPeerServerOutofService
+  .1.3.6.1.4.1.8164.2.1109:
+    event_name: starCSCFPeerServerInService
+  .1.3.6.1.4.1.8164.2.111:
+    event_name: starCHATCONFServiceStart
+  .1.3.6.1.4.1.8164.2.1110:
+    event_name: starServiceLossPTACsClear
+  .1.3.6.1.4.1.8164.2.1111:
+    event_name: starServiceLossLCClear
+  .1.3.6.1.4.1.8164.2.1114:
+    event_name: starCscfSessResourceCongestion
+  .1.3.6.1.4.1.8164.2.1115:
+    event_name: starCscfSessResourceCongestionClear
+  .1.3.6.1.4.1.8164.2.1116:
+    event_name: starOSPFv3NeighborDown
+  .1.3.6.1.4.1.8164.2.1117:
+    event_name: starOSPFv3NeighborFull
+  .1.3.6.1.4.1.8164.2.1118:
+    event_name: starServiceLossSPIOClear
+  .1.3.6.1.4.1.8164.2.1119:
+    event_name: starEgtpuPathFailure
+  .1.3.6.1.4.1.8164.2.112:
+    event_name: starCHATCONFServiceStop
+  .1.3.6.1.4.1.8164.2.1120:
+    event_name: starEgtpuPathFailureClear
+  .1.3.6.1.4.1.8164.2.1121:
+    event_name: starStorageServerCDRLoss
+  .1.3.6.1.4.1.8164.2.1122:
+    event_name: starHNBGWServiceStart
+  .1.3.6.1.4.1.8164.2.1123:
+    event_name: starHNBGWServiceStop
+  .1.3.6.1.4.1.8164.2.1127:
+    event_name: starPCCPolicyServiceStart
+  .1.3.6.1.4.1.8164.2.1128:
+    event_name: starPCCPolicyServiceStop
+  .1.3.6.1.4.1.8164.2.1129:
+    event_name: starPCCQuotaServiceStart
+  .1.3.6.1.4.1.8164.2.113:
+    event_name: starSIPRouteNomatch
+  .1.3.6.1.4.1.8164.2.1130:
+    event_name: starPCCQuotaServiceStop
+  .1.3.6.1.4.1.8164.2.1131:
+    event_name: starPCCAFServiceStart
+  .1.3.6.1.4.1.8164.2.1132:
+    event_name: starPCCAFServiceStop
+  .1.3.6.1.4.1.8164.2.1133:
+    event_name: starSPRServerUnreachable
+  .1.3.6.1.4.1.8164.2.1134:
+    event_name: starSPRServerReachable
+  .1.3.6.1.4.1.8164.2.1135:
+    event_name: starGSServiceStart
+  .1.3.6.1.4.1.8164.2.1136:
+    event_name: starGSServiceStop
+  .1.3.6.1.4.1.8164.2.1137:
+    event_name: starMAPServiceStart
+  .1.3.6.1.4.1.8164.2.1138:
+    event_name: starMAPServiceStop
+  .1.3.6.1.4.1.8164.2.1139:
+    event_name: starIUPSServiceStart
+  .1.3.6.1.4.1.8164.2.1140:
+    event_name: starIUPSServiceStop
+  .1.3.6.1.4.1.8164.2.1141:
+    event_name: starSGTPServiceStart
+  .1.3.6.1.4.1.8164.2.1142:
+    event_name: starSGTPServiceStop
+  .1.3.6.1.4.1.8164.2.1143:
+    event_name: starEPDGServiceStart
+  .1.3.6.1.4.1.8164.2.1144:
+    event_name: starEPDGServiceStop
+  .1.3.6.1.4.1.8164.2.1145:
+    event_name: starApsCommandSuccess
+  .1.3.6.1.4.1.8164.2.1146:
+    event_name: starApsCommandFailure
+  .1.3.6.1.4.1.8164.2.1147:
+    event_name: starApsSwitchSuccess
+  .1.3.6.1.4.1.8164.2.1148:
+    event_name: starApsSwitchFailure
+  .1.3.6.1.4.1.8164.2.1149:
+    event_name: starApsModeMismatch
+  .1.3.6.1.4.1.8164.2.1150:
+    event_name: starApsChannelMismatch
+  .1.3.6.1.4.1.8164.2.1151:
+    event_name: starApsByteMismatch
+  .1.3.6.1.4.1.8164.2.1152:
+    event_name: starApsFeProtLineFailure
+  .1.3.6.1.4.1.8164.2.1153:
+    event_name: starApsLossOfRedundancy
+  .1.3.6.1.4.1.8164.2.1154:
+    event_name: starApsLossOfRedundancyClear
+  .1.3.6.1.4.1.8164.2.1155:
+    event_name: starHNBGWSGSNRanapReset
+  .1.3.6.1.4.1.8164.2.1156:
+    event_name: starHNBGWMSCRanapReset
+  .1.3.6.1.4.1.8164.2.1157:
+    event_name: starALCAPNodeReset
+  .1.3.6.1.4.1.8164.2.1158:
+    event_name: starALCAPPathReset
+  .1.3.6.1.4.1.8164.2.1159:
+    event_name: starALCAPPathBlock
+  .1.3.6.1.4.1.8164.2.1160:
+    event_name: starALCAPPathUnBlock
+  .1.3.6.1.4.1.8164.2.1161:
+    event_name: starSGSServiceStart
+  .1.3.6.1.4.1.8164.2.1162:
+    event_name: starSGSServiceStop
+  .1.3.6.1.4.1.8164.2.1163:
+    event_name: starSgsnGnMsgDelay
+  .1.3.6.1.4.1.8164.2.1164:
+    event_name: starSgsnGnMsgDelayClear
+  .1.3.6.1.4.1.8164.2.1165:
+    event_name: starBNGServiceStart
+  .1.3.6.1.4.1.8164.2.1166:
+    event_name: starBNGServiceStop
+  .1.3.6.1.4.1.8164.2.1169:
+    event_name: starMVGPeerDown
+  .1.3.6.1.4.1.8164.2.1170:
+    event_name: starMVGPeerUp
+  .1.3.6.1.4.1.8164.2.1173:
+    event_name: starPCCNtfyIntfPeerUnreachable
+  .1.3.6.1.4.1.8164.2.1174:
+    event_name: starPCCNtfyIntfPeerReachable
+  .1.3.6.1.4.1.8164.2.1175:
+    event_name: starIPSecNodePeerDown
+  .1.3.6.1.4.1.8164.2.1176:
+    event_name: starIPSecNodePeerUp
+  .1.3.6.1.4.1.8164.2.1177:
+    event_name: starApsRemoteResponseFail
+  .1.3.6.1.4.1.8164.2.1178:
+    event_name: starCdrPurged
+  .1.3.6.1.4.1.8164.2.1180:
+    event_name: starLocalUserAdded
+  .1.3.6.1.4.1.8164.2.1181:
+    event_name: starLocalUserRemoved
+  .1.3.6.1.4.1.8164.2.1182:
+    event_name: starLocalUserPrivilegeChanged
+  .1.3.6.1.4.1.8164.2.1183:
+    event_name: starOsShellAccessed
+  .1.3.6.1.4.1.8164.2.1184:
+    event_name: starTestModeEntered
+  .1.3.6.1.4.1.8164.2.1185:
+    event_name: starLicenseFeaturesModified
+  .1.3.6.1.4.1.8164.2.1186:
+    event_name: starHiddenAccessEnabled
+  .1.3.6.1.4.1.8164.2.1187:
+    event_name: starHiddenAccessDisabled
+  .1.3.6.1.4.1.8164.2.1188:
+    event_name: starLawfulInterceptChanged
+  .1.3.6.1.4.1.8164.2.1193:
+    event_name: starHenbgwAccessServiceStart
+  .1.3.6.1.4.1.8164.2.1194:
+    event_name: starHenbgwAccessServiceStop
+  .1.3.6.1.4.1.8164.2.1195:
+    event_name: starHenbgwNetworkServiceStart
+  .1.3.6.1.4.1.8164.2.1196:
+    event_name: starHenbgwNetworkServiceStop
+  .1.3.6.1.4.1.8164.2.1197:
+    event_name: starAAAArchiveStarted
+  .1.3.6.1.4.1.8164.2.1198:
+    event_name: starECSTotalDNSLearntIPv4Threshold
+  .1.3.6.1.4.1.8164.2.1199:
+    event_name: starECSTotalDNSLearntIPv4ThresholdClear
+  .1.3.6.1.4.1.8164.2.12:
+    event_name: starCardRCCFailed
+  .1.3.6.1.4.1.8164.2.120:
+    event_name: starSRPActive
+  .1.3.6.1.4.1.8164.2.1200:
+    event_name: starECSTotalDNSLearntIPv6Threshold
+  .1.3.6.1.4.1.8164.2.1201:
+    event_name: starECSTotalDNSLearntIPv6ThresholdClear
+  .1.3.6.1.4.1.8164.2.1202:
+    event_name: starIPSecNodeIpv6PeerDown
+  .1.3.6.1.4.1.8164.2.1203:
+    event_name: starIPSecNodeIpv6PeerUp
+  .1.3.6.1.4.1.8164.2.1204:
+    event_name: starLAGGroupDown
+  .1.3.6.1.4.1.8164.2.1205:
+    event_name: starLAGGroupUp
+  .1.3.6.1.4.1.8164.2.1206:
+    event_name: starVLRAssocDown
+  .1.3.6.1.4.1.8164.2.1207:
+    event_name: starVLRAssocUp
+  .1.3.6.1.4.1.8164.2.1208:
+    event_name: starVLRAllAssocDown
+  .1.3.6.1.4.1.8164.2.1209:
+    event_name: starVLRAllAssocDownClear
+  .1.3.6.1.4.1.8164.2.121:
+    event_name: starSRPStandby
+  .1.3.6.1.4.1.8164.2.1210:
+    event_name: starEnhancedCongestion
+  .1.3.6.1.4.1.8164.2.1211:
+    event_name: starEnhancedCongestionClear
+  .1.3.6.1.4.1.8164.2.1212:
+    event_name: starSGSNRNCNoResetAck
+  .1.3.6.1.4.1.8164.2.1215:
+    event_name: starSGSNRMCPUWarn
+  .1.3.6.1.4.1.8164.2.1216:
+    event_name: starSGSNRMCPUWarnClear
+  .1.3.6.1.4.1.8164.2.1217:
+    event_name: starSGSNRMMemWarn
+  .1.3.6.1.4.1.8164.2.1218:
+    event_name: starSGSNRMMemWarnClear
+  .1.3.6.1.4.1.8164.2.122:
+    event_name: starBGPPeerReachable
+  .1.3.6.1.4.1.8164.2.1221:
+    event_name: starSGSNRMMemOver
+  .1.3.6.1.4.1.8164.2.1222:
+    event_name: starSGSNRMMemOverClear
+  .1.3.6.1.4.1.8164.2.1223:
+    event_name: starSessMgrFlowCount
+  .1.3.6.1.4.1.8164.2.1224:
+    event_name: starSessMgrFlowCountClear
+  .1.3.6.1.4.1.8164.2.1227:
+    event_name: starHENBGWMMESCTPAssocDown
+  .1.3.6.1.4.1.8164.2.1228:
+    event_name: starHENBGWMMESCTPAssocUp
+  .1.3.6.1.4.1.8164.2.1229:
+    event_name: starHENBGWMMESCTPAllAssocDown
+  .1.3.6.1.4.1.8164.2.123:
+    event_name: starBGPPeerUnreachable
+  .1.3.6.1.4.1.8164.2.1230:
+    event_name: starHENBGWMMESCTPAllAssocDownClear
+  .1.3.6.1.4.1.8164.2.1231:
+    event_name: starNPDBConnectionDown
+  .1.3.6.1.4.1.8164.2.1232:
+    event_name: starNPDBConnectionUp
+  .1.3.6.1.4.1.8164.2.1233:
+    event_name: starNPUMissedARPFrames
+  .1.3.6.1.4.1.8164.2.1234:
+    event_name: starNPUMissedARPFramesClear
+  .1.3.6.1.4.1.8164.2.1235:
+    event_name: starChassisCrashListFull
+  .1.3.6.1.4.1.8164.2.1236:
+    event_name: starSessMgrCSCFServiceRecoveryComplete
+  .1.3.6.1.4.1.8164.2.124:
+    event_name: starSRPAAAReachable
+  .1.3.6.1.4.1.8164.2.1242:
+    event_name: starVLRDown
+  .1.3.6.1.4.1.8164.2.1243:
+    event_name: starVLRUp
+  .1.3.6.1.4.1.8164.2.1244:
+    event_name: starPCFReachable
+  .1.3.6.1.4.1.8164.2.1245:
+    event_name: starLIRcvryError
+  .1.3.6.1.4.1.8164.2.1246:
+    event_name: starLIRcvryComplete
+  .1.3.6.1.4.1.8164.2.1247:
+    event_name: starCGWServiceStart
+  .1.3.6.1.4.1.8164.2.1248:
+    event_name: starCGWServiceStop
+  .1.3.6.1.4.1.8164.2.1249:
+    event_name: starMMENewConnectionsDisallowed
+  .1.3.6.1.4.1.8164.2.125:
+    event_name: starSRPAAAUnreachable
+  .1.3.6.1.4.1.8164.2.1250:
+    event_name: starMMENewConnectionsAllowed
+  .1.3.6.1.4.1.8164.2.1251:
+    event_name: starSAMOGServiceStart
+  .1.3.6.1.4.1.8164.2.1252:
+    event_name: starSAMOGServiceStop
+  .1.3.6.1.4.1.8164.2.1258:
+    event_name: starCardMigrateFailed
+  .1.3.6.1.4.1.8164.2.1259:
+    event_name: starTechSuppPasswdChanged
+  .1.3.6.1.4.1.8164.2.126:
+    event_name: starSRPSwitchoverInitiated
+  .1.3.6.1.4.1.8164.2.1260:
+    event_name: starPMIPPathFailure
+  .1.3.6.1.4.1.8164.2.1261:
+    event_name: starPMIPPathFailureClear
+  .1.3.6.1.4.1.8164.2.1262:
+    event_name: starHENBGWMMESCTPAssocDestAddrDown
+  .1.3.6.1.4.1.8164.2.1263:
+    event_name: starHENBGWMMESCTPAssocDestAddrUp
+  .1.3.6.1.4.1.8164.2.1264:
+    event_name: starMRMEServiceStart
+  .1.3.6.1.4.1.8164.2.1265:
+    event_name: starMRMEServiceStop
+  .1.3.6.1.4.1.8164.2.1268:
+    event_name: starESMLCAssocDown
+  .1.3.6.1.4.1.8164.2.1269:
+    event_name: starESMLCAssocUp
+  .1.3.6.1.4.1.8164.2.127:
+    event_name: starSRPCheckpointFailure
+  .1.3.6.1.4.1.8164.2.1270:
+    event_name: starESMLCAllAssocDown
+  .1.3.6.1.4.1.8164.2.1271:
+    event_name: starESMLCAllAssocDownClear
+  .1.3.6.1.4.1.8164.2.1272:
+    event_name: starSBCServiceStart
+  .1.3.6.1.4.1.8164.2.1273:
+    event_name: starSBCServiceStop
+  .1.3.6.1.4.1.8164.2.1274:
+    event_name: starCBCAssocDown
+  .1.3.6.1.4.1.8164.2.1275:
+    event_name: starCBCAssocUp
+  .1.3.6.1.4.1.8164.2.1278:
+    event_name: starSRPSwitchoverOccured
+  .1.3.6.1.4.1.8164.2.1279:
+    event_name: starHENBGWMMEOverloadStart
+  .1.3.6.1.4.1.8164.2.128:
+    event_name: starSRPConfigOutOfSync
+  .1.3.6.1.4.1.8164.2.1280:
+    event_name: starHENBGWMMEOverloadStop
+  .1.3.6.1.4.1.8164.2.1281:
+    event_name: starNpudriverECCError
+  .1.3.6.1.4.1.8164.2.1282:
+    event_name: starGTPCRLFOverThreshold
+  .1.3.6.1.4.1.8164.2.1283:
+    event_name: starGTPCRLFOverLimit
+  .1.3.6.1.4.1.8164.2.1284:
+    event_name: starGTPCRLFOverThresholdClear
+  .1.3.6.1.4.1.8164.2.1285:
+    event_name: starGTPCRLFOverLimitClear
+  .1.3.6.1.4.1.8164.2.1286:
+    event_name: starS102ServiceStart
+  .1.3.6.1.4.1.8164.2.1287:
+    event_name: starS102ServiceStop
+  .1.3.6.1.4.1.8164.2.129:
+    event_name: starSRPConfigInSync
+  .1.3.6.1.4.1.8164.2.1290:
+    event_name: starMMEEMBMSServiceStart
+  .1.3.6.1.4.1.8164.2.1291:
+    event_name: starMMEEMBMSServiceStop
+  .1.3.6.1.4.1.8164.2.1292:
+    event_name: starMCEAssocDown
+  .1.3.6.1.4.1.8164.2.1293:
+    event_name: starMCEAssocUp
+  .1.3.6.1.4.1.8164.2.1294:
+    event_name: starIuBcTcpConnDown
+  .1.3.6.1.4.1.8164.2.1295:
+    event_name: starIuBcTcpConnUp
+  .1.3.6.1.4.1.8164.2.1299:
+    event_name: starLAGGroupDownDueToMinlink
+  .1.3.6.1.4.1.8164.2.130:
+    event_name: starGESwitchFailure
+  .1.3.6.1.4.1.8164.2.1303:
+    event_name: starSerdesLanePermDown
+  .1.3.6.1.4.1.8164.2.1304:
+    event_name: starThreshAllFramedRoutes
+  .1.3.6.1.4.1.8164.2.1305:
+    event_name: starThreshAllFramedRoutesClear
+  .1.3.6.1.4.1.8164.2.1306:
+    event_name: starThreshAllTotalRoutes
+  .1.3.6.1.4.1.8164.2.1307:
+    event_name: starThreshAllTotalRoutesClear
+  .1.3.6.1.4.1.8164.2.1308:
+    event_name: starThreshVRFFramedRoutes
+  .1.3.6.1.4.1.8164.2.1309:
+    event_name: starThreshVRFFramedRoutesClear
+  .1.3.6.1.4.1.8164.2.131:
+    event_name: starSIPRouteServerAvailable
+  .1.3.6.1.4.1.8164.2.1310:
+    event_name: starThreshVRFTotalRoutes
+  .1.3.6.1.4.1.8164.2.1311:
+    event_name: starThreshVRFTotalRoutesClear
+  .1.3.6.1.4.1.8164.2.132:
+    event_name: starSIPRouteServerUnavailable
+  .1.3.6.1.4.1.8164.2.133:
+    event_name: starFMDMaxCallRateReached
+  .1.3.6.1.4.1.8164.2.134:
+    event_name: starFMDCallRateUnderControl
+  .1.3.6.1.4.1.8164.2.135:
+    event_name: starStorageServerCPUBusy
+  .1.3.6.1.4.1.8164.2.136:
+    event_name: starStorageServerCPUNormal
+  .1.3.6.1.4.1.8164.2.137:
+    event_name: starStorageServerDiskSpaceLow
+  .1.3.6.1.4.1.8164.2.138:
+    event_name: starStorageServerDiskSpaceOK
+  .1.3.6.1.4.1.8164.2.14:
+    event_name: starCardFailureLEDOn
+  .1.3.6.1.4.1.8164.2.141:
+    event_name: starStorageServerOldGcdrPending
+  .1.3.6.1.4.1.8164.2.142:
+    event_name: starStorageServerOldGcdrCleared
+  .1.3.6.1.4.1.8164.2.143:
+    event_name: starLoginFailure
+  .1.3.6.1.4.1.8164.2.144:
+    event_name: starIPSGServiceStart
+  .1.3.6.1.4.1.8164.2.145:
+    event_name: starIPSGServiceStop
+  .1.3.6.1.4.1.8164.2.146:
+    event_name: starHAUnreachable
+  .1.3.6.1.4.1.8164.2.147:
+    event_name: starHAReachable
+  .1.3.6.1.4.1.8164.2.148:
+    event_name: starASNGWServiceStart
+  .1.3.6.1.4.1.8164.2.149:
+    event_name: starASNGWServiceStop
+  .1.3.6.1.4.1.8164.2.15:
+    event_name: starCardFailureLEDOff
+  .1.3.6.1.4.1.8164.2.152:
+    event_name: starCSCFServiceStart
+  .1.3.6.1.4.1.8164.2.153:
+    event_name: starCSCFServiceStop
+  .1.3.6.1.4.1.8164.2.154:
+    event_name: starDhcpServiceStarted
+  .1.3.6.1.4.1.8164.2.155:
+    event_name: starDhcpServiceStopped
+  .1.3.6.1.4.1.8164.2.156:
+    event_name: starContFiltDBError
+  .1.3.6.1.4.1.8164.2.157:
+    event_name: starContFiltDBErrorClear
+  .1.3.6.1.4.1.8164.2.158:
+    event_name: starBLDBError
+  .1.3.6.1.4.1.8164.2.159:
+    event_name: starBLDBErrorClear
+  .1.3.6.1.4.1.8164.2.16:
+    event_name: starCardPACMigrateStart
+  .1.3.6.1.4.1.8164.2.160:
+    event_name: starContFiltDBUpgradeError
+  .1.3.6.1.4.1.8164.2.161:
+    event_name: starContFiltDBUpgradeErrorClear
+  .1.3.6.1.4.1.8164.2.162:
+    event_name: starBLDBUpgradeError
+  .1.3.6.1.4.1.8164.2.163:
+    event_name: starBLDBUpgradeErrorClear
+  .1.3.6.1.4.1.8164.2.164:
+    event_name: starIPSECDynTunUp
+  .1.3.6.1.4.1.8164.2.165:
+    event_name: starIPSECDynTunDown
+  .1.3.6.1.4.1.8164.2.166:
+    event_name: starHeartbeat
+  .1.3.6.1.4.1.8164.2.169:
+    event_name: starOverloadService
+  .1.3.6.1.4.1.8164.2.17:
+    event_name: starCardPACMigrateComplete
+  .1.3.6.1.4.1.8164.2.170:
+    event_name: starOverloadServiceClear
+  .1.3.6.1.4.1.8164.2.171:
+    event_name: starStorageServerClusterStateChange
+  .1.3.6.1.4.1.8164.2.172:
+    event_name: starStorageServerClusSwitchOver
+  .1.3.6.1.4.1.8164.2.173:
+    event_name: starStorageServerClusPathFail
+  .1.3.6.1.4.1.8164.2.174:
+    event_name: starStorageServerClusPathOK
+  .1.3.6.1.4.1.8164.2.175:
+    event_name: starStorageServerClusInterCFail
+  .1.3.6.1.4.1.8164.2.176:
+    event_name: starStorageServerClusInterCOK
+  .1.3.6.1.4.1.8164.2.177:
+    event_name: starStorageServerClusIntfFail
+  .1.3.6.1.4.1.8164.2.178:
+    event_name: starStorageServerClusIntfOK
+  .1.3.6.1.4.1.8164.2.179:
+    event_name: starStorageServerMemLow
+  .1.3.6.1.4.1.8164.2.18:
+    event_name: starCardPACMigrateFailed
+  .1.3.6.1.4.1.8164.2.180:
+    event_name: starStorageServerMemNormal
+  .1.3.6.1.4.1.8164.2.181:
+    event_name: starPDIFServiceStart
+  .1.3.6.1.4.1.8164.2.182:
+    event_name: starPDIFServiceStop
+  .1.3.6.1.4.1.8164.2.186:
+    event_name: starDiameterServerUnreachable
+  .1.3.6.1.4.1.8164.2.187:
+    event_name: starDiameterServerReachable
+  .1.3.6.1.4.1.8164.2.188:
+    event_name: starCDRFileRemoved
+  .1.3.6.1.4.1.8164.2.189:
+    event_name: starCSCFPeerServerReachable
+  .1.3.6.1.4.1.8164.2.19:
+    event_name: starCardSPCSwitchoverStart
+  .1.3.6.1.4.1.8164.2.190:
+    event_name: starCSCFPeerServerUnreachable
+  .1.3.6.1.4.1.8164.2.192:
+    event_name: starCLIConfigMode
+  .1.3.6.1.4.1.8164.2.194:
+    event_name: starSGSNServiceStart
+  .1.3.6.1.4.1.8164.2.195:
+    event_name: starSGSNServiceStop
+  .1.3.6.1.4.1.8164.2.196:
+    event_name: starM3UAPCUnavailable
+  .1.3.6.1.4.1.8164.2.197:
+    event_name: starM3UAPCAvailable
+  .1.3.6.1.4.1.8164.2.2:
+    event_name: starCardTempOK
+  .1.3.6.1.4.1.8164.2.206:
+    event_name: starThreshSubscriberTotal
+  .1.3.6.1.4.1.8164.2.207:
+    event_name: starThreshClearSubscriberTotal
+  .1.3.6.1.4.1.8164.2.208:
+    event_name: starThreshSubscriberActive
+  .1.3.6.1.4.1.8164.2.209:
+    event_name: starThreshClearSubscriberActive
+  .1.3.6.1.4.1.8164.2.21:
+    event_name: starCardSPCSwitchoverFailed
+  .1.3.6.1.4.1.8164.2.216:
+    event_name: starThreshAAAAuthFail
+  .1.3.6.1.4.1.8164.2.217:
+    event_name: starThreshClearAAAAuthFail
+  .1.3.6.1.4.1.8164.2.218:
+    event_name: starThreshAAAAuthFailRate
+  .1.3.6.1.4.1.8164.2.219:
+    event_name: starThreshClearAAAAuthFailRate
+  .1.3.6.1.4.1.8164.2.22:
+    event_name: starFanFailed
+  .1.3.6.1.4.1.8164.2.220:
+    event_name: starThreshAAAAcctFail
+  .1.3.6.1.4.1.8164.2.221:
+    event_name: starThreshClearAAAAcctFail
+  .1.3.6.1.4.1.8164.2.222:
+    event_name: starThreshAAAAcctFailRate
+  .1.3.6.1.4.1.8164.2.223:
+    event_name: starThreshClearAAAAcctFailRate
+  .1.3.6.1.4.1.8164.2.224:
+    event_name: starThreshAAARetryRate
+  .1.3.6.1.4.1.8164.2.225:
+    event_name: starThreshClearAAARetryRate
+  .1.3.6.1.4.1.8164.2.226:
+    event_name: starThreshCallSetup
+  .1.3.6.1.4.1.8164.2.227:
+    event_name: starThreshClearCallSetup
+  .1.3.6.1.4.1.8164.2.228:
+    event_name: starThreshCallSetupFailure
+  .1.3.6.1.4.1.8164.2.229:
+    event_name: starThreshClearCallSetupFailure
+  .1.3.6.1.4.1.8164.2.23:
+    event_name: starFanRemoved
+  .1.3.6.1.4.1.8164.2.230:
+    event_name: starThreshCallRejectNoResource
+  .1.3.6.1.4.1.8164.2.231:
+    event_name: starThreshClearCallRejectNoResource
+  .1.3.6.1.4.1.8164.2.232:
+    event_name: starThreshPacketsFilteredDropped
+  .1.3.6.1.4.1.8164.2.233:
+    event_name: starThreshClearPacketsFilteredDropped
+  .1.3.6.1.4.1.8164.2.234:
+    event_name: starThreshPacketsForwarded
+  .1.3.6.1.4.1.8164.2.235:
+    event_name: starThreshClearPacketsForwarded
+  .1.3.6.1.4.1.8164.2.236:
+    event_name: starThreshSessCPUThroughput
+  .1.3.6.1.4.1.8164.2.237:
+    event_name: starThreshClearSessCPUThroughput
+  .1.3.6.1.4.1.8164.2.238:
+    event_name: starThreshIPPoolAvail
+  .1.3.6.1.4.1.8164.2.239:
+    event_name: starThreshClearIPPoolAvail
+  .1.3.6.1.4.1.8164.2.24:
+    event_name: starFanInserted
+  .1.3.6.1.4.1.8164.2.242:
+    event_name: starThreshCPULoad
+  .1.3.6.1.4.1.8164.2.243:
+    event_name: starThreshClearCPULoad
+  .1.3.6.1.4.1.8164.2.246:
+    event_name: starThreshPDSNSessions
+  .1.3.6.1.4.1.8164.2.247:
+    event_name: starThreshClearPDSNSessions
+  .1.3.6.1.4.1.8164.2.248:
+    event_name: starThreshGGSNSessions
+  .1.3.6.1.4.1.8164.2.249:
+    event_name: starThreshClearGGSNSessions
+  .1.3.6.1.4.1.8164.2.25:
+    event_name: starLogThreshold
+  .1.3.6.1.4.1.8164.2.250:
+    event_name: starThreshHASessions
+  .1.3.6.1.4.1.8164.2.251:
+    event_name: starThreshClearHASessions
+  .1.3.6.1.4.1.8164.2.252:
+    event_name: starThreshLNSSessions
+  .1.3.6.1.4.1.8164.2.253:
+    event_name: starThreshClearLNSSessions
+  .1.3.6.1.4.1.8164.2.254:
+    event_name: starThreshPerServicePDSNSessions
+  .1.3.6.1.4.1.8164.2.255:
+    event_name: starThreshClearPerServicePDSNSessions
+  .1.3.6.1.4.1.8164.2.256:
+    event_name: starThreshPerServiceGGSNSessions
+  .1.3.6.1.4.1.8164.2.257:
+    event_name: starThreshClearPerServiceGGSNSessions
+  .1.3.6.1.4.1.8164.2.258:
+    event_name: starThreshPerServiceHASessions
+  .1.3.6.1.4.1.8164.2.259:
+    event_name: starThreshClearPerServiceHASessions
+  .1.3.6.1.4.1.8164.2.260:
+    event_name: starThreshPerServiceLNSSessions
+  .1.3.6.1.4.1.8164.2.261:
+    event_name: starThreshClearPerServiceLNSSessions
+  .1.3.6.1.4.1.8164.2.262:
+    event_name: starThreshIPPoolHold
+  .1.3.6.1.4.1.8164.2.263:
+    event_name: starThreshClearIPPoolHold
+  .1.3.6.1.4.1.8164.2.264:
+    event_name: starThreshIPPoolUsed
+  .1.3.6.1.4.1.8164.2.265:
+    event_name: starThreshClearIPPoolUsed
+  .1.3.6.1.4.1.8164.2.266:
+    event_name: starThreshIPPoolRelease
+  .1.3.6.1.4.1.8164.2.267:
+    event_name: starThreshClearIPPoolRelease
+  .1.3.6.1.4.1.8164.2.268:
+    event_name: starThreshIPPoolFree
+  .1.3.6.1.4.1.8164.2.269:
+    event_name: starThreshClearIPPoolFree
+  .1.3.6.1.4.1.8164.2.270:
+    event_name: starThreshAAAAcctArchive
+  .1.3.6.1.4.1.8164.2.271:
+    event_name: starThreshClearAAAAcctArchive
+  .1.3.6.1.4.1.8164.2.272:
+    event_name: starThreshPortSpecRxUtil
+  .1.3.6.1.4.1.8164.2.273:
+    event_name: starThreshClearPortSpecRxUtil
+  .1.3.6.1.4.1.8164.2.274:
+    event_name: starThreshPortSpecTxUtil
+  .1.3.6.1.4.1.8164.2.275:
+    event_name: starThreshClearPortSpecTxUtil
+  .1.3.6.1.4.1.8164.2.276:
+    event_name: starThreshHACallSetupRate
+  .1.3.6.1.4.1.8164.2.277:
+    event_name: starThreshClearHACallSetupRate
+  .1.3.6.1.4.1.8164.2.278:
+    event_name: starThreshHASvcCallSetupRate
+  .1.3.6.1.4.1.8164.2.279:
+    event_name: starThreshClearHASvcCallSetupRate
+  .1.3.6.1.4.1.8164.2.280:
+    event_name: starThreshHASvcRegReplyError
+  .1.3.6.1.4.1.8164.2.281:
+    event_name: starThreshClearHASvcRegReplyError
+  .1.3.6.1.4.1.8164.2.282:
+    event_name: starThreshHASvcReregReplyError
+  .1.3.6.1.4.1.8164.2.283:
+    event_name: starThreshClearHASvcReregReplyError
+  .1.3.6.1.4.1.8164.2.284:
+    event_name: starThreshHASvcDeregReplyError
+  .1.3.6.1.4.1.8164.2.285:
+    event_name: starThreshClearHASvcDeregReplyError
+  .1.3.6.1.4.1.8164.2.286:
+    event_name: starThreshFASvcRegReplyError
+  .1.3.6.1.4.1.8164.2.287:
+    event_name: starThreshClearFASvcRegReplyError
+  .1.3.6.1.4.1.8164.2.288:
+    event_name: starThreshPDSNCallSetupRate
+  .1.3.6.1.4.1.8164.2.289:
+    event_name: starThreshClearPDSNCallSetupRate
+  .1.3.6.1.4.1.8164.2.290:
+    event_name: starThreshPDSNSvcCallSetupRate
+  .1.3.6.1.4.1.8164.2.291:
+    event_name: starThreshClearPDSNSvcCallSetupRate
+  .1.3.6.1.4.1.8164.2.292:
+    event_name: starThreshPDSNSvcA11RRPFailure
+  .1.3.6.1.4.1.8164.2.293:
+    event_name: starThreshClearPDSNSvcA11RRPFailure
+  .1.3.6.1.4.1.8164.2.294:
+    event_name: starThreshPDSNSvcA11RRQMsgDiscard
+  .1.3.6.1.4.1.8164.2.295:
+    event_name: starThreshClearPDSNSvcA11RRQMsgDiscard
+  .1.3.6.1.4.1.8164.2.296:
+    event_name: starThreshPDSNSvcA11RACMsgDiscard
+  .1.3.6.1.4.1.8164.2.297:
+    event_name: starThreshClearPDSNSvcA11RACMsgDiscard
+  .1.3.6.1.4.1.8164.2.298:
+    event_name: starThreshPDSNSvcA11PPPSendDiscard
+  .1.3.6.1.4.1.8164.2.299:
+    event_name: starThreshClearPDSNSvcA11PPPSendDiscard
+  .1.3.6.1.4.1.8164.2.3:
+    event_name: starCardReset
+  .1.3.6.1.4.1.8164.2.300:
+    event_name: starThreshAAAMgrQueue
+  .1.3.6.1.4.1.8164.2.301:
+    event_name: starThreshClearAAAMgrQueue
+  .1.3.6.1.4.1.8164.2.302:
+    event_name: starThreshCPUOrbsWarn
+  .1.3.6.1.4.1.8164.2.303:
+    event_name: starThreshClearCPUOrbsWarn
+  .1.3.6.1.4.1.8164.2.304:
+    event_name: starThreshCPUOrbsCritical
+  .1.3.6.1.4.1.8164.2.305:
+    event_name: starThreshClearCPUOrbsCritical
+  .1.3.6.1.4.1.8164.2.306:
+    event_name: starThreshRPSetupFailRate
+  .1.3.6.1.4.1.8164.2.307:
+    event_name: starThreshClearRPSetupFailRate
+  .1.3.6.1.4.1.8164.2.308:
+    event_name: starThreshPPPSetupFailRate
+  .1.3.6.1.4.1.8164.2.309:
+    event_name: starThreshClearPPPSetupFailRate
+  .1.3.6.1.4.1.8164.2.310:
+    event_name: starThreshStorageUtilization
+  .1.3.6.1.4.1.8164.2.311:
+    event_name: starThreshClearStorageUtilization
+  .1.3.6.1.4.1.8164.2.312:
+    event_name: starThreshDCCAProtocolErrors
+  .1.3.6.1.4.1.8164.2.313:
+    event_name: starThreshClearDCCAProtocolErrors
+  .1.3.6.1.4.1.8164.2.314:
+    event_name: starThreshDCCABadAnswers
+  .1.3.6.1.4.1.8164.2.315:
+    event_name: starThreshClearDCCABadAnswers
+  .1.3.6.1.4.1.8164.2.316:
+    event_name: starThreshDCCAUnknownRatingGroup
+  .1.3.6.1.4.1.8164.2.317:
+    event_name: starThreshClearDCCAUnknownRatingGroup
+  .1.3.6.1.4.1.8164.2.318:
+    event_name: starThreshDCCARatingFailed
+  .1.3.6.1.4.1.8164.2.319:
+    event_name: starThreshClearDCCARatingFailed
+  .1.3.6.1.4.1.8164.2.32:
+    event_name: starPowerFilterUnitFailed
+  .1.3.6.1.4.1.8164.2.320:
+    event_name: starThreshIPSECIKERequests
+  .1.3.6.1.4.1.8164.2.321:
+    event_name: starThreshClearIPSECIKERequests
+  .1.3.6.1.4.1.8164.2.322:
+    event_name: starThreshIPSECIKEFailures
+  .1.3.6.1.4.1.8164.2.323:
+    event_name: starThreshClearIPSECIKEFailures
+  .1.3.6.1.4.1.8164.2.324:
+    event_name: starThreshIPSECIKEFailRate
+  .1.3.6.1.4.1.8164.2.325:
+    event_name: starThreshClearIPSECIKEFailRate
+  .1.3.6.1.4.1.8164.2.326:
+    event_name: starThreshIPSECTunSetup
+  .1.3.6.1.4.1.8164.2.327:
+    event_name: starThreshClearIPSECTunSetup
+  .1.3.6.1.4.1.8164.2.328:
+    event_name: starThreshIPSECTunEstabl
+  .1.3.6.1.4.1.8164.2.329:
+    event_name: starThreshClearIPSECTunEstabl
+  .1.3.6.1.4.1.8164.2.33:
+    event_name: starPowerFilterUnitUnavail
+  .1.3.6.1.4.1.8164.2.330:
+    event_name: starThreshIPSECCallReqRej
+  .1.3.6.1.4.1.8164.2.331:
+    event_name: starThreshClearIPSECCallReqRej
+  .1.3.6.1.4.1.8164.2.332:
+    event_name: starThreshCSCFSvcRouteFailure
+  .1.3.6.1.4.1.8164.2.333:
+    event_name: starThreshClearCSCFSvcRouteFailure
+  .1.3.6.1.4.1.8164.2.334:
+    event_name: starThreshContFiltRating
+  .1.3.6.1.4.1.8164.2.335:
+    event_name: starThreshClearContFiltRating
+  .1.3.6.1.4.1.8164.2.336:
+    event_name: starThreshContFiltBlock
+  .1.3.6.1.4.1.8164.2.337:
+    event_name: starThreshClearContFiltBlock
+  .1.3.6.1.4.1.8164.2.338:
+    event_name: starThreshCDRFileSpace
+  .1.3.6.1.4.1.8164.2.339:
+    event_name: starThreshClearCDRFileSpace
+  .1.3.6.1.4.1.8164.2.34:
+    event_name: starPowerFilterUnitAvail
+  .1.3.6.1.4.1.8164.2.340:
+    event_name: starThreshEDRFileSpace
+  .1.3.6.1.4.1.8164.2.341:
+    event_name: starThreshClearEDRFileSpace
+  .1.3.6.1.4.1.8164.2.342:
+    event_name: starThreshPDIFCurrSess
+  .1.3.6.1.4.1.8164.2.343:
+    event_name: starThreshClearPDIFCurrSess
+  .1.3.6.1.4.1.8164.2.344:
+    event_name: starThreshPDIFCurrActSess
+  .1.3.6.1.4.1.8164.2.345:
+    event_name: starThreshClearPDIFCurrActSess
+  .1.3.6.1.4.1.8164.2.346:
+    event_name: starThreshCDRFlowControl
+  .1.3.6.1.4.1.8164.2.347:
+    event_name: starThreshClearCDRFlowControl
+  .1.3.6.1.4.1.8164.2.348:
+    event_name: starThreshASNGWSessTimeout
+  .1.3.6.1.4.1.8164.2.349:
+    event_name: starThreshClearASNGWSessTimeout
+  .1.3.6.1.4.1.8164.2.350:
+    event_name: starThreshASNGWSessSetupTimeout
+  .1.3.6.1.4.1.8164.2.351:
+    event_name: starThreshClearASNGWSessSetupTimeout
+  .1.3.6.1.4.1.8164.2.352:
+    event_name: starThreshASNGWAuthFail
+  .1.3.6.1.4.1.8164.2.353:
+    event_name: starThreshClearASNGWAuthFail
+  .1.3.6.1.4.1.8164.2.354:
+    event_name: starThreshASNGWR6InvNai
+  .1.3.6.1.4.1.8164.2.355:
+    event_name: starThreshClearASNGWR6InvNai
+  .1.3.6.1.4.1.8164.2.356:
+    event_name: starThreshASNGWMaxEAPRetry
+  .1.3.6.1.4.1.8164.2.357:
+    event_name: starThreshClearASNGWMaxEAPRetry
+  .1.3.6.1.4.1.8164.2.358:
+    event_name: starThreshASNGWNWEntryDenial
+  .1.3.6.1.4.1.8164.2.359:
+    event_name: starThreshClearASNGWNWEntryDenial
+  .1.3.6.1.4.1.8164.2.360:
+    event_name: starThreshASNGWHandoffDenial
+  .1.3.6.1.4.1.8164.2.361:
+    event_name: starThreshClearASNGWHandoffDenial
+  .1.3.6.1.4.1.8164.2.362:
+    event_name: starThreshSGSNSessions
+  .1.3.6.1.4.1.8164.2.363:
+    event_name: starThreshClearSGSNSessions
+  .1.3.6.1.4.1.8164.2.364:
+    event_name: starThreshPerServiceSGSNSessions
+  .1.3.6.1.4.1.8164.2.365:
+    event_name: starThreshClearPerServiceSGSNSessions
+  .1.3.6.1.4.1.8164.2.366:
+    event_name: starThreshSGSNPdpSessions
+  .1.3.6.1.4.1.8164.2.367:
+    event_name: starThreshClearSGSNPdpSessions
+  .1.3.6.1.4.1.8164.2.368:
+    event_name: starThreshPerServiceSGSNPdpSessions
+  .1.3.6.1.4.1.8164.2.369:
+    event_name: starThreshClearPerServiceSGSNPdpSessions
+  .1.3.6.1.4.1.8164.2.370:
+    event_name: starThreshFWDosAttack
+  .1.3.6.1.4.1.8164.2.371:
+    event_name: starThreshClearFWDosAttack
+  .1.3.6.1.4.1.8164.2.372:
+    event_name: starThreshFWDropPacket
+  .1.3.6.1.4.1.8164.2.373:
+    event_name: starThreshClearFWDropPacket
+  .1.3.6.1.4.1.8164.2.374:
+    event_name: starThreshFWDenyRule
+  .1.3.6.1.4.1.8164.2.375:
+    event_name: starThreshClearFWDenyRule
+  .1.3.6.1.4.1.8164.2.376:
+    event_name: starThreshFWNoRule
+  .1.3.6.1.4.1.8164.2.377:
+    event_name: starThreshClearFWNoRule
+  .1.3.6.1.4.1.8164.2.378:
+    event_name: starThreshPHSGWSessTimeout
+  .1.3.6.1.4.1.8164.2.379:
+    event_name: starThreshClearPHSGWSessTimeout
+  .1.3.6.1.4.1.8164.2.380:
+    event_name: starThreshPHSGWSessSetupTimeout
+  .1.3.6.1.4.1.8164.2.381:
+    event_name: starThreshClearPHSGWSessSetupTimeout
+  .1.3.6.1.4.1.8164.2.382:
+    event_name: starThreshPHSGWAuthFail
+  .1.3.6.1.4.1.8164.2.383:
+    event_name: starThreshClearPHSGWAuthFail
+  .1.3.6.1.4.1.8164.2.384:
+    event_name: starThreshPHSGWMaxEAPRetry
+  .1.3.6.1.4.1.8164.2.385:
+    event_name: starThreshClearPHSGWMaxEAPRetry
+  .1.3.6.1.4.1.8164.2.386:
+    event_name: starThreshPHSGWNWEntryDenial
+  .1.3.6.1.4.1.8164.2.387:
+    event_name: starThreshClearPHSGWNWEntryDenial
+  .1.3.6.1.4.1.8164.2.388:
+    event_name: starThreshPHSGWHandoffDenial
+  .1.3.6.1.4.1.8164.2.389:
+    event_name: starThreshClearPHSGWHandoffDenial
+  .1.3.6.1.4.1.8164.2.39:
+    event_name: starAAAAuthServerUnreachable
+  .1.3.6.1.4.1.8164.2.390:
+    event_name: starThreshASNGWSessions
+  .1.3.6.1.4.1.8164.2.391:
+    event_name: starThreshClearASNGWSessions
+  .1.3.6.1.4.1.8164.2.392:
+    event_name: starThreshPerServiceASNGWSessions
+  .1.3.6.1.4.1.8164.2.393:
+    event_name: starThreshClearPerServiceASNGWSessions
+  .1.3.6.1.4.1.8164.2.394:
+    event_name: starThreshPHSPCSessSetupTimeout
+  .1.3.6.1.4.1.8164.2.395:
+    event_name: starThreshClearPHSPCSessSetupTimeout
+  .1.3.6.1.4.1.8164.2.396:
+    event_name: starThreshPHSPCSleepModeTimeout
+  .1.3.6.1.4.1.8164.2.397:
+    event_name: starThreshClearPHSPCSleepModeTimeout
+  .1.3.6.1.4.1.8164.2.398:
+    event_name: starThreshPHSPCSmEntryDenial
+  .1.3.6.1.4.1.8164.2.399:
+    event_name: starThreshClearPHSPCSmEntryDenial
+  .1.3.6.1.4.1.8164.2.40:
+    event_name: starAAAAuthServerReachable
+  .1.3.6.1.4.1.8164.2.408:
+    event_name: starThreshSGWSessions
+  .1.3.6.1.4.1.8164.2.409:
+    event_name: starThreshClearSGWSessions
+  .1.3.6.1.4.1.8164.2.41:
+    event_name: starAAAAuthServerMisconfigured
+  .1.3.6.1.4.1.8164.2.410:
+    event_name: starThreshPGWSessions
+  .1.3.6.1.4.1.8164.2.411:
+    event_name: starThreshClearPGWSessions
+  .1.3.6.1.4.1.8164.2.412:
+    event_name: starThreshLMASessions
+  .1.3.6.1.4.1.8164.2.413:
+    event_name: starThreshClearLMASessions
+  .1.3.6.1.4.1.8164.2.414:
+    event_name: starThreshMAGSessions
+  .1.3.6.1.4.1.8164.2.415:
+    event_name: starThreshClearMAGSessions
+  .1.3.6.1.4.1.8164.2.416:
+    event_name: starThreshFNGCurrSess
+  .1.3.6.1.4.1.8164.2.417:
+    event_name: starThreshClearFNGCurrSess
+  .1.3.6.1.4.1.8164.2.418:
+    event_name: starThreshFNGCurrActSess
+  .1.3.6.1.4.1.8164.2.419:
+    event_name: starThreshClearFNGCurrActSess
+  .1.3.6.1.4.1.8164.2.42:
+    event_name: starAAAAccServerUnreachable
+  .1.3.6.1.4.1.8164.2.420:
+    event_name: starThreshPHSGWEAPOLAuthFailure
+  .1.3.6.1.4.1.8164.2.421:
+    event_name: starThreshClearPHSGWEAPOLAuthFailure
+  .1.3.6.1.4.1.8164.2.422:
+    event_name: starThreshPHSGWMaxEAPOLRetry
+  .1.3.6.1.4.1.8164.2.423:
+    event_name: starThreshClearPHSGWMaxEAPOLRetry
+  .1.3.6.1.4.1.8164.2.424:
+    event_name: starThreshHSGWSessions
+  .1.3.6.1.4.1.8164.2.425:
+    event_name: starThreshClearHSGWSessions
+  .1.3.6.1.4.1.8164.2.426:
+    event_name: starThreshPDGCurrSess
+  .1.3.6.1.4.1.8164.2.427:
+    event_name: starThreshClearPDGCurrSess
+  .1.3.6.1.4.1.8164.2.428:
+    event_name: starThreshPDGCurrActSess
+  .1.3.6.1.4.1.8164.2.429:
+    event_name: starThreshClearPDGCurrActSess
+  .1.3.6.1.4.1.8164.2.430:
+    event_name: starThreshNATPortChunks
+  .1.3.6.1.4.1.8164.2.431:
+    event_name: starThreshClearNATPortChunks
+  .1.3.6.1.4.1.8164.2.432:
+    event_name: starThreshGPRSSessions
+  .1.3.6.1.4.1.8164.2.433:
+    event_name: starThreshClearGPRSSessions
+  .1.3.6.1.4.1.8164.2.434:
+    event_name: starThreshPerServiceGPRSSessions
+  .1.3.6.1.4.1.8164.2.435:
+    event_name: starThreshClearPerServiceGPRSSessions
+  .1.3.6.1.4.1.8164.2.436:
+    event_name: starThreshGPRSPdpSessions
+  .1.3.6.1.4.1.8164.2.437:
+    event_name: starThreshClearGPRSPdpSessions
+  .1.3.6.1.4.1.8164.2.438:
+    event_name: starThreshPerServiceGPRSPdpSessions
+  .1.3.6.1.4.1.8164.2.439:
+    event_name: starThreshClearPerServiceGPRSPdpSessions
+  .1.3.6.1.4.1.8164.2.440:
+    event_name: starThreshMMESessions
+  .1.3.6.1.4.1.8164.2.441:
+    event_name: starThreshClearMMESessions
+  .1.3.6.1.4.1.8164.2.442:
+    event_name: starThreshMMEAuthFail
+  .1.3.6.1.4.1.8164.2.443:
+    event_name: starThreshClearMMEAuthFail
+  .1.3.6.1.4.1.8164.2.444:
+    event_name: starThreshMMEAttachFail
+  .1.3.6.1.4.1.8164.2.445:
+    event_name: starThreshClearMMEAttachFail
+  .1.3.6.1.4.1.8164.2.446:
+    event_name: starThreshCSCFSvcRegRcvdRate
+  .1.3.6.1.4.1.8164.2.447:
+    event_name: starThreshClearCSCFSvcRegRcvdRate
+  .1.3.6.1.4.1.8164.2.448:
+    event_name: starThreshCSCFSvcTotalActiveReg
+  .1.3.6.1.4.1.8164.2.449:
+    event_name: starThreshClearCSCFSvcTotalActiveReg
+  .1.3.6.1.4.1.8164.2.45:
+    event_name: starLogMsg
+  .1.3.6.1.4.1.8164.2.450:
+    event_name: starThreshCSCFSvcInviteRcvdRate
+  .1.3.6.1.4.1.8164.2.451:
+    event_name: starThreshClearCSCFSvcInviteRcvdRate
+  .1.3.6.1.4.1.8164.2.452:
+    event_name: starThreshCSCFSvcTotalActiveCalls
+  .1.3.6.1.4.1.8164.2.453:
+    event_name: starThreshClearCSCFSvcTotalActiveCalls
+  .1.3.6.1.4.1.8164.2.454:
+    event_name: starThreshCSCFSvcTotalCallFailure
+  .1.3.6.1.4.1.8164.2.455:
+    event_name: starThreshClearCSCFSvcTotalCallFailure
+  .1.3.6.1.4.1.8164.2.456:
+    event_name: starThreshCSCFSvcErrorNoResource
+  .1.3.6.1.4.1.8164.2.457:
+    event_name: starThreshClearCSCFSvcErrorNoResource
+  .1.3.6.1.4.1.8164.2.458:
+    event_name: starThreshCSCFSvcErrorTcp
+  .1.3.6.1.4.1.8164.2.459:
+    event_name: starThreshClearCSCFSvcErrorTcp
+  .1.3.6.1.4.1.8164.2.46:
+    event_name: starPDSNServiceStart
+  .1.3.6.1.4.1.8164.2.460:
+    event_name: starThreshCSCFSvcErrorPresence
+  .1.3.6.1.4.1.8164.2.461:
+    event_name: starThreshClearCSCFSvcErrorPresence
+  .1.3.6.1.4.1.8164.2.462:
+    event_name: starThreshCSCFSvcErrorRegAuth
+  .1.3.6.1.4.1.8164.2.463:
+    event_name: starThreshClearCSCFSvcErrorRegAuth
+  .1.3.6.1.4.1.8164.2.464:
+    event_name: starThreshBGPRoutes
+  .1.3.6.1.4.1.8164.2.465:
+    event_name: starThreshClearBGPRoutes
+  .1.3.6.1.4.1.8164.2.466:
+    event_name: starThreshPCCPolicySessions
+  .1.3.6.1.4.1.8164.2.467:
+    event_name: starThreshClearPCCPolicySessions
+  .1.3.6.1.4.1.8164.2.468:
+    event_name: starThreshPerServicePCCPolicySessions
+  .1.3.6.1.4.1.8164.2.469:
+    event_name: starThreshClearPerServicePCCPolicySessions
+  .1.3.6.1.4.1.8164.2.47:
+    event_name: starPDSNServiceStop
+  .1.3.6.1.4.1.8164.2.470:
+    event_name: starThreshPCCQuotaSessions
+  .1.3.6.1.4.1.8164.2.471:
+    event_name: starThreshClearPCCQuotaSessions
+  .1.3.6.1.4.1.8164.2.472:
+    event_name: starThreshPerServicePCCQuotaSessions
+  .1.3.6.1.4.1.8164.2.473:
+    event_name: starThreshClearPerServicePCCQuotaSessions
+  .1.3.6.1.4.1.8164.2.474:
+    event_name: starThreshPCCAFSessions
+  .1.3.6.1.4.1.8164.2.475:
+    event_name: starThreshClearPCCAFSessions
+  .1.3.6.1.4.1.8164.2.476:
+    event_name: starThreshPerServicePCCAFSessions
+  .1.3.6.1.4.1.8164.2.477:
+    event_name: starThreshClearPerServicePCCAFSessions
+  .1.3.6.1.4.1.8164.2.478:
+    event_name: starThreshNPUUtilization
+  .1.3.6.1.4.1.8164.2.479:
+    event_name: starThreshClearNPUUtilization
+  .1.3.6.1.4.1.8164.2.48:
+    event_name: starHAServiceStart
+  .1.3.6.1.4.1.8164.2.480:
+    event_name: starThreshDnsLookupFailure
+  .1.3.6.1.4.1.8164.2.481:
+    event_name: starThreshClearDnsLookupFailure
+  .1.3.6.1.4.1.8164.2.482:
+    event_name: starThreshDiameterRetryRate
+  .1.3.6.1.4.1.8164.2.483:
+    event_name: starThreshClearDiameterRetryRate
+  .1.3.6.1.4.1.8164.2.484:
+    event_name: starThreshHNBGWHnbSess
+  .1.3.6.1.4.1.8164.2.485:
+    event_name: starThreshClearHNBGWHnbSess
+  .1.3.6.1.4.1.8164.2.486:
+    event_name: starThreshHNBGWUeSess
+  .1.3.6.1.4.1.8164.2.487:
+    event_name: starThreshClearHNBGWUeSess
+  .1.3.6.1.4.1.8164.2.488:
+    event_name: starThreshHNBGWIuSess
+  .1.3.6.1.4.1.8164.2.489:
+    event_name: starThreshClearHNBGWIuSess
+  .1.3.6.1.4.1.8164.2.49:
+    event_name: starHAServiceStop
+  .1.3.6.1.4.1.8164.2.491:
+    event_name: starThreshPerServicePDGSessions
+  .1.3.6.1.4.1.8164.2.492:
+    event_name: starThreshClearPerServicePDGSessions
+  .1.3.6.1.4.1.8164.2.493:
+    event_name: starThreshSystemCapacity
+  .1.3.6.1.4.1.8164.2.494:
+    event_name: starThreshClearSystemCapacity
+  .1.3.6.1.4.1.8164.2.495:
+    event_name: starThreshTpoRtoTimeout
+  .1.3.6.1.4.1.8164.2.496:
+    event_name: starThreshClearTpoRtoTimeout
+  .1.3.6.1.4.1.8164.2.497:
+    event_name: starThreshTpoDnsFailure
+  .1.3.6.1.4.1.8164.2.498:
+    event_name: starThreshClearTpoDnsFailure
+  .1.3.6.1.4.1.8164.2.499:
+    event_name: starThreshTpoLowCompressionGain
+  .1.3.6.1.4.1.8164.2.50:
+    event_name: starFAServiceStart
+  .1.3.6.1.4.1.8164.2.500:
+    event_name: starThreshClearTpoLowCompressionGain
+  .1.3.6.1.4.1.8164.2.501:
+    event_name: starThreshEPDGCurrSess
+  .1.3.6.1.4.1.8164.2.502:
+    event_name: starThreshClearEPDGCurrSess
+  .1.3.6.1.4.1.8164.2.503:
+    event_name: starThreshCardTemperatureNearPowerOffLimit
+  .1.3.6.1.4.1.8164.2.504:
+    event_name: starThreshClearCardTemperaturePowerOffLimit
+  .1.3.6.1.4.1.8164.2.505:
+    event_name: starThreshAAAAcctArchiveQueue1
+  .1.3.6.1.4.1.8164.2.506:
+    event_name: starThreshClearAAAAcctArchiveQueue1
+  .1.3.6.1.4.1.8164.2.507:
+    event_name: starThreshAAAAcctArchiveQueue2
+  .1.3.6.1.4.1.8164.2.508:
+    event_name: starThreshClearAAAAcctArchiveQueue2
+  .1.3.6.1.4.1.8164.2.509:
+    event_name: starThreshAAAAcctArchiveQueue3
+  .1.3.6.1.4.1.8164.2.51:
+    event_name: starFAServiceStop
+  .1.3.6.1.4.1.8164.2.510:
+    event_name: starThreshClearAAAAcctArchiveQueue3
+  .1.3.6.1.4.1.8164.2.511:
+    event_name: starThreshDnsLookupSrvFailure
+  .1.3.6.1.4.1.8164.2.512:
+    event_name: starThreshClearDnsLookupSrvFailure
+  .1.3.6.1.4.1.8164.2.513:
+    event_name: starThreshHENBGWHenbSessions
+  .1.3.6.1.4.1.8164.2.514:
+    event_name: starThreshClearHENBGWHenbSessions
+  .1.3.6.1.4.1.8164.2.515:
+    event_name: starThreshHENBGWUeSessions
+  .1.3.6.1.4.1.8164.2.516:
+    event_name: starThreshClearHENBGWUeSessions
+  .1.3.6.1.4.1.8164.2.517:
+    event_name: starThreshHENBGWPagingMessages
+  .1.3.6.1.4.1.8164.2.518:
+    event_name: starThreshClearHENBGWPagingMessages
+  .1.3.6.1.4.1.8164.2.519:
+    event_name: starThreshPerServiceSAMOGSessions
+  .1.3.6.1.4.1.8164.2.520:
+    event_name: starThreshClearPerServiceSAMOGSessions
+  .1.3.6.1.4.1.8164.2.521:
+    event_name: starThreshNATPktDrop
+  .1.3.6.1.4.1.8164.2.522:
+    event_name: starThreshClearNATPktDrop
+  .1.3.6.1.4.1.8164.2.523:
+    event_name: starThreshFabricEGQDiscards
+  .1.3.6.1.4.1.8164.2.524:
+    event_name: starThreshClearFabricEGQDiscards
+  .1.3.6.1.4.1.8164.2.525:
+    event_name: starGILANServiceStart
+  .1.3.6.1.4.1.8164.2.526:
+    event_name: starGILANServiceStop
+  .1.3.6.1.4.1.8164.2.527:
+    event_name: starThreshEPDGIKEV2SetupAttempts
+  .1.3.6.1.4.1.8164.2.528:
+    event_name: starThreshClearEPDGIKEV2SetupAttempts
+  .1.3.6.1.4.1.8164.2.529:
+    event_name: starThreshEPDGIKEV2AuthFailures
+  .1.3.6.1.4.1.8164.2.530:
+    event_name: starThreshClearEPDGIKEV2AuthFailures
+  .1.3.6.1.4.1.8164.2.531:
+    event_name: starThreshEPDGIKEV2SetupSuccess
+  .1.3.6.1.4.1.8164.2.532:
+    event_name: starThreshClearEPDGIKEV2SetupSuccess
+  .1.3.6.1.4.1.8164.2.533:
+    event_name: starThreshEPDGIKEV2SetupFailure
+  .1.3.6.1.4.1.8164.2.534:
+    event_name: starThreshClearEPDGIKEV2SetupFailure
+  .1.3.6.1.4.1.8164.2.535:
+    event_name: starThreshEPDGIKEV2SetupFailureRate
+  .1.3.6.1.4.1.8164.2.536:
+    event_name: starThreshClearEPDGIKEV2SetupFailureRate
+  .1.3.6.1.4.1.8164.2.56:
+    event_name: starLACServiceStart
+  .1.3.6.1.4.1.8164.2.57:
+    event_name: starLACServiceStop
+  .1.3.6.1.4.1.8164.2.58:
+    event_name: starLNSServiceStart
+  .1.3.6.1.4.1.8164.2.59:
+    event_name: starLNSServiceStop
+  .1.3.6.1.4.1.8164.2.6:
+    event_name: starCardVoltageFailure
+  .1.3.6.1.4.1.8164.2.63:
+    event_name: starGGSNServiceStart
+  .1.3.6.1.4.1.8164.2.64:
+    event_name: starGGSNServiceStop
+  .1.3.6.1.4.1.8164.2.68:
+    event_name: starLongDurTimerExpiry
+  .1.3.6.1.4.1.8164.2.69:
+    event_name: starClosedRPServiceStart
+  .1.3.6.1.4.1.8164.2.70:
+    event_name: starClosedRPServiceStop
+  .1.3.6.1.4.1.8164.2.71:
+    event_name: starGtpcPathFailure
+  .1.3.6.1.4.1.8164.2.72:
+    event_name: starGtpuPathFailure
+  .1.3.6.1.4.1.8164.2.74:
+    event_name: starEISServerAlive
+  .1.3.6.1.4.1.8164.2.75:
+    event_name: starEISServerDead
+  .1.3.6.1.4.1.8164.2.76:
+    event_name: starCgfAlive
+  .1.3.6.1.4.1.8164.2.77:
+    event_name: starCgfDead
+  .1.3.6.1.4.1.8164.2.78:
+    event_name: starStorageServerAlive
+  .1.3.6.1.4.1.8164.2.79:
+    event_name: starStorageServerDead
+  .1.3.6.1.4.1.8164.2.80:
+    event_name: starGgsnInitiatedUpdtFailed
+  .1.3.6.1.4.1.8164.2.83:
+    event_name: starServiceLossPTACs
+  .1.3.6.1.4.1.8164.2.84:
+    event_name: starServiceLossLC
+  .1.3.6.1.4.1.8164.2.85:
+    event_name: starServiceLossSPIO
+  .1.3.6.1.4.1.8164.2.86:
+    event_name: starIPSPAllAddrsFree
+  .1.3.6.1.4.1.8164.2.87:
+    event_name: starPCFUnreachable
+  .1.3.6.1.4.1.8164.2.88:
+    event_name: starDhcpAlive
+  .1.3.6.1.4.1.8164.2.89:
+    event_name: starDhcpDead
+  .1.3.6.1.4.1.8164.2.92:
+    event_name: starL2TPTunnelDownPeerUnreachable
+  .1.3.6.1.4.1.8164.2.95:
+    event_name: starIPSECPriTunDown
+  .1.3.6.1.4.1.8164.2.96:
+    event_name: starIPSECPriTunUp
+  .1.3.6.1.4.1.8164.2.97:
+    event_name: starIPSECSecTunDown
+  .1.3.6.1.4.1.8164.2.98:
+    event_name: starIPSECSecTunUp
+  .1.3.6.1.4.1.8164.2.99:
+    event_name: starIPSECTunSwitchFail
