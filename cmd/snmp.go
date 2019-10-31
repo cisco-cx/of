@@ -21,6 +21,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	of_v2 "github.com/cisco-cx/of/pkg/v2"
+	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
 	profile "github.com/cisco-cx/of/wrap/profile/v1"
 	snmp "github.com/cisco-cx/of/wrap/snmp/v2"
 )
@@ -64,6 +65,58 @@ func cmdSNMPHandler() *cobra.Command {
 	// Precedence: CLI flag, os.ENV, default value set while defining cmd.Flags().
 	viper.BindPFlags(cmd.Flags())
 	return cmd
+}
+
+// cmdSNMPMIBsProcessor returns the `snmp handler` command.
+func cmdSNMPMIBsProcessor() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "mib-preprocess",
+		Short: "Pre-process JSON MIBs into a single JSON file",
+		Run:   runMibsPreProcess,
+	}
+
+	// Define flags and configuration settings.
+	// cmd.PersistentFlags().String("foo", "", "A help for foo")
+	// cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	cmd.Flags().String("mibs-dir", "", "Path to MIBs directory.")
+	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
+
+	// Enable ENV to set flag values.
+	// Ex: ENV AM_URL will set the value for --am-url.
+	// Precedence: CLI flag, os.ENV, default value set while defining cmd.Flags().
+	viper.BindPFlags(cmd.Flags())
+	return cmd
+}
+
+// Entry point for ./of snmp mib-preprocess.
+func runMibsPreProcess(cmd *cobra.Command, args []string) {
+	// Start the profiler and defer stopping it until the program exits.
+	defer profile.Start().Stop()
+
+	logv2.WithField("info", infoSvc).Infof("snmp mib-preprocess called")
+
+	checkRequiredFlags(cmd)
+
+	SNMPMIBsDir := viper.GetString("mibs-dir")
+	cacheFile := viper.GetString("cache-file")
+
+	if SNMPMIBsDir == "" || cacheFile == "none" {
+		logv2.Errorf("Please specify a mibs-dir and cache-file.")
+		return
+	}
+
+	readerMIB := &mib_registry.MIBHandler{
+		MapMIB: make(map[string]of_v2.MIB),
+	}
+
+	err := readerMIB.LoadJSONFromDir(SNMPMIBsDir)
+	if err != nil {
+		logv2.WithError(err).Fatalf("Failed to load MIBs from MIBS dir.")
+	}
+	err = readerMIB.WriteCacheToFile(cacheFile)
+	if err != nil {
+		logv2.WithError(err).Fatalf("Failed to load MIBs from cache.")
+	}
 }
 
 // Entry point for ./of snmp handler.
@@ -119,6 +172,7 @@ func init() {
 
 	// Create and add the subcommands of the `snmp` command.
 	cmd.AddCommand(cmdSNMPHandler())
+	cmd.AddCommand(cmdSNMPMIBsProcessor())
 
 	// Add the `snmp` command to the root command.
 	rootCmd.AddCommand(cmd)
