@@ -1,0 +1,86 @@
+epc:
+  defaults:
+    enabled: true
+    source_type: host
+    generator_url_prefix: http://www.oid-info.com/get/
+    label_mods:
+    - type: set
+      key: vendor
+      value: cisco
+    - type: set
+      key: subsystem
+      value: epc
+    - type: copy
+      oid: .1.3.6.1.4.1.8164.1.2.1.1.1
+      as: value
+      to_key: star_slot_num
+      on_error: drop
+    annotation_mods:
+    - type: copy
+      oid: .1.3.6.1.6.1.1.1.4.1
+      as: value
+      to_key: event_oid
+    - type: copy
+      oid: .1.3.6.1.6.1.1.1.4.1
+      as: oid.value-str-short
+      to_key: event_name
+  alerts:
+  - name: starCard
+    enabled: true
+    label_mods:
+    - type: set
+      key: alert_severity
+      value: error
+    - type: set
+      key: alert_name
+      value: starCard
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.13
+        - .1.3.6.1.4.1.8164.2.4
+        - .1.3.6.1.4.1.8164.2.7
+        - .1.3.6.1.4.1.8164.2.44
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        - .1.3.6.1.4.1.8164.2.55
+  - name: starCardBootFailed
+    label_mods:
+    - type: set
+      key: alert_severity
+      value: error
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.9
+    clearing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.5
+        - .1.3.6.1.4.1.8164.2.55
+  - name: starCardActive
+    label_mods:
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1
+        as: value
+        values:
+        - .1.3.6.1.4.1.8164.2.55
