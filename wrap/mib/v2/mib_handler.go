@@ -55,11 +55,11 @@ func (mh *MIBHandler) LoadJSONFromFile(path string) error {
 		if oid, hasOid := entry["oid"]; hasOid {
 			var name, description, units string
 			name = entry["name"].(string)
-			if description, hasDescription := entry["description"]; hasDescription {
-				description = description.(string)
+			if d, hasDescription := entry["description"]; hasDescription {
+				description = d.(string)
 			}
-			if units, hasUnits := entry["units"]; hasUnits {
-				units = units.(string)
+			if u, hasUnits := entry["units"]; hasUnits {
+				units = u.(string)
 			}
 
 			mh.MapMIB[oid.(string)] = of.MIB{
