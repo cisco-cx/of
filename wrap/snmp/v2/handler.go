@@ -37,16 +37,20 @@ func (h *Handler) Run() {
 	if err != nil {
 		h.Log.WithError(err).Fatalf("Failed to add health check.")
 	}
+	h.Log.Debugf("Init health check.")
 
 	// Configure HTTP server to handle various requests.
 	h.server = http.NewServer(&httpConfig)
 
 	h.server.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
+		h.Log.Tracef("Version endpoint accessed.")
 		fmt.Fprint(w, h.Config.Version)
 	})
+	h.Log.Debugf("Added version handler.")
 
 	// Handling health check.
 	h.server.HandleFunc("/health", func(w of.ResponseWriter, r of.Request) {
+		h.Log.Tracef("Health endpoint accessed.")
 		err := hc.State("health_check")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -55,12 +59,15 @@ func (h *Handler) Run() {
 		}
 		w.WriteHeader(http.StatusOK)
 	})
+	h.Log.Debugf("Added health handler.")
 
 	// Handling prometheus calls.
 	h.server.Handle("/metrics", prometheus.NewHandler())
+	h.Log.Debugf("Added metrics handler.")
 
 	// Handling status calls.
 	h.server.HandleFunc("/api/v2/status", func(w of.ResponseWriter, r of.Request) {
+		h.Log.Tracef("Status endpoint accessed.")
 		fmt.Fprint(w, of.AppStatus{
 			ApiVersion:  "",
 			Description: "AlertManager Client for SNMP Traps",
@@ -68,8 +75,10 @@ func (h *Handler) Run() {
 			Status:      "success",
 		})
 	})
+	h.Log.Debugf("Added status handler.")
 
 	h.server.HandleFunc("/api/v2/events", h.SNMP.AlertHandler)
+	h.Log.Debugf("Added event handler.")
 
 	// Starting health check.
 	err = hc.Start()
@@ -77,11 +86,17 @@ func (h *Handler) Run() {
 		h.Log.WithError(err).Fatalf("Failed to start at health check.")
 	}
 	defer hc.Stop()
+	h.Log.Debugf("Started health check.")
 
+	h.Log.Infof("Starting SNMP handler server.")
 	// Starting SNMP server.
 	err = h.server.ListenAndServe()
 	if err != nil {
 		h.Log.WithError(err).Fatalf("Failed to listen at %s", h.Config.ListenAddress)
 	}
 
+}
+
+func (h *Handler) Shutdown() error {
+	return h.server.Shutdown()
 }

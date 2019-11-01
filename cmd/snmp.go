@@ -67,7 +67,7 @@ func cmdSNMPMIBsProcessor() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "mib-preprocess",
 		Short: "Pre-process JSON MIBs into a single JSON file",
-		Run:   runMibsPreProcess,
+		Run:   RunMibsPreProcess,
 	}
 
 	// Define flags and configuration settings.
@@ -82,7 +82,7 @@ func cmdSNMPMIBsProcessor() *cobra.Command {
 }
 
 // Entry point for ./of snmp mib-preprocess.
-func runMibsPreProcess(cmd *cobra.Command, args []string) {
+func RunMibsPreProcess(cmd *cobra.Command, args []string) {
 	// Start the profiler and defer stopping it until the program exits.
 	defer profile.Start().Stop()
 
@@ -120,6 +120,7 @@ func runSNMPHandler(cmd *cobra.Command, args []string) {
 	logv2.WithField("info", infoSvc).Infof("snmp handler called")
 
 	config := SNMPConfig(cmd)
+	logv2.Infof("Starting SNMP service")
 	service, err := snmp.NewService(logv2, config)
 	if err != nil {
 		logv2.WithError(err).Fatalf("Failed to init SNMP service.")
