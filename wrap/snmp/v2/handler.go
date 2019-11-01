@@ -5,7 +5,7 @@ import (
 	"net/url"
 
 	of "github.com/cisco-cx/of/pkg/v2"
-	health "github.com/cisco-cx/of/wrap/health/v1"
+	health "github.com/cisco-cx/of/wrap/health/v2"
 	http "github.com/cisco-cx/of/wrap/http/v2"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
 	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"

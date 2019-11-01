@@ -82,7 +82,7 @@ func (hc *HealthChecker) AddURL(name string, urlTarget string, timeout time.Dura
 	healthConfig := health.Config{
 		Name:     name,
 		Fatal:    true,
-		Interval: timeout * time.Second,
+		Interval: timeout,
 		Checker:  httpChecker,
 	}
 	return hc.ih.AddCheck(&healthConfig)
