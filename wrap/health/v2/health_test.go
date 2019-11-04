@@ -27,6 +27,7 @@
 package v2_test
 
 import (
+	"net/http"
 	"testing"
 	"time"
 
@@ -102,25 +103,56 @@ func TestHealthChecker_AddCheck(t *testing.T) {
 	)
 }
 
+type TestHealthChecker struct {
+	fooChecked bool
+	barChecked bool
+	msg        chan string
+}
+
+func (thc *TestHealthChecker) UrlHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path[1:] == "foo" {
+		thc.fooChecked = true
+		w.WriteHeader(500)
+	}
+	if r.URL.Path[1:] == "bar" {
+		thc.barChecked = true
+	}
+	if thc.barChecked == true && thc.fooChecked == true {
+		thc.msg <- "foo and bar checked"
+	}
+}
+
 func TestHealthChecker_State(t *testing.T) {
+	var thc TestHealthChecker
+	thc.msg = make(chan string, 1)
+	http.HandleFunc("/foo", thc.UrlHandler)
+	http.HandleFunc("/bar", thc.UrlHandler)
+	go http.ListenAndServe(":63333", nil)
+
 	wrapHealth := health.New()
 
-	err := wrapHealth.AddURL("bar", "http://randomfoourl/somerandomurl", 1)
+	err := wrapHealth.AddURL("bar", "http://localhost:63333/bar", 1)
 	require.NoError(t, err)
 
 	err = wrapHealth.State("foo")
 	assert.EqualError(t, err, "HealthCheck entry 'foo' not found")
 
-	err = wrapHealth.AddURL("foo", "http://randomurl/somerandomurl", 1)
+	err = wrapHealth.AddURL("foo", "http://localhost:63333/foo", 1)
 	require.NoError(t, err)
 
 	err = wrapHealth.Start()
 	require.NoError(t, err)
-	time.Sleep(500 * time.Millisecond)
+
+	select {
+	case <-thc.msg:
+		time.Sleep(500 * time.Millisecond)
+	case <-time.After(10 * time.Second):
+		t.Fatal("timeout has reached")
+	}
 
 	err = wrapHealth.State("foo")
-	assert.Contains(t, err, "Ran into error while performing")
+	assert.Contains(t, err, "Received status code '500'")
 
 	err = wrapHealth.State("bar")
-	assert.Contains(t, err, "Ran into error while performing")
+	require.NoError(t, err)
 }
