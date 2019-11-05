@@ -127,11 +127,11 @@ func TestSNMPService(t *testing.T) {
 
 	// wait until http server is ready
 	for i := 0; i < 10; i++ {
-		resp, _ := builtin_http.Get("http://localhost:24932/ready")
-		if resp.Body != nil {
+		resp, err := builtin_http.Get("http://localhost:24932/ready")
+		if err == nil {
 			defer resp.Body.Close()
-			body, _ := ioutil.ReadAll(resp.Body)
-			if string(body) == "OK" {
+			body, err := ioutil.ReadAll(resp.Body)
+			if err == nil && string(body) == "OK" {
 				break
 			}
 		}
