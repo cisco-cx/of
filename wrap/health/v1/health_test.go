@@ -128,19 +128,19 @@ func TestHealthChecker_State(t *testing.T) {
 	http.HandleFunc("/foo", thc.UrlHandler)
 	http.HandleFunc("/bar", thc.UrlHandler)
 	go func() {
-		err := http.ListenAndServe("localhost:63333", nil)
+		err := http.ListenAndServe("localhost:63334", nil)
 		require.NoError(t, err)
 	}()
 
 	wrapHealth := health.New()
 
-	err := wrapHealth.AddURL("bar", "http://localhost:63333/bar", 1*time.Second)
+	err := wrapHealth.AddURL("bar", "http://localhost:63334/bar", 1*time.Second)
 	require.NoError(t, err)
 
 	err = wrapHealth.State("foo")
 	assert.EqualError(t, err, "HealthCheck entry 'foo' not found")
 
-	err = wrapHealth.AddURL("foo", "http://localhost:63333/foo", 1*time.Second)
+	err = wrapHealth.AddURL("foo", "http://localhost:63334/foo", 1*time.Second)
 	require.NoError(t, err)
 
 	err = wrapHealth.Start()
