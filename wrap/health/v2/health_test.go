@@ -127,7 +127,7 @@ func TestHealthChecker_State(t *testing.T) {
 	thc.msg = make(chan string, 1)
 	http.HandleFunc("/foo", thc.UrlHandler)
 	http.HandleFunc("/bar", thc.UrlHandler)
-	go http.ListenAndServe(":63333", nil)
+	go http.ListenAndServe("localhost:63333", nil)
 
 	wrapHealth := health.New()
 
