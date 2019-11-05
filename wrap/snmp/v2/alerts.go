@@ -61,7 +61,7 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 			if err == nil {
 				// Add end time to clearing alerts.
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
-				cAlert.EndsAt = time.Now().Format(of.AMTimeFormat)
+				cAlert.EndsAt = time.Now().UTC()
 				allAlerts = append(allAlerts, cAlert)
 			}
 		}
