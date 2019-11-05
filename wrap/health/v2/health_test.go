@@ -52,7 +52,7 @@ func TestHealthChecker_Start(t *testing.T) {
 
 func TestHealthChecker_Stop(t *testing.T) {
 	wrapHealth := health.New()
-	err := wrapHealth.AddURL("name", "http://localhost/somerandomurl", 2)
+	err := wrapHealth.AddURL("name", "http://localhost/somerandomurl", 2*time.Second)
 	require.NoError(t, err)
 
 	err = wrapHealth.Stop()
@@ -71,31 +71,31 @@ func TestHealthChecker_Stop(t *testing.T) {
 func TestHealthChecker_AddCheck(t *testing.T) {
 	wrapHealth := health.New()
 
-	err := wrapHealth.AddURL("foo", "http://localhost/somerandomurl", 2)
+	err := wrapHealth.AddURL("foo", "http://localhost/somerandomurl", 2*time.Second)
 	require.NoError(t, err)
 
-	err = wrapHealth.AddURL("", "http://localhost/somerandomurl", -1)
+	err = wrapHealth.AddURL("", "http://localhost/somerandomurl", -1*time.Second)
 	assert.EqualError(
 		t,
 		err,
 		"The name can't be empty",
 	)
 
-	err = wrapHealth.AddURL("bar", "http://localhost/somerandomurl", -1)
+	err = wrapHealth.AddURL("bar", "http://localhost/somerandomurl", -1*time.Second)
 	assert.EqualError(
 		t,
 		err,
 		"The timeout value must be greather than zero",
 	)
 
-	err = wrapHealth.AddURL("foo", "", 2)
+	err = wrapHealth.AddURL("foo", "", 2*time.Second)
 	assert.EqualError(
 		t,
 		err,
 		"The target url can't be empty",
 	)
 
-	err = wrapHealth.AddURL("foobar", ":foo", 2)
+	err = wrapHealth.AddURL("foobar", ":foo", 2*time.Second)
 	assert.EqualError(
 		t,
 		err,
@@ -131,13 +131,13 @@ func TestHealthChecker_State(t *testing.T) {
 
 	wrapHealth := health.New()
 
-	err := wrapHealth.AddURL("bar", "http://localhost:63333/bar", 1)
+	err := wrapHealth.AddURL("bar", "http://localhost:63333/bar", 1*time.Second)
 	require.NoError(t, err)
 
 	err = wrapHealth.State("foo")
 	assert.EqualError(t, err, "HealthCheck entry 'foo' not found")
 
-	err = wrapHealth.AddURL("foo", "http://localhost:63333/foo", 1)
+	err = wrapHealth.AddURL("foo", "http://localhost:63333/foo", 1*time.Second)
 	require.NoError(t, err)
 
 	err = wrapHealth.Start()
