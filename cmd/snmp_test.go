@@ -126,7 +126,14 @@ func checkHandler(t *testing.T, cmd cobra.Command, amAddress string) {
 	go handler.Run()
 
 	// Wait for server to start.
-	time.Sleep(3 * time.Second)
+	for i := 0; i < 10; i++ {
+		c := http.NewClient()
+		resp, err := c.Get("http://localhost:14444")
+		if err == nil && resp.StatusCode == 200 {
+			break
+		}
+		time.Sleep(500 * time.Millisecond)
+	}
 	runHandlerChecks(t, config.ListenAddress)
 	handler.Shutdown()
 }
