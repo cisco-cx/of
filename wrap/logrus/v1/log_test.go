@@ -92,6 +92,20 @@ func TestWithField(t *testing.T) {
 	require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s msg=\"%s\" file=\"%s:%d\" key3=value3", "error", "Errors with custom field again.", "log_test.go", getLineNumber()-2))
 }
 
+// Test concurrent modifications to fields.
+func TestConcurrentMods(t *testing.T) {
+	buf := &bytes.Buffer{}
+	log := customLogger(buf)
+	log.SetLevel("debug")
+	err := errors.New("Test error.")
+	for i := 0; i < 15000; i++ {
+		go func() {
+			log.WithError(err).WithField("key", "value").Debugf("")
+			require.Contains(t, string(buf.Bytes()), fmt.Sprintf("level=%s file=\"%s:%d\" error=\"Test error.\" key=value", "debug", "log_test.go", getLineNumber()-1))
+		}()
+	}
+}
+
 // Test logger with AutoClear disabled.
 func TestAutoClearFieldsDisabled(t *testing.T) {
 	buf := &bytes.Buffer{}

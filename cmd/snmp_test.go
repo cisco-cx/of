@@ -62,7 +62,7 @@ func TestSNMPMIBsPreprocess(t *testing.T) {
 // Test handler.run
 func TestSNMPHandler(t *testing.T) {
 
-	amAddress := "localhost:14932"
+	amAddress := "localhost:15932"
 
 	// Start fake AM Server.
 	srv := startFakeAM(t, amAddress)

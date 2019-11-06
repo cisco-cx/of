@@ -19,10 +19,13 @@ import (
 	"io"
 	"path/filepath"
 	"runtime"
+	"sync"
 
 	"github.com/sirupsen/logrus"
 	of "github.com/cisco-cx/of/pkg/v1"
 )
+
+var mutex = &sync.Mutex{}
 
 // Represents loggo logger and fields to support structured logging.
 type Logger struct {
@@ -72,6 +75,8 @@ func (l *Logger) AutoClearFields(enabled bool) {
 
 // Reset all fields set by WithField(s) method.
 func (l *Logger) ClearFields() {
+	mutex.Lock()
+	defer mutex.Unlock()
 	l.entry.Data = make(logrus.Fields)
 }
 
@@ -115,26 +120,34 @@ func (l *Logger) Warningf(msg string, args ...interface{}) {
 
 // Log the given error as a seperate field.
 func (l *Logger) WithError(err error) of.Logger {
+	mutex.Lock()
+	defer mutex.Unlock()
 	l.entry = l.entry.WithError(err)
 	return l
 }
 
 // Add given key, value as custom field and value in log.
 func (l *Logger) WithField(k string, v interface{}) of.Logger {
+	mutex.Lock()
+	defer mutex.Unlock()
 	l.entry = l.entry.WithField(k, v)
 	return l
 }
 
 // Add given key, value pairs as custom fields and values in log.
 func (l *Logger) WithFields(kv map[string]interface{}) of.Logger {
+	mutex.Lock()
+	defer mutex.Unlock()
 	l.entry = l.entry.WithFields(logrus.Fields(kv))
 	return l
 }
 
 // Log at given log level.
 func (l *Logger) Logf(level logrus.Level, msg string, args ...interface{}) {
+	mutex.Lock()
 	l.entry.Logf(level, msg, args...)
 	delete(l.entry.Data, logrus.ErrorKey)
+	mutex.Unlock()
 	if l.autoClearFields == true {
 		l.ClearFields()
 	}
@@ -155,4 +168,9 @@ func (l *Logger) LogLevel() string {
 // Change output. Default output is os.Stderr.
 func (l *Logger) SetOutput(w io.Writer) {
 	l.entry.Logger.SetOutput(w)
+}
+
+// Change output. Default output is os.Stderr.
+func (l *Logger) Logger() *logrus.Logger {
+	return l.entry.Logger
 }
