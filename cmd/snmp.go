@@ -160,6 +160,8 @@ func SNMPConfig(cmd *cobra.Command) *of_v2.SNMPConfig {
 		logv2.Fatalf("Please specify a mibs-dir or cache-file.")
 	}
 
+	// Setting namespace for counters.
+	cfg.Application = "of_snmp_handler"
 	return cfg
 }
 

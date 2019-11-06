@@ -1,10 +1,14 @@
 package v2_test
 
 import (
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
@@ -62,6 +66,10 @@ func TestAlertFire(t *testing.T) {
 	}
 
 	require.Equal(t, expectedAlert, alerts)
+	metrics := promMetrics(t)
+	require.Contains(t, metrics, "TestAlertFire_alerts_generated_count{alertType=\"firing\"} 1")
+	require.Contains(t, metrics, "TestAlertFire_clearing_alert_count 0")
+	require.Contains(t, metrics, "TestAlertFire_unknown_cluster_ip_count 1")
 
 }
 
@@ -119,6 +127,10 @@ func TestAlertClear(t *testing.T) {
 		alerts[idx].EndsAt = time.Time{}
 	}
 	require.ElementsMatch(t, expectedAlerts, alerts)
+	metrics := promMetrics(t)
+	require.Contains(t, metrics, "TestAlertClear_alerts_generated_count{alertType=\"clearing\"} 3")
+	require.Contains(t, metrics, "TestAlertClear_clearing_alert_count 1")
+	require.Contains(t, metrics, "TestAlertClear_unknown_cluster_ip_count 0")
 }
 
 // Preparing Alert generator.
@@ -142,5 +154,18 @@ func newAlerter(t *testing.T) *snmp.Alerter {
 		Value:    snmp.NewValue(trapVars(), mr),
 		MR:       mr,
 		U:        &uuid.FixedUUID{},
+		CN:       t.Name(),
 	}
+}
+
+// Fetches current metrics.
+func promMetrics(t *testing.T) string {
+	ts := httptest.NewServer(promhttp.Handler())
+	defer ts.Close()
+	res, err := http.Get(ts.URL)
+	require.NoError(t, err)
+	defer res.Body.Close()
+	metrics, err := ioutil.ReadAll(res.Body)
+	require.NoError(t, err)
+	return string(metrics)
 }

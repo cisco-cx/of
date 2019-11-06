@@ -94,7 +94,7 @@ func TestSNMPHandler(t *testing.T) {
 		//"--cache-file=/tmp/mibs.json",
 		"--config-dir=test/snmp/configs/",
 	})
-	checkHandler(t, cmd, amAddress)
+	checkHandler(t, cmd, amAddress, "test_dir")
 
 	// Using cache file that was just generated dir.
 	cmd.Flags().Parse([]string{
@@ -106,12 +106,13 @@ func TestSNMPHandler(t *testing.T) {
 		"--cache-file=test/snmp/cache_mibs.json",
 		"--config-dir=test/snmp/configs/",
 	})
-	checkHandler(t, cmd, amAddress)
+	checkHandler(t, cmd, amAddress, "test_cache")
 }
 
-func checkHandler(t *testing.T, cmd cobra.Command, amAddress string) {
+func checkHandler(t *testing.T, cmd cobra.Command, amAddress string, cn string) {
 
 	config := snmp_cmd.SNMPConfig(&cmd)
+	config.Application = cn
 
 	log := logger.New()
 	service, err := snmp.NewService(log, config)

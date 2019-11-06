@@ -20,6 +20,7 @@ package v2_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v2"
 	promclient "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
@@ -48,4 +49,5 @@ func TestCounterVecIncr(t *testing.T) {
 	// Search metrics to check if value of counter is 10.
 	require.Contains(t, promMetrics(t), "TestAppVec_test_counter_incr{request=\"get\"} 10")
 	require.Contains(t, promMetrics(t), "TestAppVec_test_counter_incr{request=\"post\"} 20")
+	require.Panics(t, assert.PanicTestFunc(func() { cntrVec.Incr("", "") }))
 }

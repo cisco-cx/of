@@ -201,6 +201,7 @@ func initService(t *testing.T) *snmp.Service {
 		U:       &uuid.FixedUUID{},
 		As:      &testAlertService{t: t},
 		Lookup:  &lookup,
+		CN:      t.Name(),
 	}
 	return s
 }

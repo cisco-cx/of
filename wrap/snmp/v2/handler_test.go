@@ -24,6 +24,7 @@ func TestHandlerRun(t *testing.T) {
 		AMTimeout:     5 * time.Second,
 		ListenAddress: "localhost:44932",
 		Version:       "Handler Test",
+		Application:   "of_snmp_handler_test",
 	}
 
 	// Start fake AM Server.

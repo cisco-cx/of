@@ -44,6 +44,7 @@ import (
 
 // Represents SNMP settings.
 type SNMPConfig struct {
+	Application   string
 	AMAddress     string
 	AMTimeout     time.Duration
 	SNMPMibsDir   string

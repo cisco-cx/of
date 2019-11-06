@@ -2,6 +2,7 @@ package v2
 
 import (
 	"encoding/json"
+	"fmt"
 
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
@@ -23,6 +24,7 @@ type Service struct {
 	U       of.UUIDGen
 	Lookup  of_snmp.Lookup
 	As      of.Notifier
+	CN      string
 }
 
 func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
@@ -103,6 +105,7 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 		U:       &uuid.UUID{},
 		As:      &as,
 		Lookup:  &lookup,
+		CN:      cfg.Application,
 	}
 	return s, nil
 }
@@ -130,7 +133,7 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 		s.Log.WithError(err).Errorf("Failed to decode events.")
 		s.Writer.WriteError(w, r, herodot.ErrBadRequest.WithError(err.Error()))
 	}
-	s.Log.Debugf("Received %d events.", len(events))
+	s.Log.Infof("Received %d events.", len(events))
 
 	configs := s.lookupConfigs(events)
 
@@ -139,6 +142,7 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 		Configs: s.Configs,
 		MR:      s.MR,
 		U:       s.U,
+		CN:      s.CN,
 	}
 
 	for index, event := range events {
@@ -155,6 +159,7 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 		if err != nil {
 			continue
 		}
+		s.Log.Infof("Generated %d alerts for event[%s]", len(alerts), fmt.Sprintf("%d", index))
 		err = s.As.Notify(&alerts)
 		if err != nil {
 			s.Log.WithError(err).Errorf("Failed to publish alert(s) for received event")
