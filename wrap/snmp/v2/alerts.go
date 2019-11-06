@@ -53,6 +53,9 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 			fAlert, err := a.matchAlerts(cfg, alertCfg, of_snmp.Firing, fixedAnnotations)
 			if err == nil {
 				fAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Firing)
+
+				// Setting `alert_oid` as the value of of_snmp.SNMPTrapOID
+				fAlert.Labels["alert_oid"] = fAlert.Annotations["event_oid"]
 				allAlerts = append(allAlerts, fAlert)
 			}
 
@@ -62,7 +65,16 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 				// Add end time to clearing alerts.
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
 				cAlert.EndsAt = time.Now().UTC()
-				allAlerts = append(allAlerts, cAlert)
+
+				// For `selects` under firing.
+				for _, s := range alertCfg.Firing["select"] {
+					// Add each OID under values as `alert_oid`
+					for _, v := range s.Values {
+						// Setting `alert_oid` to clear for all known firing values.
+						cAlert.Labels["alert_oid"] = v
+						allAlerts = append(allAlerts, cAlert)
+					}
+				}
 			}
 		}
 
