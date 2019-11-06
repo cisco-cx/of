@@ -40,6 +40,7 @@ func TestAlertFire(t *testing.T) {
 				"vendor":            "cisco",
 				"alert_fingerprint": "1d8540881d5a50ae",
 				"event_id":          "9dcc77fc-dda5-4edf-a683-64f2589036d6",
+				"alert_oid":         ".1.3.6.1.4.1.8164.1.2.1.1.1",
 			},
 			Annotations: map[string]string{
 				"alert_name":                "starCard",
@@ -73,7 +74,7 @@ func TestAlertClear(t *testing.T) {
 	alerts, err := ag.Alert([]string{"nso"})
 	require.NoError(t, err)
 
-	expectedAlert := of.Alert{
+	expectedAlertTemplate := of.Alert{
 		Labels: map[string]string{
 			"alert_severity":    "error",
 			"alertname":         "nsoPackageLoadFailure",
@@ -98,17 +99,26 @@ func TestAlertClear(t *testing.T) {
 			"event_vars_json":           "[{\"oid\":\".1.3.6.1.6.1.1.1.4.1\",\"oid_string\":\"1.3.6.1.6.1.1.1.4.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.6.1.1.1.4.1\",\"type\":\"\",\"value\":\".1.3.6.1.4.1.8164.1.2.1.1.1\"},{\"oid\":\".1.3.6.1.4.1.8164.1.2.1.1.1\",\"oid_string\":\"1.3.6.1.4.1.8164.1.2.1.1.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.8164.1.2.1.1.1\",\"type\":\"\",\"value\":\"14\"},{\"oid\":\".1.3.6.1.4.1.24961.2.103.1.1.5.1.2\",\"oid_string\":\"1.3.6.1.4.1.24961.2.103.1.1.5.1.2\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.24961.2.103.1.1.5.1.2\",\"type\":\"\",\"value\":\"package-load-failure\"},{\"oid\":\".1.3.6.1.2.1.1.3.0\",\"oid_string\":\"1.3.6.1.2.1.1.3.0\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.2.1.1.3.0\",\"type\":\"Timeticks\",\"value\":\"(123) 0:00:01.23\"},{\"oid\":\".1.3.6.1.6.3.1.1.4.1\",\"oid_string\":\"1.3.6.1.6.3.1.1.4.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.6.3.1.1.4.1\",\"type\":\"OID\",\"value\":\".1.3.6.1.4.1.8164.2.13\"},{\"oid\":\".1.3.6.1.6.3.1.1.4.1.0\",\"oid_string\":\"1.3.6.1.6.3.1.1.4.1.0\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.6.3.1.1.4.1.0\",\"type\":\"OID\",\"value\":\".1.3.6.1.4.1.8164.2.44\"},{\"oid\":\".1.3.6.1.4.1.8164.2.44\",\"oid_string\":\"1.3.6.1.4.1.8164.2.44\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.44\",\"type\":\"STRING\",\"value\":\"foo\"},{\"oid\":\".1.3.6.1.6.3.1.1.4.1.1\",\"oid_string\":\"1.3.6.1.6.3.1.1.4.1.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.6.3.1.1.4.1.1\",\"type\":\"OID\",\"value\":\".1.3.6.1.4.1.8164.2.45\"},{\"oid\":\".1.3.6.1.4.1.8164.2.45\",\"oid_string\":\"1.3.6.1.4.1.8164.2.45\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.45\",\"type\":\"OID\",\"value\":\".1.3.6.1.4.1.65000.1.1.1.1.1\"},{\"oid\":\".1.3.6.1.4.1.65000.1.1.1.1.1\",\"oid_string\":\"1.3.6.1.4.1.65000.1.1.1.1.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.65000.1.1.1.1.1\",\"type\":\"STRING\",\"value\":\"bar\"}]",
 			"event_oid":                 ".1.3.6.1.4.1.8164.2.44",
 		},
-		EndsAt:       time.Now().UTC(),
+		EndsAt:       time.Time{},
 		GeneratorURL: "http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.44",
 	}
 
-	// EndsAt is time.Now, so individually matching other components.
-	require.Len(t, alerts, 1)
-	require.Equal(t, expectedAlert.Labels, alerts[0].Labels)
-	require.Equal(t, expectedAlert.Annotations, alerts[0].Annotations)
-	require.Equal(t, expectedAlert.GeneratorURL, alerts[0].GeneratorURL)
-	require.NotEmpty(t, alerts[0].EndsAt)
+	expectedAlerts := make([]of.Alert, 3)
+	for idx, val := range []string{
+		".1.3.6.1.4.1.24961.2.103.2.0.3",
+		".1.3.6.1.4.1.24961.2.103.2.0.4",
+		".1.3.6.1.4.1.24961.2.103.2.0.5",
+	} {
+		expectedAlertTemplate.Labels["alert_oid"] = val
+		expectedAlerts[idx] = expectedAlertTemplate
+	}
 
+	// EndsAt is time.Now, so individually matching other components.
+	require.Len(t, alerts, 3)
+	for idx, _ := range alerts {
+		alerts[idx].EndsAt = time.Time{}
+	}
+	require.ElementsMatch(t, expectedAlerts, alerts)
 }
 
 // Preparing Alert generator.

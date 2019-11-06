@@ -151,8 +151,10 @@ func startFakeAM(t *testing.T, amAddress string) *http.Server {
 		var alerts []of_v2.Alert
 		err := json.NewDecoder(r.Body).Decode(&alerts)
 		require.NoError(t, err)
-		require.Len(t, alerts, 2)
+		require.Len(t, alerts, 4)
 		expectedOIDStrs := []string{
+			"iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured",
+			"iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured",
 			"iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured",
 			"iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured",
 		}
