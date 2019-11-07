@@ -24,3 +24,10 @@ type Counter interface {
 	Incr() error
 	Destroy() error
 }
+
+// CounterVector is a Domain Type that represents the options for creating
+// a CounterVec. It is based on `prometheus/CounterVec`
+type CounterVector interface {
+	Create([]string) error     // Labels.
+	Incr(string, string) error // Label, Value
+}

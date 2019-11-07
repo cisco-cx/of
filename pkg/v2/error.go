@@ -22,6 +22,9 @@ const (
 	// Counter errors.
 	ErrCounterCreateFailed  = Error("Failed to create counter.")
 	ErrCounterDestroyFailed = Error("Failed to remove counter.")
+
+	// CounterVec errors.
+	ErrCounterVecCreateFailed = Error("Failed to create counter vector.")
 )
 
 // Error represents an OF error.
