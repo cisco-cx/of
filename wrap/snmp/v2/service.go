@@ -134,6 +134,9 @@ func (s Service) lookupConfigs(events []*of.PostableEvent) [][]string {
 			continue
 		}
 		configs[idx] = cfgs
+		if len(cfgs) == 0 {
+			s.Log.Tracef("No match for %+v", event.Document.Receipts.Snmptrapd.Vars)
+		}
 	}
 	return configs
 }
