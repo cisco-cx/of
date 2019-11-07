@@ -121,7 +121,7 @@ func UrlHandler(w of.ResponseWriter, r of.Request) {
 func TestSNMPService(t *testing.T) {
 
 	// Init SNMP service
-	s := initService(t)
+	s := initService(t, "testingService")
 
 	// Start server to listen for SNMP traps
 	addr := "localhost:24932"
@@ -169,7 +169,7 @@ func TestSNMPService(t *testing.T) {
 }
 
 // init SNMP service
-func initService(t *testing.T) *snmp.Service {
+func initService(t *testing.T, namespace string) *snmp.Service {
 
 	// Logger
 	l := logger.New()
@@ -192,16 +192,28 @@ func initService(t *testing.T) *snmp.Service {
 	err = lookup.Build()
 	require.NoError(t, err)
 
+	u := uuid.FixedUUID{}
+	ag := snmp.Alerter{
+		Log:     l,
+		Configs: &v2Config,
+		MR:      mr,
+		U:       &u,
+		CN:      namespace,
+	}
+
+	ag.InitCounters()
+
 	// INIT SNMP service.
 	s := &snmp.Service{
 		Writer:  herodot.New(l),
 		Log:     l,
 		MR:      mr,
 		Configs: &v2Config,
-		U:       &uuid.FixedUUID{},
+		U:       &u,
 		As:      &testAlertService{t: t},
 		Lookup:  &lookup,
 		CN:      t.Name(),
+		Alerter: &ag,
 	}
 	return s
 }

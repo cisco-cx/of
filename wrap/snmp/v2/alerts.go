@@ -36,7 +36,7 @@ type Alerter struct {
 }
 
 // Create counters..
-func (a *Alerter) initCounters() {
+func (a *Alerter) InitCounters() {
 	if a.CN == "" {
 		a.Log.Fatalf("Counters namespace cannot be empty.")
 	}
@@ -67,9 +67,9 @@ func (a *Alerter) initCounters() {
 
 // Iterate through configs in configNames and generate all possible Alerts.
 func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
-	// Init counters only once.
+
 	if len(a.cntr) == 0 {
-		a.initCounters()
+		a.Log.Panicf("Counters have not been initiated, Run Alerter.InitCounters().")
 	}
 
 	// Fixed annotionations for this set of Trap vars.

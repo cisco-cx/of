@@ -41,7 +41,7 @@ func TestHandlerRun(t *testing.T) {
 	}()
 	defer srv.Shutdown()
 	time.Sleep(time.Second)
-	service := initService(t)
+	service := initService(t, "testingHandler")
 	h := snmp.Handler{
 		SNMP:   service,
 		Log:    service.Log,

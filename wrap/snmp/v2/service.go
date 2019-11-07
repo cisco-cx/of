@@ -25,6 +25,7 @@ type Service struct {
 	Lookup  of_snmp.Lookup
 	As      of.Notifier
 	CN      string
+	Alerter *Alerter
 }
 
 func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
@@ -96,16 +97,29 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 		return nil, err
 	}
 
+	u := uuid.UUID{}
+
+	ag := Alerter{
+		Log:     l,
+		Configs: &v2Config,
+		MR:      mr,
+		U:       &u,
+		CN:      cfg.Application,
+	}
+
+	ag.InitCounters()
+
 	// INIT SNMP service.
 	s := &Service{
 		Writer:  herodot.New(l),
 		Log:     l,
 		MR:      mr,
 		Configs: &v2Config,
-		U:       &uuid.UUID{},
+		U:       &u,
 		As:      &as,
 		Lookup:  &lookup,
 		CN:      cfg.Application,
+		Alerter: &ag,
 	}
 	return s, nil
 }
@@ -137,14 +151,6 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 
 	configs := s.lookupConfigs(events)
 
-	ag := Alerter{
-		Log:     s.Log,
-		Configs: s.Configs,
-		MR:      s.MR,
-		U:       s.U,
-		CN:      s.CN,
-	}
-
 	for index, event := range events {
 		snmptrapd := event.Document.Receipts.Snmptrapd
 		s.Log.WithFields(map[string]interface{}{"index": index, "timestamp": snmptrapd.Timestamp, "hostname": snmptrapd.Source.Hostname}).Debugf("Processing event")
@@ -152,10 +158,10 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 			s.Log.Debugf("No config found for index, %d", index)
 			continue
 		}
-		//ag.ReValue
-		ag.Receipts = &event.Document.Receipts
-		ag.Value = NewValue(&snmptrapd.Vars, s.MR)
-		alerts, err := ag.Alert(configs[index])
+
+		s.Alerter.Receipts = &event.Document.Receipts
+		s.Alerter.Value = NewValue(&snmptrapd.Vars, s.MR)
+		alerts, err := s.Alerter.Alert(configs[index])
 		if err != nil {
 			continue
 		}

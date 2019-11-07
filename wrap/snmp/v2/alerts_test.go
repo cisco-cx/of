@@ -1,6 +1,7 @@
 package v2_test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -23,10 +24,16 @@ func TestAlertsInterface(t *testing.T) {
 	var _ of_snmp.AlertGenerator = &snmp.Alerter{}
 }
 
-// Test Alerts firing.
+// Test multiple Alert firing.
 func TestAlertFire(t *testing.T) {
-
 	ag := newAlerter(t)
+	for i := 0; i < 10; i++ {
+		fireAlert(ag, i+1, t)
+	}
+}
+
+// Test Alerts firing.
+func fireAlert(ag *snmp.Alerter, count int, t *testing.T) {
 
 	// All possible alerts for given configs and trapVars.
 	alerts, err := ag.Alert([]string{"epc"})
@@ -67,16 +74,22 @@ func TestAlertFire(t *testing.T) {
 
 	require.Equal(t, expectedAlert, alerts)
 	metrics := promMetrics(t)
-	require.Contains(t, metrics, "TestAlertFire_alerts_generated_count{alertType=\"firing\"} 1")
+	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_alerts_generated_count{alertType=\"firing\"} %d", count))
 	require.Contains(t, metrics, "TestAlertFire_clearing_alert_count 0")
-	require.Contains(t, metrics, "TestAlertFire_unknown_cluster_ip_count 1")
+	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_unknown_cluster_ip_count %d", count))
 
 }
 
-// Test Alerts clearing.
+// Test multiple alert clearing.
 func TestAlertClear(t *testing.T) {
-
 	ag := newAlerter(t)
+	for i := 0; i < 10; i++ {
+		clearAlert(ag, i+1, t)
+	}
+}
+
+// Test Alerts clearing.
+func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 
 	// All possible alerts for given configs and trapVars.
 	alerts, err := ag.Alert([]string{"nso"})
@@ -128,8 +141,8 @@ func TestAlertClear(t *testing.T) {
 	}
 	require.ElementsMatch(t, expectedAlerts, alerts)
 	metrics := promMetrics(t)
-	require.Contains(t, metrics, "TestAlertClear_alerts_generated_count{alertType=\"clearing\"} 3")
-	require.Contains(t, metrics, "TestAlertClear_clearing_alert_count 1")
+	require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_alerts_generated_count{alertType=\"clearing\"} %d", count*3))
+	require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_clearing_alert_count %d", count))
 	require.Contains(t, metrics, "TestAlertClear_unknown_cluster_ip_count 0")
 }
 
@@ -147,7 +160,7 @@ func newAlerter(t *testing.T) *snmp.Alerter {
 
 	mr := mibRegistry(t)
 
-	return &snmp.Alerter{
+	ag := snmp.Alerter{
 		Log:      l,
 		Configs:  &configs,
 		Receipts: TrapReceipts(),
@@ -156,6 +169,8 @@ func newAlerter(t *testing.T) *snmp.Alerter {
 		U:        &uuid.FixedUUID{},
 		CN:       t.Name(),
 	}
+	ag.InitCounters()
+	return &ag
 }
 
 // Fetches current metrics.
