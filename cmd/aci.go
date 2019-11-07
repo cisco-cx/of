@@ -57,7 +57,7 @@ func cmdACIHandler() *cobra.Command {
 	cmd.Flags().String("aci-alerts-config", "alerts.yaml", "Alerts config file (default: alerts.yaml)")
 	cmd.Flags().String("aci-secrets-config", "secrets.yaml", "Secrets config file (default: secrets.yaml)")
 	cmd.Flags().Duration("aci-timeout", 10*time.Second, "ACI Read/Write timeout  (default: 10s)")
-	cmd.Flags().String("static-labels", "None", staticLabelUsage)
+	cmd.Flags().String("aci-static-labels", "None", staticLabelUsage)
 	cmd.Flags().Bool("aci-throttle", true, "Trottle posts to Alertmanager (default: true)")
 	cmd.Flags().Int("aci-post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
 	cmd.Flags().Int("aci-sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
@@ -89,13 +89,13 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 	checkRequiredFlags(cmd)
 	cfg := &of.ACIConfig{}
 	cfg.Application = info.Program
-	cfg.ListenAddress = viper.GetString("listen-address")
-	cfg.CycleInterval = viper.GetInt("cycle-interval")
-	cfg.AmURL = viper.GetString("am-url")
+	cfg.ListenAddress = viper.GetString("aci-listen-address")
+	cfg.CycleInterval = viper.GetInt("aci-cycle-interval")
+	cfg.AmURL = viper.GetString("aci-am-url")
 	cfg.ACIHost = viper.GetString("aci-host")
 
-	cfg.AlertsCFGFile = viper.GetString("alerts-config")
-	cfg.SecretsCFGFile = viper.GetString("secrets-config")
+	cfg.AlertsCFGFile = viper.GetString("aci-alerts-config")
+	cfg.SecretsCFGFile = viper.GetString("aci-secrets-config")
 
 	cfg.User = viper.GetString("aci-user")
 	cfg.Pass = viper.GetString("aci-password")
@@ -104,16 +104,16 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 
 	cfg.ACITimeout = viper.GetDuration("aci-timeout")
 
-	cfg.Throttle = viper.GetBool("throttle")
-	cfg.PostTime = viper.GetInt("post-time")
-	cfg.SleepTime = viper.GetInt("sleep-time")
-	cfg.SendTime = viper.GetInt("send-time")
+	cfg.Throttle = viper.GetBool("aci-throttle")
+	cfg.PostTime = viper.GetInt("aci-post-time")
+	cfg.SleepTime = viper.GetInt("aci-sleep-time")
+	cfg.SendTime = viper.GetInt("aci-send-time")
 
 	if strings.HasPrefix(cfg.AmURL, "http") == false {
-		log.Fatalf("AM URL must begin with http/https")
+		log.Fatalf("aci-am-url must begin with http/https")
 	}
 
-	staticLabels := viper.GetString("static-labels")
+	staticLabels := viper.GetString("aci-static-labels")
 	if staticLabels != "" && staticLabels != "None" {
 		m := make(of.LabelMap)
 		labelItems := strings.Split(staticLabels, ",")
