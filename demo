@@ -4,13 +4,13 @@
 set -euo pipefail
 
 ## Set globally relevant vars.
-export AM_URL=http://localhost:9093
 export PROFILER_MODE=${PROFILER_MODE:-}
 
 ## aci runs a demo of 'of aci handler'.
 aci() {
 
   ## Configure OF ACI Handler.
+  export   ACI_AM_URL="http://localhost:9093"
   export     ACI_HOST=$(jsonnet /keybase/path | jq -r .aci.cluster.hosts[0])
   export     ACI_USER=$(jsonnet /keybase/path | jq -r .aci.auth.username)
   export ACI_PASSWORD=$(jsonnet /keybase/path | jq -r .aci.auth.password)

@@ -48,23 +48,23 @@ func cmdACIHandler() *cobra.Command {
 		Run:   runACIHandler,
 	}
 
-	cmd.Flags().String("listen-address", "localhost:9011", "host:port on which to listen, for metrics scraping")
-	cmd.Flags().Int("cycle-interval", 60, "Number of seconds to sleep between APIC -> AM notification cycles (default: 60)")
-	cmd.Flags().String("am-url", "", "AlertManager's URL")
+	cmd.Flags().String("aci-listen-address", "localhost:9011", "host:port on which to listen, for metrics scraping")
+	cmd.Flags().Int("aci-cycle-interval", 60, "Number of seconds to sleep between APIC -> AM notification cycles (default: 60)")
+	cmd.Flags().String("aci-am-url", "", "AlertManager's URL")
 	cmd.Flags().String("aci-host", "", "ACI host")
 	cmd.Flags().String("aci-user", "", "ACI username")
 	cmd.Flags().String("aci-password", "", "ACI password")
-	cmd.Flags().String("alerts-config", "alerts.yaml", "Alerts config file (default: alerts.yaml)")
-	cmd.Flags().String("secrets-config", "secrets.yaml", "Secrets config file (default: secrets.yaml)")
+	cmd.Flags().String("aci-alerts-config", "alerts.yaml", "Alerts config file (default: alerts.yaml)")
+	cmd.Flags().String("aci-secrets-config", "secrets.yaml", "Secrets config file (default: secrets.yaml)")
 	cmd.Flags().Duration("aci-timeout", 10*time.Second, "ACI Read/Write timeout  (default: 10s)")
 	cmd.Flags().String("static-labels", "None", staticLabelUsage)
-	cmd.Flags().Bool("throttle", true, "Trottle posts to Alertmanager (default: true)")
-	cmd.Flags().Int("post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
-	cmd.Flags().Int("sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
-	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
+	cmd.Flags().Bool("aci-throttle", true, "Trottle posts to Alertmanager (default: true)")
+	cmd.Flags().Int("aci-post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
+	cmd.Flags().Int("aci-sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
+	cmd.Flags().Int("aci-send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
 
 	// Enable ENV to set flag values.
-	// Ex: ENV AM_URL will set the value for --am-url.
+	// Ex: ENV ACI_AM_URL will set the value for --aci-am-url.
 	// Precedence: CLI flag, os.ENV, default value set while defining cmd.Flags().
 	viper.BindPFlags(cmd.Flags())
 	return cmd

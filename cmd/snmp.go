@@ -56,7 +56,7 @@ func cmdSNMPHandler() *cobra.Command {
 	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
 
 	// Enable ENV to set flag values.
-	// Ex: ENV AM_URL will set the value for --am-url.
+	// Ex: ENV AM_ADDRESS will set the value for --am-address.
 	// Precedence: CLI flag, os.ENV, default value set while defining cmd.Flags().
 	viper.BindPFlags(cmd.Flags())
 	return cmd
