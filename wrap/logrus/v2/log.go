@@ -17,6 +17,7 @@ package v2
 import (
 	"fmt"
 	"io"
+	"log"
 	"path/filepath"
 	"runtime"
 	"sync"
@@ -100,7 +101,10 @@ func (l *Logger) Fatalf(msg string, args ...interface{}) {
 
 // Log at panic level.
 func (l *Logger) Panicf(msg string, args ...interface{}) {
-	l.Logf(logrus.PanicLevel, msg, args...)
+	i := make([]interface{}, 0)
+	i = append(i, msg)
+	i = append(i, args...)
+	log.Panic(i)
 }
 
 // Log at debug level.
