@@ -143,6 +143,7 @@ func (h *Handler) PushAlerts() {
 
 	h.counters[apicConnectAttemptCount].Incr()
 	faults, err := h.Aci.Faults()
+	h.Log.Debugf("Retrieved %d faults from ACI", len(faults))
 	if err != nil {
 		h.counters[apicConnectErrorCount].Incr()
 		h.Log.WithError(err).Errorf("Failed to get faults.")
@@ -150,6 +151,7 @@ func (h *Handler) PushAlerts() {
 	}
 
 	alerts, err = h.FaultsToAlerts(faults)
+	h.Log.Debugf("Converted faults to %d alerts", len(alerts))
 	if err != nil {
 		h.Log.WithError(err).Errorf("Failed to convert faults to alerts.")
 		return
@@ -184,6 +186,7 @@ func (h *Handler) Throttle(totalCount int, f func(int, int)) {
 	// or h.Config.SendTime is less than time needed for a single post.
 	if h.Config.Throttle == false || h.Config.SendTime <= h.Config.PostTime+h.Config.SleepTime {
 		f(0, totalCount)
+		h.Log.Infof("Throttle disabled, sending all alerts")
 		return
 	}
 
@@ -198,6 +201,7 @@ func (h *Handler) Throttle(totalCount int, f func(int, int)) {
 			f(start, end)
 			start = end
 			end = start + chunkSize
+			h.Log.Infof("Throttling alerts, sleeping for %d seconds", h.Config.SleepTime)
 			time.Sleep(time.Duration(h.Config.SleepTime) * time.Millisecond)
 		}
 	}
@@ -205,6 +209,7 @@ func (h *Handler) Throttle(totalCount int, f func(int, int)) {
 	// Handle condition where totalCount is not divisible by maxRequests.
 	if start < totalCount {
 		f(start, totalCount)
+		h.Log.Infof("Throttling alerts, sleeping for %d seconds", h.Config.SleepTime)
 		time.Sleep(time.Duration(h.Config.SleepTime) * time.Millisecond)
 	}
 }
@@ -213,6 +218,7 @@ func (h *Handler) Throttle(totalCount int, f func(int, int)) {
 func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error) {
 	var alerts []*alertmanager.Alert
 	for _, mapFault := range faults {
+		h.Log.Tracef("Processing fault: %s\n", mapFault)
 
 		// Decode fault into struct.
 		f := of.ACIFaultRaw{}
@@ -241,10 +247,12 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		// Parse string date.
 		faultCreated, err := fp.Created()
 		if err != nil {
+			h.Log.Errorf("Failed to parse created date, %s", err.Error())
 			return nil, err
 		}
 		faultLastTransition, err := fp.LastTransition()
 		if err != nil {
+			h.Log.Errorf("Failed to parse last transition date, %s", err.Error())
 			return nil, err
 		}
 
@@ -310,6 +318,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		b := []byte{}
 		b, err = json.Marshal(alert)
 		if err != nil {
+			h.Log.Errorf("Failed to marshal to JSON, %s", err.Error())
 			return nil, err
 		}
 		h.Log.WithField("Alert name", alert.Labels["alertname"]).
