@@ -90,7 +90,7 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 	}
 
 	// Prepare lookup.
-	lookup := Lookup{Configs: v2Config, MR: mr}
+	lookup := Lookup{Configs: v2Config, MR: mr, Log: l}
 	err = lookup.Build()
 	if err != nil {
 		l.WithError(err).Errorf("Failed to build lookup.")
@@ -128,6 +128,7 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 func (s Service) lookupConfigs(events []*of.PostableEvent) [][]string {
 	configs := make([][]string, len(events))
 	for idx, event := range events {
+		s.Log.Tracef("Event[%d] %+v", idx, event)
 		cfgs, err := s.Lookup.Find(&event.Document.Receipts.Snmptrapd.Vars)
 		if err != nil {
 			s.Log.WithError(err).Errorf("Lookup failed.")
@@ -135,7 +136,7 @@ func (s Service) lookupConfigs(events []*of.PostableEvent) [][]string {
 		}
 		configs[idx] = cfgs
 		if len(cfgs) == 0 {
-			s.Log.Tracef("No match for %+v", event.Document.Receipts.Snmptrapd.Vars)
+			s.Log.Debugf("No match for %+v", event.Document.Receipts.Snmptrapd.Vars)
 		}
 	}
 	return configs

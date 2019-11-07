@@ -105,6 +105,12 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 				fAlert.Labels["alert_oid"] = fAlert.Annotations["event_oid"]
 				a.cntrVec[alertsGeneratedCount].Incr("alertType", "firing")
 				allAlerts = append(allAlerts, fAlert)
+				a.Log.WithFields(map[string]interface{}{
+					"alertType": "firing",
+					"labels":    fAlert.Labels,
+					"vars":      a.Receipts.Snmptrapd.Vars,
+					"config":    cfgName,
+				}).Debugf("Generated alerts")
 			}
 
 			// Check if trap Vars have any alerts matching clearing conditions.
@@ -123,6 +129,12 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 						cAlert.Labels["alert_oid"] = v
 						a.cntrVec[alertsGeneratedCount].Incr("alertType", "clearing")
 						allAlerts = append(allAlerts, cAlert)
+						a.Log.WithFields(map[string]interface{}{
+							"alertType": "clearing",
+							"labels":    cAlert.Labels,
+							"vars":      a.Receipts.Snmptrapd.Vars,
+							"config":    cfgName,
+						}).Debugf("Generated alerts")
 					}
 				}
 			}

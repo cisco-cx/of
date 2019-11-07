@@ -3,6 +3,7 @@ package v2
 import (
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
+	logger "github.com/cisco-cx/of/wrap/logrus/v2"
 	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
 )
 
@@ -15,6 +16,7 @@ type Lookup struct {
 	lm      lookupMap        // Lookup map
 	Configs of_snmp.V2Config // Concatenate list of configs
 	MR      *mib_registry.MIBRegistry
+	Log     *logger.Logger
 }
 
 // Build lookup to match with SNMP Trap var
@@ -72,6 +74,7 @@ func (l *Lookup) Build() error {
 			}
 		}
 	}
+	l.Log.Tracef("Lookup Map : %+v", l.lm)
 	return nil
 }
 
@@ -96,6 +99,13 @@ func (l *Lookup) buildFromSelects(configName string, selects []of_snmp.Select) {
 
 			// Add config name to lookup
 			l.lm[s.Oid][s.As][value][configName] = false
+
+			l.Log.WithFields(map[string]interface{}{
+				"OID":        s.Oid,
+				"as":         s.As,
+				"value":      value,
+				"configName": configName,
+			}).Tracef("Added to lookup map.")
 		}
 	}
 }
@@ -107,6 +117,7 @@ func (l *Lookup) Find(vars *[]of.TrapVar) ([]string, error) {
 	var as asMap
 	var ok bool
 
+	l.Log.Tracef("vars : %+v", vars)
 	snmpValue := NewValue(vars, l.MR)
 	for _, v := range *vars {
 		oid := v.Oid
@@ -137,6 +148,12 @@ func (l *Lookup) Find(vars *[]of.TrapVar) ([]string, error) {
 				if _, ok := configNames[cfgName]; ok == false {
 					configNames[cfgName] = true
 					configList = append(configList, cfgName)
+					l.Log.WithFields(map[string]interface{}{
+						"OID":        oid,
+						"as":         asType,
+						"value":      value,
+						"configName": cfgName,
+					}).Debugf("Lookup matched.")
 				}
 			}
 		}

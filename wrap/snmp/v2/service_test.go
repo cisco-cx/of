@@ -187,7 +187,7 @@ func initService(t *testing.T, namespace string) *snmp.Service {
 	mr := mibRegistry(t)
 
 	// Prepare lookup.
-	lookup := snmp.Lookup{Configs: v2Config, MR: mr}
+	lookup := snmp.Lookup{Configs: v2Config, MR: mr, Log: l}
 
 	err = lookup.Build()
 	require.NoError(t, err)

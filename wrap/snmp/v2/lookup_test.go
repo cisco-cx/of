@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
+	logger "github.com/cisco-cx/of/wrap/logrus/v2"
 	snmp "github.com/cisco-cx/of/wrap/snmp/v2"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v2"
 )
@@ -38,7 +39,7 @@ func build(t *testing.T) *snmp.Lookup {
 	cfg := yaml.Configs{}
 	err := cfg.Decode(r)
 	require.NoError(t, err)
-	lookup := snmp.Lookup{Configs: of_snmp.V2Config(cfg), MR: mibRegistry(t)}
+	lookup := snmp.Lookup{Configs: of_snmp.V2Config(cfg), MR: mibRegistry(t), Log: logger.New()}
 	lookup.Build()
 	return &lookup
 }
