@@ -19,7 +19,8 @@ const (
 	unknownClusterIPCount = "unknown_cluster_ip_count"
 
 	//CounterVec names.
-	alertsGeneratedCount = "alerts_generated_count"
+	alertsGeneratedCount    = "alerts_generated_count"
+	alertsNotGeneratedCount = "alerts_not_generated_count"
 )
 
 // Implements of_snmp.AlertGenerator
@@ -55,13 +56,40 @@ func (a *Alerter) InitCounters() {
 		}
 	}
 
-	a.cntrVec = map[string]*prometheus.CounterVec{
-		alertsGeneratedCount: &prometheus.CounterVec{Namespace: a.CN, Name: alertsGeneratedCount,
-			Help: "Number of times we generated an alert object for sending to AlertManager."},
+	// Represents the details needed to init a counter vector.
+	type vectorInfo struct {
+		vector *prometheus.CounterVec
+		labels []string
 	}
-	err := a.cntrVec[alertsGeneratedCount].Create([]string{"alertType"})
-	if err != nil {
-		a.Log.WithError(err).Fatalf("Failed to init counterVec, %s", alertsGeneratedCount)
+
+	// Available vectors
+	vis := []vectorInfo{
+		vectorInfo{
+			vector: &prometheus.CounterVec{
+				Namespace: a.CN,
+				Name:      alertsGeneratedCount,
+				Help:      "Number of times we generated an alert object for sending to AlertManager.",
+			},
+			labels: []string{"alertType"},
+		},
+
+		vectorInfo{
+			vector: &prometheus.CounterVec{
+				Namespace: a.CN,
+				Name:      alertsNotGeneratedCount,
+				Help:      "Number of times alert were not generated for configs that matched our lookup..",
+			},
+			labels: []string{"level"},
+		},
+	}
+
+	a.cntrVec = make(map[string]*prometheus.CounterVec)
+	for _, vi := range vis {
+		err := vi.vector.Create(vi.labels)
+		if err != nil {
+			a.Log.WithError(err).Fatalf("Failed to init counterVec, %s", vi.vector.Name)
+		}
+		a.cntrVec[vi.vector.Name] = vi.vector
 	}
 }
 
@@ -86,8 +114,23 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 			continue
 		}
 
+		trapV, err := a.Value.Value(of_snmp.SNMPTrapOID)
+		if err != nil {
+			a.Log.WithError(err).Errorf("Failed to get SNMPTrapOID's value.")
+		}
+		trapVStrShort, err := a.Value.ValueStrShort(of_snmp.SNMPTrapOID)
+		if err != nil {
+			a.Log.WithError(err).Errorf("Failed to get SNMPTrapOID value's short name.")
+		}
+
+		// To check if any alert was generated for `cfgName`.
+		var alertMatchedConfig bool = false
 		// Check through of_snmp.Config.Alerts to find a match.
 		for aNum, alertCfg := range cfg.Alerts {
+
+			// To check if any alert was generated for `alertCfg`.
+			var alertMatchedAlertCfg bool = false
+
 			// Check if alert is enabled.
 			a.Log.Debugf("Checking Alert no. %d (%v) in config: %s", aNum, alertCfg.Name, cfgName)
 			if a.enabled(cfg.Defaults.Enabled, alertCfg.Enabled) == false {
@@ -99,6 +142,9 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 			// Check if trap Vars have any alert matching firing conditions.
 			fAlert, err := a.matchAlerts(cfg, alertCfg, of_snmp.Firing, fixedAnnotations)
 			if err == nil {
+				alertMatchedAlertCfg = true
+				alertMatchedConfig = true
+
 				fAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Firing)
 
 				// Setting `alert_oid` as the value of of_snmp.SNMPTrapOID
@@ -106,16 +152,22 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 				a.cntrVec[alertsGeneratedCount].Incr("alertType", "firing")
 				allAlerts = append(allAlerts, fAlert)
 				a.Log.WithFields(map[string]interface{}{
-					"alertType": "firing",
-					"labels":    fAlert.Labels,
-					"vars":      a.Receipts.Snmptrapd.Vars,
-					"config":    cfgName,
+					"alertType":   "firing",
+					"labels":      fAlert.Labels,
+					"annotations": fAlert.Annotations,
+					"startsAt":    fAlert.StartsAt,
+					"endsAt":      fAlert.EndsAt,
+					"vars":        a.Receipts.Snmptrapd.Vars,
+					"config":      cfgName,
 				}).Debugf("Generated alerts")
 			}
 
 			// Check if trap Vars have any alerts matching clearing conditions.
 			cAlert, err := a.matchAlerts(cfg, alertCfg, of_snmp.Clearing, fixedAnnotations)
 			if err == nil {
+				alertMatchedAlertCfg = true
+				alertMatchedConfig = true
+
 				// Add end time to clearing alerts.
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
 				cAlert.EndsAt = time.Now().UTC()
@@ -130,14 +182,42 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 						a.cntrVec[alertsGeneratedCount].Incr("alertType", "clearing")
 						allAlerts = append(allAlerts, cAlert)
 						a.Log.WithFields(map[string]interface{}{
-							"alertType": "clearing",
-							"labels":    cAlert.Labels,
-							"vars":      a.Receipts.Snmptrapd.Vars,
-							"config":    cfgName,
+							"alertType":   "clearing",
+							"labels":      cAlert.Labels,
+							"annotations": cAlert.Annotations,
+							"startsAt":    cAlert.StartsAt,
+							"endsAt":      cAlert.EndsAt,
+							"vars":        a.Receipts.Snmptrapd.Vars,
+							"config":      cfgName,
 						}).Debugf("Generated alerts")
 					}
 				}
 			}
+
+			// Alert not generated for `alertCfg`
+			if alertMatchedAlertCfg == false {
+				a.Log.WithFields(map[string]interface{}{
+					"alertCfg":         alertCfg,
+					"alertIndex":       aNum,
+					"vars":             a.Receipts.Snmptrapd.Vars,
+					"config":           cfgName,
+					"SNMPTrapOIDValue": trapV,
+					"SNMPTrapOIDName":  trapVStrShort,
+				}).Debugf("No match found for alertCfg.")
+				a.cntrVec[alertsNotGeneratedCount].Incr("level", "alert")
+			}
+
+		}
+
+		// Alert not generated for `cfgName`
+		if alertMatchedConfig == false {
+			a.Log.WithFields(map[string]interface{}{
+				"config":           cfgName,
+				"vars":             a.Receipts.Snmptrapd.Vars,
+				"SNMPTrapOIDValue": trapV,
+				"SNMPTrapOIDName":  trapVStrShort,
+			}).Debugf("No match found for config.")
+			a.cntrVec[alertsNotGeneratedCount].Incr("level", "config")
 		}
 
 	}

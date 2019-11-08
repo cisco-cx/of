@@ -136,7 +136,15 @@ func (s Service) lookupConfigs(events []*of.PostableEvent) [][]string {
 		}
 		configs[idx] = cfgs
 		if len(cfgs) == 0 {
-			s.Log.Debugf("No match for %+v", event.Document.Receipts.Snmptrapd.Vars)
+			valueLookup := NewValue(&event.Document.Receipts.Snmptrapd.Vars, s.MR)
+			trapV, _ := valueLookup.Value(of_snmp.SNMPTrapOID)
+			trapVStrShort, _ := valueLookup.ValueStrShort(of_snmp.SNMPTrapOID)
+			s.Log.WithFields(map[string]interface{}{
+				"vars":             event.Document.Receipts.Snmptrapd.Vars,
+				"event":            event,
+				"SNMPTrapOIDValue": trapV,
+				"SNMPTrapOIDName":  trapVStrShort,
+			}).Debugf("No match found at lookup")
 		}
 	}
 	return configs
