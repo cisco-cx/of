@@ -13,16 +13,6 @@ import (
 	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 )
 
-const (
-	// Counters names.
-	clearingEventCount    = "clearing_alert_count"
-	unknownClusterIPCount = "unknown_cluster_ip_count"
-
-	//CounterVec names.
-	alertsGeneratedCount    = "alerts_generated_count"
-	alertsNotGeneratedCount = "alerts_not_generated_count"
-)
-
 // Implements of_snmp.AlertGenerator
 type Alerter struct {
 	Log      *logger.Logger
@@ -31,73 +21,15 @@ type Alerter struct {
 	Value    *Value
 	MR       *mibs.MIBRegistry
 	U        of.UUIDGen
-	cntr     map[string]*prometheus.Counter
-	cntrVec  map[string]*prometheus.CounterVec
-	CN       string // Namespace for counters.
-}
-
-// Create counters..
-func (a *Alerter) InitCounters() {
-	if a.CN == "" {
-		a.Log.Fatalf("Counters namespace cannot be empty.")
-	}
-	a.cntr = map[string]*prometheus.Counter{
-		clearingEventCount: &prometheus.Counter{Namespace: a.CN, Name: clearingEventCount,
-			Help: "Number of unique clear events generated."},
-		unknownClusterIPCount: &prometheus.Counter{Namespace: a.CN, Name: unknownClusterIPCount,
-			Help: "Number of times we got events for a cluster, where the IP is not in the cluster list."},
-	}
-
-	// Init counters
-	for name, c := range a.cntr {
-		err := c.Create()
-		if err != nil {
-			a.Log.WithError(err).Fatalf("Failed to init counter, %s", name)
-		}
-	}
-
-	// Represents the details needed to init a counter vector.
-	type vectorInfo struct {
-		vector *prometheus.CounterVec
-		labels []string
-	}
-
-	// Available vectors
-	vis := []vectorInfo{
-		vectorInfo{
-			vector: &prometheus.CounterVec{
-				Namespace: a.CN,
-				Name:      alertsGeneratedCount,
-				Help:      "Number of times we generated an alert object for sending to AlertManager.",
-			},
-			labels: []string{"alertType"},
-		},
-
-		vectorInfo{
-			vector: &prometheus.CounterVec{
-				Namespace: a.CN,
-				Name:      alertsNotGeneratedCount,
-				Help:      "Number of times alert were not generated for configs that matched our lookup..",
-			},
-			labels: []string{"level"},
-		},
-	}
-
-	a.cntrVec = make(map[string]*prometheus.CounterVec)
-	for _, vi := range vis {
-		err := vi.vector.Create(vi.labels)
-		if err != nil {
-			a.Log.WithError(err).Fatalf("Failed to init counterVec, %s", vi.vector.Name)
-		}
-		a.cntrVec[vi.vector.Name] = vi.vector
-	}
+	Cntr     map[string]*prometheus.Counter
+	CntrVec  map[string]*prometheus.CounterVec
 }
 
 // Iterate through configs in configNames and generate all possible Alerts.
 func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 
-	if len(a.cntr) == 0 {
-		a.Log.Panicf("Counters have not been initiated, Run Alerter.InitCounters().")
+	if a.Cntr == nil || len(a.Cntr) == 0 {
+		a.Log.Panicf("Counters have not been initiated.")
 	}
 
 	// Fixed annotionations for this set of Trap vars.
@@ -149,7 +81,7 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 
 				// Setting `alert_oid` as the value of of_snmp.SNMPTrapOID
 				fAlert.Labels["alert_oid"] = fAlert.Annotations["event_oid"]
-				a.cntrVec[alertsGeneratedCount].Incr("alertType", "firing")
+				a.CntrVec[alertsGeneratedCount].Incr("alertType", "firing")
 				allAlerts = append(allAlerts, fAlert)
 				a.Log.WithFields(map[string]interface{}{
 					"alertType":   "firing",
@@ -172,14 +104,14 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
 				cAlert.EndsAt = time.Now().UTC()
 
-				a.cntr[clearingEventCount].Incr()
+				a.Cntr[clearingEventCount].Incr()
 				// For `selects` under firing.
 				for _, s := range alertCfg.Firing["select"] {
 					// Add each OID under values as `alert_oid`
 					for _, v := range s.Values {
 						// Setting `alert_oid` to clear for all known firing values.
 						cAlert.Labels["alert_oid"] = v
-						a.cntrVec[alertsGeneratedCount].Incr("alertType", "clearing")
+						a.CntrVec[alertsGeneratedCount].Incr("alertType", "clearing")
 						allAlerts = append(allAlerts, cAlert)
 						a.Log.WithFields(map[string]interface{}{
 							"alertType":   "clearing",
@@ -204,7 +136,7 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 					"SNMPTrapOIDValue": trapV,
 					"SNMPTrapOIDName":  trapVStrShort,
 				}).Debugf("No match found for alertCfg.")
-				a.cntrVec[alertsNotGeneratedCount].Incr("level", "alert")
+				a.CntrVec[alertsNotGeneratedCount].Incr("level", "alert")
 			}
 
 		}
@@ -217,7 +149,7 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 				"SNMPTrapOIDValue": trapV,
 				"SNMPTrapOIDName":  trapVStrShort,
 			}).Debugf("No match found for config.")
-			a.cntrVec[alertsNotGeneratedCount].Incr("level", "config")
+			a.CntrVec[alertsNotGeneratedCount].Incr("level", "config")
 		}
 
 	}
@@ -373,7 +305,7 @@ func (a *Alerter) prepareBaseAlert(alert *of.Alert, cfg *of_snmp.Config) error {
 	// If no cluster is found or host type is not cluster.
 	if found == false {
 		a.Log.Debugf("Setting default source info for IP : %s", a.Receipts.Snmptrapd.Source.Address)
-		a.cntr[unknownClusterIPCount].Incr()
+		a.Cntr[unknownClusterIPCount].Incr()
 		a.updateSource(alert)
 	}
 

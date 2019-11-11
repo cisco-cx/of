@@ -12,8 +12,19 @@ import (
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
 	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
 	mibs "github.com/cisco-cx/of/wrap/mib/v2"
+	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 	uuid "github.com/cisco-cx/of/wrap/uuid/v2"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v2"
+)
+
+const (
+	// Counters names.
+	clearingEventCount    = "clearing_alert_count"
+	unknownClusterIPCount = "unknown_cluster_ip_count"
+
+	//CounterVec names.
+	alertsGeneratedCount    = "alerts_generated_count"
+	alertsNotGeneratedCount = "alerts_not_generated_count"
 )
 
 type Service struct {
@@ -24,8 +35,9 @@ type Service struct {
 	U       of.UUIDGen
 	Lookup  of_snmp.Lookup
 	As      of.Notifier
-	CN      string
 	Alerter *Alerter
+	Cntr    map[string]*prometheus.Counter
+	CntrVec map[string]*prometheus.CounterVec
 }
 
 func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
@@ -99,15 +111,15 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 
 	u := uuid.UUID{}
 
+	cntr, cntrVec := InitCounters(cfg.Application, l)
 	ag := Alerter{
 		Log:     l,
 		Configs: &v2Config,
 		MR:      mr,
 		U:       &u,
-		CN:      cfg.Application,
+		Cntr:    cntr,
+		CntrVec: cntrVec,
 	}
-
-	ag.InitCounters()
 
 	// INIT SNMP service.
 	s := &Service{
@@ -118,8 +130,9 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 		U:       &u,
 		As:      &as,
 		Lookup:  &lookup,
-		CN:      cfg.Application,
 		Alerter: &ag,
+		Cntr:    cntr,
+		CntrVec: cntrVec,
 	}
 	return s, nil
 }
@@ -145,6 +158,7 @@ func (s Service) lookupConfigs(events []*of.PostableEvent) [][]string {
 				"SNMPTrapOIDValue": trapV,
 				"SNMPTrapOIDName":  trapVStrShort,
 			}).Debugf("No match found at lookup")
+			s.CntrVec[alertsNotGeneratedCount].Incr("level", "lookup")
 		}
 	}
 	return configs
@@ -184,4 +198,62 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 		}
 	}
 	s.Writer.WriteCode(w, r, 200, nil)
+}
+
+// Create counters..
+func InitCounters(namespace string, log *logger.Logger) (map[string]*prometheus.Counter, map[string]*prometheus.CounterVec) {
+	if namespace == "" {
+		log.Fatalf("Counters namespace cannot be empty.")
+	}
+	cntr := map[string]*prometheus.Counter{
+		clearingEventCount: &prometheus.Counter{Namespace: namespace, Name: clearingEventCount,
+			Help: "Number of unique clear events generated."},
+		unknownClusterIPCount: &prometheus.Counter{Namespace: namespace, Name: unknownClusterIPCount,
+			Help: "Number of times we got events for a cluster, where the IP is not in the cluster list."},
+	}
+
+	// Init counters
+	for name, c := range cntr {
+		err := c.Create()
+		if err != nil {
+			log.WithError(err).Fatalf("Failed to init counter, %s", name)
+		}
+	}
+
+	// Represents the details needed to init a counter vector.
+	type vectorInfo struct {
+		vector *prometheus.CounterVec
+		labels []string
+	}
+
+	// Available vectors
+	vis := []vectorInfo{
+		vectorInfo{
+			vector: &prometheus.CounterVec{
+				Namespace: namespace,
+				Name:      alertsGeneratedCount,
+				Help:      "Number of times we generated an alert object for sending to AlertManager.",
+			},
+			labels: []string{"alertType"},
+		},
+
+		vectorInfo{
+			vector: &prometheus.CounterVec{
+				Namespace: namespace,
+				Name:      alertsNotGeneratedCount,
+				Help:      "Number of times alert were not generated for configs that matched our lookup..",
+			},
+			labels: []string{"level"},
+		},
+	}
+
+	cntrVec := make(map[string]*prometheus.CounterVec)
+	for _, vi := range vis {
+		err := vi.vector.Create(vi.labels)
+		if err != nil {
+			log.WithError(err).Fatalf("Failed to init counterVec, %s", vi.vector.Name)
+		}
+		cntrVec[vi.vector.Name] = vi.vector
+	}
+	return cntr, cntrVec
 }

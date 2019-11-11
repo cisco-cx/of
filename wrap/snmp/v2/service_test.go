@@ -193,15 +193,17 @@ func initService(t *testing.T, namespace string) *snmp.Service {
 	require.NoError(t, err)
 
 	u := uuid.FixedUUID{}
+
+	cntr, cntrVec := snmp.InitCounters(namespace, l)
+
 	ag := snmp.Alerter{
 		Log:     l,
 		Configs: &v2Config,
 		MR:      mr,
 		U:       &u,
-		CN:      namespace,
+		Cntr:    cntr,
+		CntrVec: cntrVec,
 	}
-
-	ag.InitCounters()
 
 	// INIT SNMP service.
 	s := &snmp.Service{
@@ -212,8 +214,9 @@ func initService(t *testing.T, namespace string) *snmp.Service {
 		U:       &u,
 		As:      &testAlertService{t: t},
 		Lookup:  &lookup,
-		CN:      t.Name(),
 		Alerter: &ag,
+		Cntr:    cntr,
+		CntrVec: cntrVec,
 	}
 	return s
 }

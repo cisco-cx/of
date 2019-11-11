@@ -160,6 +160,7 @@ func newAlerter(t *testing.T) *snmp.Alerter {
 
 	mr := mibRegistry(t)
 
+	cntr, cntrVec := snmp.InitCounters(t.Name(), l)
 	ag := snmp.Alerter{
 		Log:      l,
 		Configs:  &configs,
@@ -167,9 +168,9 @@ func newAlerter(t *testing.T) *snmp.Alerter {
 		Value:    snmp.NewValue(trapVars(), mr),
 		MR:       mr,
 		U:        &uuid.FixedUUID{},
-		CN:       t.Name(),
+		Cntr:     cntr,
+		CntrVec:  cntrVec,
 	}
-	ag.InitCounters()
 	return &ag
 }
 
