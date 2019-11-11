@@ -38,46 +38,23 @@ func cmdSNMP() *cobra.Command {
 // cmdSNMPHandler returns the `snmp handler` command.
 func cmdSNMPHandler() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "handler",
-		Short: "Start the SNMP handler",
-		Run:   runSNMPHandler,
+		Use:                "handler",
+		Short:              "Start the SNMP handler",
+		Run:                runSNMPHandler,
+		DisableFlagParsing: true,
 	}
 
-	// Define flags and configuration settings.
-	cmd.Flags().String("listen-address", "localhost:80", "host:port on which to listen, for SNMP trap events.")
-	cmd.Flags().String("am-address", "http://localhost:9093", "AlertManager's URL")
-	cmd.Flags().Duration("am-timeout", 1*time.Second, "Alertmanager timeout  (default: 10s)")
-	cmd.Flags().String("mibs-dir", "none", "Path to MIBs directory.")
-	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
-	cmd.Flags().String("config-dir", "", "Path to directory containing configs.")
-	cmd.Flags().Bool("throttle", true, "Trottle posts to Alertmanager (default: true)")
-	cmd.Flags().Int("post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
-	cmd.Flags().Int("sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
-	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
-
-	// Enable ENV to set flag values.
-	// Ex: ENV AM_ADDRESS will set the value for --am-address.
-	// Precedence: CLI flag, os.ENV, default value set while defining cmd.Flags().
-	viper.BindPFlags(cmd.Flags())
 	return cmd
 }
 
 // cmdSNMPMIBsProcessor returns the `snmp handler` command.
 func cmdSNMPMIBsProcessor() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "mib-preprocess",
-		Short: "Pre-process JSON MIBs into a single JSON file",
-		Run:   RunMibsPreProcess,
+		Use:                "mib-preprocess",
+		Short:              "Pre-process JSON MIBs into a single JSON file",
+		Run:                RunMibsPreProcess,
+		DisableFlagParsing: true,
 	}
-
-	// Define flags and configuration settings.
-	cmd.Flags().String("input-dir", "", "Path to MIBs directory.")
-	cmd.Flags().String("output-file", "none", "Path to MIBs cache file.")
-
-	// Enable ENV to set flag values.
-	// Ex: ENV AM_URL will set the value for --am-url.
-	// Precedence: CLI flag, os.ENV, default value set while defining cmd.Flags().
-	viper.BindPFlags(cmd.Flags())
 	return cmd
 }
 
@@ -88,10 +65,14 @@ func RunMibsPreProcess(cmd *cobra.Command, args []string) {
 
 	logv2.WithField("info", infoSvc).Infof("snmp mib-preprocess called")
 
-	checkRequiredFlags(cmd)
+	// Define flags and configuration settings.
+	cmd.Flags().String("mibs-dir", "", "Path to MIBs directory.")
+	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
 
-	SNMPMIBsDir := viper.GetString("input-dir")
-	cacheFile := viper.GetString("output-file")
+	checkRequiredFlags(cmd, args)
+
+	SNMPMIBsDir := viper.GetString("mibs-dir")
+	cacheFile := viper.GetString("cache-file")
 
 	if SNMPMIBsDir == "" || cacheFile == "none" {
 		logv2.Errorf("Please specify a input-dir and output-file.")
@@ -118,7 +99,7 @@ func runSNMPHandler(cmd *cobra.Command, args []string) {
 	defer profile.Start().Stop()
 
 	logv2.WithField("info", infoSvc).Infof("snmp handler called")
-
+	ParseSNMPHandlerFlags(cmd, args)
 	config := SNMPConfig(cmd)
 	logv2.Infof("Starting SNMP service")
 	service, err := snmp.NewService(logv2, config)
@@ -135,9 +116,24 @@ func runSNMPHandler(cmd *cobra.Command, args []string) {
 	handler.Run()
 }
 
+func ParseSNMPHandlerFlags(cmd *cobra.Command, args []string) {
+
+	// Define flags and configuration settings.
+	cmd.Flags().String("listen-address", "localhost:80", "host:port on which to listen, for SNMP trap events.")
+	cmd.Flags().String("am-address", "http://localhost:9093", "AlertManager's URL")
+	cmd.Flags().Duration("am-timeout", 1*time.Second, "Alertmanager timeout  (default: 10s)")
+	cmd.Flags().String("mibs-dir", "none", "Path to MIBs directory.")
+	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
+	cmd.Flags().String("config-dir", "", "Path to directory containing configs.")
+	cmd.Flags().Bool("throttle", true, "Trottle posts to Alertmanager (default: true)")
+	cmd.Flags().Int("post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
+	cmd.Flags().Int("sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
+	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
+	checkRequiredFlags(cmd, args)
+}
+
 // Returns  &of.SNMPConfig{} based on CLI flags and ENV.
 func SNMPConfig(cmd *cobra.Command) *of_v2.SNMPConfig {
-	checkRequiredFlags(cmd)
 	cfg := &of_v2.SNMPConfig{}
 	cfg.ListenAddress = viper.GetString("listen-address")
 	cfg.AMAddress = viper.GetString("am-address")

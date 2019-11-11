@@ -43,10 +43,21 @@ func cmdACI() *cobra.Command {
 // cmdACIHandler returns the `aci handler` command.
 func cmdACIHandler() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "handler",
-		Short: "Start the ACI handler",
-		Run:   runACIHandler,
+		Use:                "handler",
+		Short:              "Start the ACI handler",
+		Run:                runACIHandler,
+		DisableFlagParsing: true,
 	}
+
+	return cmd
+}
+
+// Entry point for ./of aci handler.
+func runACIHandler(cmd *cobra.Command, args []string) {
+	// Start the profiler and defer stopping it until the program exits.
+	defer profile.Start().Stop()
+
+	log.WithField("info", infoSvc).Infof("aci handler called")
 
 	cmd.Flags().String("aci-listen-address", "localhost:9011", "host:port on which to listen, for metrics scraping")
 	cmd.Flags().Int("aci-cycle-interval", 60, "Number of seconds to sleep between APIC -> AM notification cycles (default: 60)")
@@ -63,19 +74,7 @@ func cmdACIHandler() *cobra.Command {
 	cmd.Flags().Int("aci-sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
 	cmd.Flags().Int("aci-send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
 
-	// Enable ENV to set flag values.
-	// Ex: ENV ACI_AM_URL will set the value for --aci-am-url.
-	// Precedence: CLI flag, os.ENV, default value set while defining cmd.Flags().
-	viper.BindPFlags(cmd.Flags())
-	return cmd
-}
-
-// Entry point for ./of aci handler.
-func runACIHandler(cmd *cobra.Command, args []string) {
-	// Start the profiler and defer stopping it until the program exits.
-	defer profile.Start().Stop()
-
-	log.WithField("info", infoSvc).Infof("aci handler called")
+	checkRequiredFlags(cmd, args)
 
 	config := ACIConfig(cmd)
 	handler := &aci.Handler{Config: config, Log: log}
@@ -86,7 +85,6 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 
 // Returns  &ACI{} based on CLI flags and ENV.
 func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
-	checkRequiredFlags(cmd)
 	cfg := &of.ACIConfig{}
 	cfg.Application = info.Program
 	cfg.ListenAddress = viper.GetString("aci-listen-address")

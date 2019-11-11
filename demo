@@ -15,13 +15,9 @@ aci() {
   export     ACI_USER=$(jsonnet /keybase/path | jq -r .aci.auth.username)
   export ACI_PASSWORD=$(jsonnet /keybase/path | jq -r .aci.auth.password)
   export STATIC_LABELS="source_hostname=vagrant,source_address=127.0.0.1"
+  export ACI_ALERTS_CONFIG="example/aci/v1/alerts.yaml"
+  export ACI_SECRETS_CONFIG="example/aci/v1/secrets.yaml"
 
-  ## Symlink to example configs.
-  for f in alerts.yaml secrets.yaml; do
-    if [ ! -e ${f} ]; then
-      ln -s ${f}.example ${f}
-    fi
-  done
 
   ## Run it.
   ./of aci handler

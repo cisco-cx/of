@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 	snmp_cmd "github.com/cisco-cx/of/cmd"
 	of_v2 "github.com/cisco-cx/of/pkg/v2"
@@ -23,12 +22,6 @@ import (
 
 // Test SNMP mibs pre process
 func TestSNMPMIBsPreprocess(t *testing.T) {
-	cmd := cobra.Command{}
-
-	cmd.Flags().String("input-dir", "", "Path to MIBs directory.")
-	cmd.Flags().String("output-file", "none", "Path to MIBs cache file.")
-
-	viper.BindPFlags(cmd.Flags())
 
 	// Create temp. file
 	tmpFile, err := ioutil.TempFile(os.TempDir(), "cache-")
@@ -39,12 +32,13 @@ func TestSNMPMIBsPreprocess(t *testing.T) {
 	defer os.Remove(fileName)
 
 	// Using mibs dir.
-	cmd.Flags().Parse([]string{
-		"--input-dir=test/snmp/mibs/",
-		"--output-file=" + fileName,
-	})
+	cmd := &cobra.Command{}
+	args := []string{
+		"--mibs-dir=test/snmp/mibs/",
+		"--cache-file=" + fileName,
+	}
 
-	snmp_cmd.RunMibsPreProcess(&cmd, []string{})
+	snmp_cmd.RunMibsPreProcess(cmd, args)
 
 	// Compute check sum of generated file.
 	f, err := os.Open(fileName)
@@ -68,50 +62,32 @@ func TestSNMPHandler(t *testing.T) {
 	srv := startFakeAM(t, amAddress)
 	defer srv.Shutdown()
 
-	cmd := cobra.Command{}
-
-	cmd.Flags().String("listen-address", "localhost:80", "host:port on which to listen, for SNMP trap events.")
-	cmd.Flags().String("am-address", "http://localhost:9093", "AlertManager's URL")
-	cmd.Flags().Duration("am-timeout", 1*time.Second, "Alertmanager timeout  (default: 10s)")
-	cmd.Flags().String("mibs-dir", "none", "Path to MIBs directory.")
-	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
-	cmd.Flags().String("config-dir", "", "Path to directory containing configs.")
-	cmd.Flags().Bool("throttle", true, "Trottle posts to Alertmanager (default: true)")
-	cmd.Flags().Int("post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
-	cmd.Flags().Int("sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
-	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
-
-	viper.BindPFlags(cmd.Flags())
-
 	// Using mibs dir.
-	cmd.Flags().Parse([]string{
+	args := []string{
 		"--listen-address=blah",
-
 		"--listen-address=localhost:14444",
 		"--am-address=http://" + amAddress,
 		"--mibs-dir=test/snmp/mibs/",
-		//"--am-timeout=1s",
-		//"--cache-file=/tmp/mibs.json",
 		"--config-dir=test/snmp/configs/",
-	})
-	checkHandler(t, cmd, amAddress, "test_dir")
+	}
+	checkHandler(t, args, amAddress, "test_dir")
 
 	// Using cache file that was just generated dir.
-	cmd.Flags().Parse([]string{
+	args = []string{
 		"--listen-address=blah",
-
 		"--listen-address=localhost:14444",
 		"--am-address=http://" + amAddress,
 		"--am-timeout=10s",
 		"--cache-file=test/snmp/cache_mibs.json",
 		"--config-dir=test/snmp/configs/",
-	})
-	checkHandler(t, cmd, amAddress, "test_cache")
+	}
+	checkHandler(t, args, amAddress, "test_cache")
 }
 
-func checkHandler(t *testing.T, cmd cobra.Command, amAddress string, cn string) {
-
-	config := snmp_cmd.SNMPConfig(&cmd)
+func checkHandler(t *testing.T, args []string, amAddress string, cn string) {
+	cmd := &cobra.Command{}
+	snmp_cmd.ParseSNMPHandlerFlags(cmd, args)
+	config := snmp_cmd.SNMPConfig(cmd)
 	config.Application = cn
 
 	log := logger.New()
