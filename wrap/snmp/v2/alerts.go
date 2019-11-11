@@ -330,11 +330,8 @@ func (a *Alerter) prepareBaseAlert(alert *of.Alert, cfg *of_snmp.Config) error {
 func (a *Alerter) fixedAnnotations() map[string]string {
 
 	enrichedVars := make([]map[string]string, len(a.Receipts.Snmptrapd.Vars))
-	var oid string
+	var oid, eventStrOid, eventDesc string
 	for i, v := range a.Receipts.Snmptrapd.Vars {
-		if v.Oid == of_snmp.SNMPTrapOID {
-			oid = v.Value
-		}
 
 		enrichedVar := make(map[string]string)
 		enrichedVar["oid"] = v.Oid
@@ -351,19 +348,18 @@ func (a *Alerter) fixedAnnotations() map[string]string {
 		enrichedVar["oid_string"] = a.MR.String(varOid)
 		enrichedVar["oid_uri"] = "http://www.oid-info.com/get/" + varOid
 		enrichedVars[i] = enrichedVar
+		if v.Oid == of_snmp.SNMPTrapOID {
+			oid = v.Value
+			eventOid := oid[1:]
+			eventObj := a.MR.MIB(eventOid)
+			if eventObj != nil {
+				eventDesc = eventObj.Description
+				eventStrOid = a.MR.String(eventOid)
+			}
+		}
 	}
 
 	enrichedVarsJson, _ := json.Marshal(enrichedVars)
-
-	var eventStrOid, eventDesc string
-	if oid != "" {
-		eventOid := oid[1:]
-		eventObj := a.MR.MIB(eventOid)
-		if eventObj != nil {
-			eventDesc = eventObj.Description
-			eventStrOid = a.MR.String(eventOid)
-		}
-	}
 
 	fixedAnnotations := map[string]string{
 		"event_filebeat_timestamp":  a.Receipts.Filebeat.Timestamp,
