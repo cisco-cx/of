@@ -21,6 +21,8 @@ const (
 	// Counters names.
 	clearingEventCount    = "clearing_alert_count"
 	unknownClusterIPCount = "unknown_cluster_ip_count"
+	eventsReceivedCount   = "events_received_count"
+	eventsProcessedCount  = "events_processed_count"
 
 	//CounterVec names.
 	alertsGeneratedCount    = "alerts_generated_count"
@@ -141,6 +143,7 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 func (s Service) lookupConfigs(events []*of.PostableEvent) [][]string {
 	configs := make([][]string, len(events))
 	for idx, event := range events {
+		s.Cntr[eventsReceivedCount].Incr()
 		s.Log.Tracef("Event[%d] %+v", idx, event)
 		cfgs, err := s.Lookup.Find(&event.Document.Receipts.Snmptrapd.Vars)
 		if err != nil {
@@ -182,6 +185,7 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 		s.Log.WithFields(map[string]interface{}{"index": index, "timestamp": snmptrapd.Timestamp, "hostname": snmptrapd.Source.Hostname}).Debugf("Processing event")
 		if len(configs[index]) == 0 {
 			s.Log.Debugf("No config found for index, %d", index)
+			s.Cntr[eventsProcessedCount].Incr()
 			continue
 		}
 
@@ -189,13 +193,16 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 		s.Alerter.Value = NewValue(&snmptrapd.Vars, s.MR)
 		alerts, err := s.Alerter.Alert(configs[index])
 		if err != nil {
+			s.Cntr[eventsProcessedCount].Incr()
 			continue
 		}
 		s.Log.Infof("Generated %d alerts for event[%s]", len(alerts), fmt.Sprintf("%d", index))
 		err = s.As.Notify(&alerts)
 		if err != nil {
 			s.Log.WithError(err).Errorf("Failed to publish alert(s) for received event")
+			continue
 		}
+		s.Cntr[eventsProcessedCount].Incr()
 	}
 	s.Writer.WriteCode(w, r, 200, nil)
 }
@@ -210,6 +217,10 @@ func InitCounters(namespace string, log *logger.Logger) (map[string]*prometheus.
 			Help: "Number of unique clear events generated."},
 		unknownClusterIPCount: &prometheus.Counter{Namespace: namespace, Name: unknownClusterIPCount,
 			Help: "Number of times we got events for a cluster, where the IP is not in the cluster list."},
+		eventsReceivedCount: &prometheus.Counter{Namespace: namespace, Name: eventsReceivedCount,
+			Help: "Number of SNMP trap events receieved."},
+		eventsProcessedCount: &prometheus.Counter{Namespace: namespace, Name: eventsProcessedCount,
+			Help: "Number of SNMP trap events processed by the handler."},
 	}
 
 	// Init counters
