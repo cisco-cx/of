@@ -27,15 +27,15 @@
 package v2_test
 
 import (
-	"net/http"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	of "github.com/cisco-cx/of/pkg/v1"
-	health "github.com/cisco-cx/of/wrap/health/v1"
+	of "github.com/cisco-cx/of/pkg/v2"
+	health "github.com/cisco-cx/of/wrap/health/v2"
+	http "github.com/cisco-cx/of/wrap/http/v2"
 )
 
 func TestHealthChecker_Interface(t *testing.T) {
@@ -109,7 +109,7 @@ type TestHealthChecker struct {
 	msg        chan string
 }
 
-func (thc *TestHealthChecker) UrlHandler(w http.ResponseWriter, r *http.Request) {
+func (thc *TestHealthChecker) UrlHandler(w of.ResponseWriter, r of.Request) {
 	if r.URL.Path[1:] == "foo" {
 		thc.fooChecked = true
 		w.WriteHeader(500)
@@ -125,16 +125,18 @@ func (thc *TestHealthChecker) UrlHandler(w http.ResponseWriter, r *http.Request)
 func TestHealthChecker_State(t *testing.T) {
 	var thc TestHealthChecker
 	thc.msg = make(chan string, 1)
-	http.HandleFunc("/foo", thc.UrlHandler)
-	http.HandleFunc("/bar", thc.UrlHandler)
-	go func() {
-		err := http.ListenAndServe("localhost:63333", nil)
-		require.NoError(t, err)
-	}()
+
+	hc := &of.HTTPConfig{ListenAddress: "localhost:63333", ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second}
+	srv := http.NewServer(hc)
+	srv.HandleFunc("/foo", thc.UrlHandler)
+	srv.HandleFunc("/bar", thc.UrlHandler)
+
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 
 	wrapHealth := health.New()
 
-	err := wrapHealth.AddURL("bar", "http://localhost:63333/bar", 1*time.Second)
+	err = wrapHealth.AddURL("bar", "http://localhost:63333/bar", 1*time.Second)
 	require.NoError(t, err)
 
 	err = wrapHealth.State("foo")

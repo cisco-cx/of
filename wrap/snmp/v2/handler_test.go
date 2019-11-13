@@ -35,12 +35,9 @@ func TestHandlerRun(t *testing.T) {
 		w.WriteHeader(http.StatusBadGateway)
 	})
 
-	go func() {
-		err := srv.ListenAndServe()
-		require.NoError(t, err)
-	}()
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 	defer srv.Shutdown()
-	time.Sleep(time.Second)
 	service := initService(t, "testingHandler")
 	h := snmp.Handler{
 		SNMP:   service,
@@ -48,8 +45,7 @@ func TestHandlerRun(t *testing.T) {
 		Config: &cfg,
 	}
 
-	go h.Run()
-	time.Sleep(2 * time.Second)
+	h.Run()
 
 	// Test Version
 	checkResponse(t, 200, "http://"+cfg.ListenAddress, "Handler Test")

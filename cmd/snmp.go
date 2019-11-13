@@ -114,6 +114,9 @@ func runSNMPHandler(cmd *cobra.Command, args []string) {
 	}
 
 	handler.Run()
+
+	// Run forever.
+	<-make(chan (bool))
 }
 
 func ParseSNMPHandlerFlags(cmd *cobra.Command, args []string) {

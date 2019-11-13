@@ -15,7 +15,10 @@
 package v2
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+	"time"
 
 	of "github.com/cisco-cx/of/pkg/v2"
 	graceful "github.com/cisco-cx/of/wrap/graceful/v2"
@@ -41,9 +44,37 @@ func NewServer(config *of.HTTPConfig) *Server {
 		G:   graceful.New(srv)}
 }
 
-// Start a graceful server.
+// Start a graceful server and check if the server has started successfully.
+// This is not a blocking call.
 func (s *Server) ListenAndServe() error {
-	return s.G.Start()
+
+	// 5809095455300d637e414389a9fd5957 = md5("This is an internal URI to check if the server has started.")
+	path := "/5809095455300d637e414389a9fd5957"
+	s.HandleFunc(path, func(w of.ResponseWriter, r of.Request) {
+		return
+	})
+
+	go func() {
+		err := s.G.Start()
+		if err != nil {
+			log.Panic(err)
+		}
+	}()
+
+	started := false
+	c := NewClient()
+	for i := 0; i < 10; i++ {
+		resp, err := c.Get(fmt.Sprintf("http://%s%s", s.Srv.Addr, path))
+		if err == nil && resp.StatusCode == 200 {
+			started = true
+			break
+		}
+		time.Sleep(500 * time.Millisecond)
+	}
+	if started == false {
+		return fmt.Errorf("Failed to start server.")
+	}
+	return nil
 }
 
 // Shutdown http server.

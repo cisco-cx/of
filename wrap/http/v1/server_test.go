@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v1"
@@ -33,13 +32,10 @@ func TestServer(t *testing.T) {
 
 	srv := http.NewServer(c)
 
-	go func() {
-		err := srv.ListenAndServe()
-		require.NoError(t, err)
-	}()
-	time.Sleep(time.Second)
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 
-	err := srv.Shutdown()
+	err = srv.Shutdown()
 	require.NoError(t, err)
 }
 
@@ -53,13 +49,10 @@ func TestHandleFunc(t *testing.T) {
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, response_text)
 	})
-	go func() {
-		err := srv.ListenAndServe()
-		require.NoError(t, err)
-	}()
-	time.Sleep(time.Second)
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 	checkResponse(t, "http://"+addr, response_text)
-	err := srv.Shutdown()
+	err = srv.Shutdown()
 	require.NoError(t, err)
 }
 
@@ -70,13 +63,10 @@ func TestHandle(t *testing.T) {
 
 	srv := http.NewServer(c)
 	srv.Handle("/", &testHandler{})
-	go func() {
-		err := srv.ListenAndServe()
-		require.NoError(t, err)
-	}()
-	time.Sleep(time.Second)
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 	checkResponse(t, "http://"+addr, "This is a handler.")
-	err := srv.Shutdown()
+	err = srv.Shutdown()
 	require.NoError(t, err)
 }
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
 	"gotest.tools/assert"
@@ -37,11 +36,8 @@ func startServer(t *testing.T, server_addr string) *http.Server {
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, response_text)
 	})
-	go func() {
-		err := srv.ListenAndServe()
-		require.NoError(t, err)
-	}()
-	time.Sleep(time.Second)
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 	return srv
 }
 

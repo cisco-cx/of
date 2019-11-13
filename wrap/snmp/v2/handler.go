@@ -32,11 +32,13 @@ func (h *Handler) Run() {
 	if err != nil {
 		h.Log.WithError(err).Fatalf("Failed to parse the Alerts manager address: %s", h.Config.AMAddress)
 	}
+
 	healthUrl, _ := url.Parse("/-/healthy")
 	err = hc.AddURL("health_check", amUrl.ResolveReference(healthUrl).String(), h.Config.AMTimeout)
 	if err != nil {
 		h.Log.WithError(err).Fatalf("Failed to add health check.")
 	}
+
 	h.Log.Debugf("Init health check.")
 
 	// Configure HTTP server to handle various requests.
@@ -85,7 +87,6 @@ func (h *Handler) Run() {
 	if err != nil {
 		h.Log.WithError(err).Fatalf("Failed to start at health check.")
 	}
-	defer hc.Stop()
 	h.Log.Debugf("Started health check.")
 
 	h.Log.Infof("Starting SNMP handler server.")
@@ -94,7 +95,6 @@ func (h *Handler) Run() {
 	if err != nil {
 		h.Log.WithError(err).Fatalf("Failed to listen at %s", h.Config.ListenAddress)
 	}
-
 }
 
 func (h *Handler) Shutdown() error {

@@ -100,17 +100,8 @@ func checkHandler(t *testing.T, args []string, amAddress string, cn string) {
 		Log:    log,
 	}
 
-	go handler.Run()
+	handler.Run()
 
-	// Wait for server to start.
-	for i := 0; i < 10; i++ {
-		c := http.NewClient()
-		resp, err := c.Get("http://localhost:14444")
-		if err == nil && resp.StatusCode == 200 {
-			break
-		}
-		time.Sleep(500 * time.Millisecond)
-	}
 	runHandlerChecks(t, config.ListenAddress)
 	handler.Shutdown()
 }
@@ -146,10 +137,8 @@ func startFakeAM(t *testing.T, amAddress string) *http.Server {
 		require.ElementsMatch(t, expectedOIDStrs, eventOIDStrs)
 	})
 
-	go func() {
-		err := srv.ListenAndServe()
-		require.NoError(t, err)
-	}()
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 	return srv
 }
 

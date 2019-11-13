@@ -91,6 +91,8 @@ func (h *Handler) Run() {
 	if err != nil {
 		h.Log.WithError(err).Fatalf("Failed to listen at %s", h.Config.ListenAddress)
 	}
+
+	<-make(chan bool)
 }
 
 func (h *Handler) InitHandler() {

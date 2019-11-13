@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	builtin_http "net/http"
 	"strings"
 	"testing"
 	"time"
@@ -129,25 +127,9 @@ func TestSNMPService(t *testing.T) {
 	hc := &of.HTTPConfig{ListenAddress: addr}
 
 	srv := http.NewServer(hc)
-	srv.HandleFunc("/ready", UrlHandler)
 	srv.HandleFunc("/", s.AlertHandler)
-	go func() {
-		err := srv.ListenAndServe()
-		require.NoError(t, err)
-	}()
-
-	// wait until http server is ready
-	for i := 0; i < 10; i++ {
-		resp, err := builtin_http.Get("http://localhost:24932/ready")
-		if err == nil {
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body)
-			if err == nil && string(body) == "OK" {
-				break
-			}
-		}
-		time.Sleep(500 * time.Millisecond)
-	}
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 
 	// Send SNMP traps to server.
 	dataBytes, err := json.Marshal(TrapEvents())
