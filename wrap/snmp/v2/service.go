@@ -101,6 +101,7 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 		SleepTime: cfg.SleepTime,
 		SendTime:  cfg.SendTime,
 		Log:       l,
+		DryRun:    cfg.DryRun,
 	}
 
 	// Prepare lookup.

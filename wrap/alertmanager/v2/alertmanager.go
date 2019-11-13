@@ -20,6 +20,7 @@ type AlertService struct {
 	SleepTime int
 	SendTime  int
 	Log       *logger.Logger
+	DryRun    bool
 }
 
 // Send alerts to Alertmanager
@@ -62,6 +63,19 @@ func (a *AlertService) notify(alerts []of.Alert) error {
 
 // Divide alerts into smaller chunks and spread posting to Alertmanager over a.SendTime milliseconds.
 func (a *AlertService) Notify(alerts *[]of.Alert) error {
+
+	if a.DryRun == true {
+		for _, alert := range *alerts {
+			a.Log.WithFields(map[string]interface{}{
+				"labels":       alert.Labels,
+				"annotations":  alert.Annotations,
+				"startsAt":     alert.StartsAt,
+				"endsAt":       alert.EndsAt,
+				"generatorURL": alert.GeneratorURL,
+			}).Infof("Dry run.")
+		}
+		return nil
+	}
 
 	totalCount := len(*alerts)
 	// Send all alerts in a single post to Alertmanager, if Throttle is disabled

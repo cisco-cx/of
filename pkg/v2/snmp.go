@@ -56,4 +56,5 @@ type SNMPConfig struct {
 	PostTime      int
 	SleepTime     int
 	SendTime      int
+	DryRun        bool
 }
