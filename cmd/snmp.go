@@ -69,7 +69,7 @@ func RunMibsPreProcess(cmd *cobra.Command, args []string) {
 	cmd.Flags().String("mibs-dir", "", "Path to MIBs directory.")
 	cmd.Flags().String("cache-file", "none", "Path to MIBs cache file.")
 
-	checkRequiredFlags(cmd, args)
+	checkRequiredFlags(cmd, args, []string{})
 
 	SNMPMIBsDir := viper.GetString("mibs-dir")
 	cacheFile := viper.GetString("cache-file")
@@ -132,8 +132,8 @@ func ParseSNMPHandlerFlags(cmd *cobra.Command, args []string) {
 	cmd.Flags().Int("post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
 	cmd.Flags().Int("sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
 	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
-	cmd.Flags().String("dry-run", "false", "Log generated alerts, instead of sending to Alertmanager. (default: false)")
-	checkRequiredFlags(cmd, args)
+	cmd.Flags().Bool("dry-run", false, "Log generated alerts, instead of sending to Alertmanager. (default: false)")
+	checkRequiredFlags(cmd, args, []string{"dry-run"})
 }
 
 // Returns  &of.SNMPConfig{} based on CLI flags and ENV.
@@ -151,7 +151,7 @@ func SNMPConfig(cmd *cobra.Command) *of_v2.SNMPConfig {
 	cfg.PostTime = viper.GetInt("post-time")
 	cfg.SleepTime = viper.GetInt("sleep-time")
 	cfg.SendTime = viper.GetInt("send-time")
-	dryRunStr := viper.GetString("dry-run")
+	cfg.DryRun = viper.GetBool("dry-run")
 
 	if strings.HasPrefix(cfg.AMAddress, "http") == false {
 		logv2.Fatalf("AM URL must begin with http/https")
@@ -159,11 +159,6 @@ func SNMPConfig(cmd *cobra.Command) *of_v2.SNMPConfig {
 
 	if cfg.SNMPMibsDir == "none" && cfg.CacheFile == "none" {
 		logv2.Fatalf("Please specify a mibs-dir or cache-file.")
-	}
-
-	cfg.DryRun = false
-	if strings.ToLower(dryRunStr) != "false" {
-		cfg.DryRun = true
 	}
 
 	// Setting namespace for counters.

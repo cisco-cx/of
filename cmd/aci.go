@@ -74,7 +74,7 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 	cmd.Flags().Int("aci-sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
 	cmd.Flags().Int("aci-send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
 
-	checkRequiredFlags(cmd, args)
+	checkRequiredFlags(cmd, args, []string{})
 
 	config := ACIConfig(cmd)
 	handler := &aci.Handler{Config: config, Log: log}

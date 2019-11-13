@@ -116,17 +116,23 @@ func initConfig() {
 }
 
 // Check if all flags are set and print the values for each flag.
-func checkRequiredFlags(cmd *cobra.Command, args []string) {
+func checkRequiredFlags(cmd *cobra.Command, args []string, optArgs []string) {
 	// Enable ENV to set flag values.
 	// Ex: ENV AM_URL will set the value for --am-url.
 	// Precedence: CLI flag, os.ENV, default value set while defining cmd.Flags().
 	viper.BindPFlags(cmd.Flags())
 	parseErr := cmd.Flags().Parse(args)
 
+	optMap := make(map[string]bool)
+	optMap["help"] = true
+	for _, v := range optArgs {
+		optMap[v] = true
+	}
+
 	fmt.Println("=============== Current Setting ===============")
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
 		log.Debugf("flag : %s\n", f.Name)
-		if f.Name != "help" {
+		if _, ok := optMap[f.Name]; ok == false {
 			if isFlagSet(f) == false {
 				cmd.Usage()
 				fmt.Printf("Required : %s\n", f.Name)
