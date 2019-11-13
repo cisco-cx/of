@@ -25,12 +25,9 @@ func TestDryRun(t *testing.T) {
 		w.WriteHeader(http.StatusBadRequest)
 	})
 
-	go func() {
-		err := srv.ListenAndServe()
-		require.NoError(t, err)
-	}()
+	err := srv.ListenAndServe()
+	require.NoError(t, err)
 	defer srv.Shutdown()
-	time.Sleep(time.Second)
 
 	// setup logger
 	output := &bytes.Buffer{}
@@ -49,7 +46,7 @@ func TestDryRun(t *testing.T) {
 			Labels: map[string]string{"dryRun": "true"},
 		},
 	}
-	err := as.Notify(alerts)
+	err = as.Notify(alerts)
 	require.NoError(t, err)
 	dryRunContents := string(output.Bytes())
 	require.Contains(t, dryRunContents, "level=info msg=\"Dry run.\" file=\"alertmanager.go:75\" annotations=\"map[]\" endsAt=\"0001-01-01 00:00:00 +0000 UTC\" generatorURL= labels=\"map[dryRun:true]\" startsAt=\"0001-01-01 00:00:00 +0000 UTC\"")
