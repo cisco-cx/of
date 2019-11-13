@@ -3,7 +3,6 @@ package v2_test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -110,10 +109,6 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 
 	require.ElementsMatch(as.t, expectedAlerts, *alerts)
 	return nil
-}
-
-func UrlHandler(w of.ResponseWriter, r of.Request) {
-	fmt.Fprintf(w, "OK")
 }
 
 func TestSNMPService(t *testing.T) {
