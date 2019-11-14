@@ -44,17 +44,19 @@ import (
 
 // Represents SNMP settings.
 type SNMPConfig struct {
-	Application   string
-	AMAddress     string
-	AMTimeout     time.Duration
-	SNMPMibsDir   string
-	CacheFile     string
-	ListenAddress string
-	ConfigDir     string
-	Version       string
-	Throttle      bool
-	PostTime      int
-	SleepTime     int
-	SendTime      int
-	DryRun        bool
+	Application    string
+	AMAddress      string
+	AMTimeout      time.Duration
+	SNMPMibsDir    string
+	CacheFile      string
+	ListenAddress  string
+	ConfigDir      string
+	Version        string
+	Throttle       bool
+	PostTime       int
+	SleepTime      int
+	SendTime       int
+	DryRun         bool
+	LogUnknown     bool
+	ForwardUnknown bool
 }

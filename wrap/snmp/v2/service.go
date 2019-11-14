@@ -116,12 +116,14 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 
 	cntr, cntrVec := InitCounters(cfg.Application, l)
 	ag := Alerter{
-		Log:     l,
-		Configs: &v2Config,
-		MR:      mr,
-		U:       &u,
-		Cntr:    cntr,
-		CntrVec: cntrVec,
+		Log:            l,
+		Configs:        &v2Config,
+		MR:             mr,
+		U:              &u,
+		Cntr:           cntr,
+		CntrVec:        cntrVec,
+		LogUnknown:     cfg.LogUnknown,
+		ForwardUnknown: cfg.ForwardUnknown,
 	}
 
 	// INIT SNMP service.
@@ -158,11 +160,11 @@ func (s Service) lookupConfigs(events []*of.PostableEvent) [][]string {
 			trapVStrShort, _ := valueLookup.ValueStrShort(of_snmp.SNMPTrapOID)
 			s.Log.WithFields(map[string]interface{}{
 				"vars":             event.Document.Receipts.Snmptrapd.Vars,
+				"source":           event.Document.Receipts.Snmptrapd.Source,
 				"event":            event,
 				"SNMPTrapOIDValue": trapV,
 				"SNMPTrapOIDName":  trapVStrShort,
 			}).Debugf("No match found at lookup")
-			s.CntrVec[alertsNotGeneratedCount].Incr("level", "lookup")
 		}
 	}
 	return configs
@@ -183,22 +185,19 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 
 	for index, event := range events {
 		snmptrapd := event.Document.Receipts.Snmptrapd
-		s.Log.WithFields(map[string]interface{}{"index": index, "timestamp": snmptrapd.Timestamp, "hostname": snmptrapd.Source.Hostname}).Debugf("Processing event")
-		if len(configs[index]) == 0 {
-			s.Log.Debugf("No config found for index, %d", index)
-			s.Cntr[eventsProcessedCount].Incr()
-			continue
-		}
-
 		s.Alerter.Receipts = &event.Document.Receipts
 		s.Alerter.Value = NewValue(&snmptrapd.Vars, s.MR)
-		alerts, err := s.Alerter.Alert(configs[index])
-		if err != nil {
-			s.Cntr[eventsProcessedCount].Incr()
-			continue
+
+		s.Log.WithFields(map[string]interface{}{"index": index, "timestamp": snmptrapd.Timestamp, "source": snmptrapd.Source}).Debugf("Processing event")
+		var alerts []of.Alert
+		if len(configs[index]) != 0 {
+			alerts = s.Alerter.Alert(configs[index])
+		} else {
+			alerts = s.Alerter.Unknown("lookup")
 		}
+
 		s.Log.Infof("Generated %d alerts for event[%s]", len(alerts), fmt.Sprintf("%d", index))
-		err = s.As.Notify(&alerts)
+		err := s.As.Notify(&alerts)
 		if err != nil {
 			s.Log.WithError(err).Errorf("Failed to publish alert(s) for received event")
 			continue

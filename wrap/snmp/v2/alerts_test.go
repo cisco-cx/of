@@ -1,6 +1,7 @@
 package v2_test
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -36,8 +37,7 @@ func TestAlertFire(t *testing.T) {
 func fireAlert(ag *snmp.Alerter, count int, t *testing.T) {
 
 	// All possible alerts for given configs and trapVars.
-	alerts, err := ag.Alert([]string{"epc"})
-	require.NoError(t, err)
+	alerts := ag.Alert([]string{"epc"})
 
 	expectedAlert := []of.Alert{
 		of.Alert{
@@ -92,8 +92,7 @@ func TestAlertClear(t *testing.T) {
 func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 
 	// All possible alerts for given configs and trapVars.
-	alerts, err := ag.Alert([]string{"nso"})
-	require.NoError(t, err)
+	alerts := ag.Alert([]string{"nso"})
 
 	expectedAlertTemplate := of.Alert{
 		Labels: map[string]string{
@@ -144,6 +143,43 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 	require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_alerts_generated_count{alertType=\"clearing\"} %d", count*3))
 	require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_clearing_alert_count %d", count))
 	require.Contains(t, metrics, "TestAlertClear_unknown_cluster_ip_count 0")
+}
+
+// Test Unknown logging.
+func TestUnknownLogging(t *testing.T) {
+	ag := newAlerter(t)
+
+	buf := &bytes.Buffer{}
+	l := logger.New()
+	l.SetOutput(buf)
+	ag.Log = l
+	ag.LogUnknown = true
+
+	_ = ag.Unknown("unknown_logging")
+	require.Contains(t, string(buf.Bytes()), "SNMPTrapOIDName=oid3 SNMPTrapOIDValue=.1.3.6.1.4.1.8164.2.44")
+
+	ag.LogUnknown = false
+
+	_ = ag.Unknown("unknown_logging")
+	require.Contains(t, string(buf.Bytes()), "")
+}
+
+// Test Unknown forwarding.
+func TestUnknownForwarding(t *testing.T) {
+	ag := newAlerter(t)
+
+	ag.ForwardUnknown = true
+
+	alerts := ag.Unknown("unknown_logging")
+	require.Len(t, alerts, 1)
+	require.Equal(t, "4a907db964f787a9", alerts[0].Labels[of_snmp.FingerprintText])
+	require.Equal(t, "unknownSnmpTrap", alerts[0].Labels["alertname"])
+	require.Equal(t, ".1.3.6.1.4.1.8164.2.44", alerts[0].Labels["alert_oid"])
+
+	ag.ForwardUnknown = false
+
+	alerts = ag.Unknown("unknown_logging")
+	require.Len(t, alerts, 0)
 }
 
 // Preparing Alert generator.

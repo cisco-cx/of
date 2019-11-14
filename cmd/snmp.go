@@ -133,7 +133,9 @@ func ParseSNMPHandlerFlags(cmd *cobra.Command, args []string) {
 	cmd.Flags().Int("sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
 	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
 	cmd.Flags().Bool("dry-run", false, "Log generated alerts, instead of sending to Alertmanager. (default: false)")
-	checkRequiredFlags(cmd, args, []string{"dry-run"})
+	cmd.Flags().Bool("log-unknown", false, "Log unknown alerts at info level. (default: false)")
+	cmd.Flags().Bool("forward-unknown", false, "send unknown alerts to Alertmanager. (default: false)")
+	checkRequiredFlags(cmd, args, []string{"dry-run", "log-unknown", "forward-unknown"})
 }
 
 // Returns  &of.SNMPConfig{} based on CLI flags and ENV.
@@ -152,6 +154,8 @@ func SNMPConfig(cmd *cobra.Command) *of_v2.SNMPConfig {
 	cfg.SleepTime = viper.GetInt("sleep-time")
 	cfg.SendTime = viper.GetInt("send-time")
 	cfg.DryRun = viper.GetBool("dry-run")
+	cfg.LogUnknown = viper.GetBool("log-unknown")
+	cfg.ForwardUnknown = viper.GetBool("forward-unknown")
 
 	if strings.HasPrefix(cfg.AMAddress, "http") == false {
 		logv2.Fatalf("AM URL must begin with http/https")

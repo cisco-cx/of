@@ -15,18 +15,20 @@ import (
 
 // Implements of_snmp.AlertGenerator
 type Alerter struct {
-	Log      *logger.Logger
-	Configs  *of_snmp.V2Config
-	Receipts *of.Receipts
-	Value    *Value
-	MR       *mibs.MIBRegistry
-	U        of.UUIDGen
-	Cntr     map[string]*prometheus.Counter
-	CntrVec  map[string]*prometheus.CounterVec
+	Log            *logger.Logger
+	Configs        *of_snmp.V2Config
+	Receipts       *of.Receipts
+	Value          *Value
+	MR             *mibs.MIBRegistry
+	U              of.UUIDGen
+	Cntr           map[string]*prometheus.Counter
+	CntrVec        map[string]*prometheus.CounterVec
+	LogUnknown     bool
+	ForwardUnknown bool
 }
 
 // Iterate through configs in configNames and generate all possible Alerts.
-func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
+func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 
 	if a.Cntr == nil || len(a.Cntr) == 0 {
 		a.Log.Panicf("Counters have not been initiated.")
@@ -90,6 +92,7 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 					"startsAt":    fAlert.StartsAt,
 					"endsAt":      fAlert.EndsAt,
 					"vars":        a.Receipts.Snmptrapd.Vars,
+					"source":      a.Receipts.Snmptrapd.Source,
 					"config":      cfgName,
 				}).Debugf("Generated alerts")
 			}
@@ -120,6 +123,7 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 							"startsAt":    cAlert.StartsAt,
 							"endsAt":      cAlert.EndsAt,
 							"vars":        a.Receipts.Snmptrapd.Vars,
+							"source":      a.Receipts.Snmptrapd.Source,
 							"config":      cfgName,
 						}).Debugf("Generated alerts")
 					}
@@ -132,13 +136,13 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 					"alertCfg":         alertCfg,
 					"alertIndex":       aNum,
 					"vars":             a.Receipts.Snmptrapd.Vars,
+					"source":           a.Receipts.Snmptrapd.Source,
 					"config":           cfgName,
 					"SNMPTrapOIDValue": trapV,
 					"SNMPTrapOIDName":  trapVStrShort,
 				}).Debugf("No match found for alertCfg.")
 				a.CntrVec[alertsNotGeneratedCount].Incr("level", "alert")
 			}
-
 		}
 
 		// Alert not generated for `cfgName`
@@ -146,14 +150,67 @@ func (a *Alerter) Alert(cfgNames []string) ([]of.Alert, error) {
 			a.Log.WithFields(map[string]interface{}{
 				"config":           cfgName,
 				"vars":             a.Receipts.Snmptrapd.Vars,
+				"source":           a.Receipts.Snmptrapd.Source,
 				"SNMPTrapOIDValue": trapV,
 				"SNMPTrapOIDName":  trapVStrShort,
 			}).Debugf("No match found for config.")
-			a.CntrVec[alertsNotGeneratedCount].Incr("level", "config")
+			allAlerts = append(allAlerts, a.Unknown("config")...)
 		}
-
 	}
-	return allAlerts, nil
+	return allAlerts
+}
+
+// Create alert for unknown SNMP trap.
+func (a *Alerter) Unknown(level string) []of.Alert {
+
+	a.CntrVec[alertsNotGeneratedCount].Incr("level", level)
+
+	trapV, err := a.Value.Value(of_snmp.SNMPTrapOID)
+	if err != nil {
+		a.Log.WithError(err).Errorf("Failed to get SNMPTrapOID's value.")
+	}
+	trapVStrShort, err := a.Value.ValueStrShort(of_snmp.SNMPTrapOID)
+	if err != nil {
+		a.Log.WithError(err).Errorf("Failed to get SNMPTrapOID value's short name.")
+	}
+
+	info := a.Log.WithFields(map[string]interface{}{
+		"level":            level,
+		"vars":             a.Receipts.Snmptrapd.Vars,
+		"source":           a.Receipts.Snmptrapd.Source,
+		"SNMPTrapOIDValue": trapV,
+		"SNMPTrapOIDName":  trapVStrShort,
+	})
+
+	if a.LogUnknown == true {
+		info.Infof("Unknown alert.")
+	} else {
+		info.Debugf("Unknown alert.")
+	}
+
+	if a.ForwardUnknown == false {
+		return []of.Alert{}
+	}
+
+	var alert = of.Alert{}
+
+	// Init new Alert
+	alert.Labels = make(map[string]string)
+	alert.Annotations = make(map[string]string)
+
+	// Fixed annotionations for this set of Trap vars.
+	fixedAnnotations := a.fixedAnnotations()
+	// Apply fixed annotionations.
+	for k, v := range fixedAnnotations {
+		alert.Annotations[k] = v
+	}
+
+	alert.Labels["alertname"] = "unknownSnmpTrap"
+	alert.Labels["alert_oid"] = alert.Annotations["event_oid"]
+
+	alert.Labels[of_snmp.FingerprintText] = a.fingerprint(alert)
+
+	return []of.Alert{alert}
 }
 
 // match trapVars with alerts in config.

@@ -6,5 +6,5 @@ import (
 
 // Parse given configs and generate alerts.
 type AlertGenerator interface {
-	Alert([]string) ([]of.Alert, error) // Generate an array of of.Alert for given array of Config names.
+	Alert([]string) []of.Alert // Generate an array of of.Alert for given array of Config names.
 }

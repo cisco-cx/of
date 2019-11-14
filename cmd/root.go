@@ -141,8 +141,8 @@ func checkRequiredFlags(cmd *cobra.Command, args []string, optArgs []string) {
 				}
 				os.Exit(1)
 			}
-			fmt.Printf("%16s : %-24v // %s\n", f.Name, viper.Get(f.Name), f.Usage)
 		}
+		fmt.Printf("%16s : %-24v // %s\n", f.Name, viper.Get(f.Name), f.Usage)
 	})
 	fmt.Println("===============================================")
 }
