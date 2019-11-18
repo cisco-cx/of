@@ -93,50 +93,54 @@ func newAlert(alertName string, alert *of_snmpv1.AlertEntry) of_snmpv2.Alert {
 
 	clearEvents, _ := json.Marshal(alert.ClearEvents)
 
-	// Clearing Selects
-	firingSelect := of_snmpv2.Select{
-		Type:   of_snmpv2.Equals,
-		Oid:    of_snmpv2.SNMPTrapOID,
-		As:     of_snmpv2.Value,
-		Values: firingValues,
-		AnnotationMods: []of_snmpv2.Mod{
-			of_snmpv2.Mod{
-				Type:  of_snmpv2.Copy,
-				Oid:   of_snmpv2.SNMPTrapOID,
-				As:    of_snmpv2.Value,
-				ToKey: "event_name",
-				Map:   firingEventMap,
+	// Firing Selects
+	if len(firingValues) != 0 {
+		firingSelect := of_snmpv2.Select{
+			Type:   of_snmpv2.Equals,
+			Oid:    of_snmpv2.SNMPTrapOID,
+			As:     of_snmpv2.Value,
+			Values: firingValues,
+			AnnotationMods: []of_snmpv2.Mod{
+				of_snmpv2.Mod{
+					Type:  of_snmpv2.Copy,
+					Oid:   of_snmpv2.SNMPTrapOID,
+					As:    of_snmpv2.Value,
+					ToKey: "event_name",
+					Map:   firingEventMap,
+				},
+				of_snmpv2.Mod{
+					Type:  of_snmpv2.Set,
+					Key:   "compatible_clear_events",
+					Value: string(clearEvents),
+				},
 			},
-			of_snmpv2.Mod{
-				Type:  of_snmpv2.Set,
-				Key:   "compatible_clear_events",
-				Value: string(clearEvents),
-			},
-		},
+		}
+
+		newAlert.Firing = map[string][]of_snmpv2.Select{
+			"select": []of_snmpv2.Select{firingSelect},
+		}
 	}
 
 	// Clearing Selects
-	clearingSelect := of_snmpv2.Select{
-		Type:   of_snmpv2.Equals,
-		Oid:    of_snmpv2.SNMPTrapOID,
-		As:     of_snmpv2.Value,
-		Values: clearingValues,
-		AnnotationMods: []of_snmpv2.Mod{
-			of_snmpv2.Mod{
-				Type:  of_snmpv2.Copy,
-				Oid:   of_snmpv2.SNMPTrapOID,
-				As:    of_snmpv2.Value,
-				ToKey: "event_name",
-				Map:   clearingEventMap,
+	if len(clearingValues) != 0 {
+		clearingSelect := of_snmpv2.Select{
+			Type:   of_snmpv2.Equals,
+			Oid:    of_snmpv2.SNMPTrapOID,
+			As:     of_snmpv2.Value,
+			Values: clearingValues,
+			AnnotationMods: []of_snmpv2.Mod{
+				of_snmpv2.Mod{
+					Type:  of_snmpv2.Copy,
+					Oid:   of_snmpv2.SNMPTrapOID,
+					As:    of_snmpv2.Value,
+					ToKey: "event_name",
+					Map:   clearingEventMap,
+				},
 			},
-		},
-	}
-
-	newAlert.Firing = map[string][]of_snmpv2.Select{
-		"select": []of_snmpv2.Select{firingSelect},
-	}
-	newAlert.Clearing = map[string][]of_snmpv2.Select{
-		"select": []of_snmpv2.Select{clearingSelect},
+		}
+		newAlert.Clearing = map[string][]of_snmpv2.Select{
+			"select": []of_snmpv2.Select{clearingSelect},
+		}
 	}
 
 	return newAlert
