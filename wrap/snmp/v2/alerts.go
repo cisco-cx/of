@@ -83,7 +83,10 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 
 				// Setting `alert_oid` as the value of of_snmp.SNMPTrapOID
 				fAlert.Labels["alert_oid"] = fAlert.Annotations["event_oid"]
-				a.CntrVec[alertsGeneratedCount].Incr("alertType", "firing")
+				a.CntrVec[alertsGeneratedCount].Incr(map[string]string{
+					"alertType": "firing",
+					"alert_oid": fAlert.Labels["alert_oid"],
+				})
 				allAlerts = append(allAlerts, fAlert)
 				a.Log.WithFields(map[string]interface{}{
 					"alertType":   "firing",
@@ -114,7 +117,10 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 					for _, v := range s.Values {
 						// Setting `alert_oid` to clear for all known firing values.
 						cAlert.Labels["alert_oid"] = v
-						a.CntrVec[alertsGeneratedCount].Incr("alertType", "clearing")
+						a.CntrVec[alertsGeneratedCount].Incr(map[string]string{
+							"alertType": "clearing",
+							"alert_oid": v,
+						})
 						allAlerts = append(allAlerts, cAlert)
 						a.Log.WithFields(map[string]interface{}{
 							"alertType":   "clearing",
@@ -141,7 +147,11 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 					"SNMPTrapOIDValue": trapV,
 					"SNMPTrapOIDName":  trapVStrShort,
 				}).Debugf("No match found for alertCfg.")
-				a.CntrVec[alertsNotGeneratedCount].Incr("level", "alert")
+
+				a.CntrVec[alertsNotGeneratedCount].Incr(map[string]string{
+					"level":     "alert",
+					"alert_oid": trapV,
+				})
 			}
 		}
 
@@ -154,6 +164,10 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 				"SNMPTrapOIDValue": trapV,
 				"SNMPTrapOIDName":  trapVStrShort,
 			}).Debugf("No match found for config.")
+			a.CntrVec[alertsNotGeneratedCount].Incr(map[string]string{
+				"level":     "config",
+				"alert_oid": trapV,
+			})
 			allAlerts = append(allAlerts, a.Unknown("config")...)
 		}
 	}
@@ -163,8 +177,6 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 // Create alert for unknown SNMP trap.
 func (a *Alerter) Unknown(level string) []of.Alert {
 
-	a.CntrVec[alertsNotGeneratedCount].Incr("level", level)
-
 	trapV, err := a.Value.Value(of_snmp.SNMPTrapOID)
 	if err != nil {
 		a.Log.WithError(err).Errorf("Failed to get SNMPTrapOID's value.")
@@ -173,6 +185,11 @@ func (a *Alerter) Unknown(level string) []of.Alert {
 	if err != nil {
 		a.Log.WithError(err).Errorf("Failed to get SNMPTrapOID value's short name.")
 	}
+
+	a.CntrVec[unknownAlertsCount].Incr(map[string]string{
+		"level":     level,
+		"alert_oid": trapV,
+	})
 
 	info := a.Log.WithFields(map[string]interface{}{
 		"level":            level,

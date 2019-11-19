@@ -27,6 +27,7 @@ const (
 	//CounterVec names.
 	alertsGeneratedCount    = "alerts_generated_count"
 	alertsNotGeneratedCount = "alerts_not_generated_count"
+	unknownAlertsCount      = "unknown_alerts_count"
 )
 
 type Service struct {
@@ -245,16 +246,24 @@ func InitCounters(namespace string, log *logger.Logger) (map[string]*prometheus.
 				Name:      alertsGeneratedCount,
 				Help:      "Number of times we generated an alert object for sending to AlertManager.",
 			},
-			labels: []string{"alertType"},
+			labels: []string{"alertType", "alert_oid"},
 		},
 
 		vectorInfo{
 			vector: &prometheus.CounterVec{
 				Namespace: namespace,
 				Name:      alertsNotGeneratedCount,
-				Help:      "Number of times alert were not generated for configs that matched our lookup..",
+				Help:      "Number of times alert were not generated for configs that matched our lookup.",
 			},
-			labels: []string{"level"},
+			labels: []string{"level", "alert_oid"},
+		},
+		vectorInfo{
+			vector: &prometheus.CounterVec{
+				Namespace: namespace,
+				Name:      unknownAlertsCount,
+				Help:      "Number of times we encountered unknown SNMP traps.",
+			},
+			labels: []string{"level", "alert_oid"},
 		},
 	}
 

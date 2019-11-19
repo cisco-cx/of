@@ -46,7 +46,7 @@ func (c *CounterVec) Create(labels []string) error {
 }
 
 // Increment counter for given label and value.
-func (c *CounterVec) Incr(label string, value string) error {
-	c.cntrVec.With(promclient.Labels{label: value}).Inc()
+func (c *CounterVec) Incr(labels map[string]string) error {
+	c.cntrVec.With(promclient.Labels(labels)).Inc()
 	return nil
 }

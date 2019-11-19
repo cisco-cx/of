@@ -74,7 +74,7 @@ func fireAlert(ag *snmp.Alerter, count int, t *testing.T) {
 
 	require.Equal(t, expectedAlert, alerts)
 	metrics := promMetrics(t)
-	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_alerts_generated_count{alertType=\"firing\"} %d", count))
+	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_alerts_generated_count{alertType=\"firing\",alert_oid=\".1.3.6.1.4.1.8164.1.2.1.1.1\"} %d", count))
 	require.Contains(t, metrics, "TestAlertFire_clearing_alert_count 0")
 	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_unknown_cluster_ip_count %d", count))
 
@@ -124,11 +124,13 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 	}
 
 	expectedAlerts := make([]of.Alert, 3)
-	for idx, val := range []string{
+	OIDs := []string{
 		".1.3.6.1.4.1.24961.2.103.2.0.3",
 		".1.3.6.1.4.1.24961.2.103.2.0.4",
 		".1.3.6.1.4.1.24961.2.103.2.0.5",
-	} {
+	}
+
+	for idx, val := range OIDs {
 		expectedAlertTemplate.Labels["alert_oid"] = val
 		expectedAlerts[idx] = expectedAlertTemplate
 	}
@@ -140,7 +142,9 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 	}
 	require.ElementsMatch(t, expectedAlerts, alerts)
 	metrics := promMetrics(t)
-	require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_alerts_generated_count{alertType=\"clearing\"} %d", count*3))
+	for _, val := range OIDs {
+		require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_alerts_generated_count{alertType=\"clearing\",alert_oid=\"%s\"} %d", val, count))
+	}
 	require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_clearing_alert_count %d", count))
 	require.Contains(t, metrics, "TestAlertClear_unknown_cluster_ip_count 0")
 }

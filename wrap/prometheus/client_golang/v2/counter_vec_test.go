@@ -37,17 +37,17 @@ func TestCounterVecIncr(t *testing.T) {
 	err := cntrVec.Create([]string{"request"})
 	require.NoError(t, err)
 	for i := 0; i < 10; i++ {
-		err = cntrVec.Incr("request", "get")
+		err = cntrVec.Incr(map[string]string{"request": "get"})
 		require.NoError(t, err)
 	}
 
 	for i := 0; i < 20; i++ {
-		err = cntrVec.Incr("request", "post")
+		err = cntrVec.Incr(map[string]string{"request": "post"})
 		require.NoError(t, err)
 	}
 
 	// Search metrics to check if value of counter is 10.
 	require.Contains(t, promMetrics(t), "TestAppVec_test_counter_incr{request=\"get\"} 10")
 	require.Contains(t, promMetrics(t), "TestAppVec_test_counter_incr{request=\"post\"} 20")
-	require.Panics(t, assert.PanicTestFunc(func() { cntrVec.Incr("", "") }))
+	require.Panics(t, assert.PanicTestFunc(func() { cntrVec.Incr(map[string]string{"": ""}) }))
 }
