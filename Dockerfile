@@ -7,7 +7,7 @@ ADD . /src
 WORKDIR /src
 
 ## Build of.
-RUN make all
+RUN make build
 
 ## Build jsonnet.
 RUN cd /tmp && \
