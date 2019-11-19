@@ -1,0 +1,91 @@
+alerts:
+    Alteon_SwDefGwDown:
+        alert_severity: critical
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.3:
+                event_name: SwDefGwDown
+    Alteon_SwSlbVirtServerServicesDown:
+        alert_severity: critical
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.26:
+                event_name: SwSlbVirtServerServicesDown
+    Alteon_SwSlbRemoteRealServerDown:
+        alert_severity: info
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.32:
+                event_name: SwSlbRemoteRealServerDown
+    Alteon_SwPortVlanDown:
+        alert_severity: critical
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.36:
+                event_name: SwPortVlanDown
+    Alteon_SwTputReachThreshold:
+        alert_severity: info
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.47:
+                event_name: SwTputReachThreshold
+    Alteon_SwTputExceedLimit:
+        alert_severity: warning
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.48:
+                event_name: SwTputExceedLimit
+    Alteon_SwtmpCecLimitMemShort:
+        alert_severity: warning
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.59:
+                event_name: SwtmpCecLimitMemShort
+    Alteon_SwtmpCecLmtStop:
+        alert_severity: critical
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.52:
+                event_name: SwtmpCecLmtStop
+    Alteon_SwcertExpDays:
+        alert_severity: warning
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.71:
+                event_name: SwcertExpDays
+    Alteon_SwsslCpsLicenseOverflow:
+        alert_severity: warning
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.75:
+                event_name: SwsslCpsLicenseOverflow
+    Alteon_HAGroupNewInitTrap:
+        alert_severity: warning
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.152:
+                event_name: HAGroupNewInitTrap
+    Alteon_HAGroupNewBackupTrap:
+        alert_severity: warning
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.155:
+                event_name: HAGroupNewBackupTrap
+    Alteon_HAGroupNewMasterTrap:
+        alert_severity: warning
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.154:
+                event_name: HAGroupNewMasterTrap
+    Alteon_virtHighSpCpuTrap:
+        alert_severity: critical
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.159:
+                event_name: virtHighSpCpuTrap
+    Alteon_SwSpCpuPressureActivatedTrap:
+        alert_severity: warning
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.214:
+                event_name: SwSpCpuPressureActivatedTrap
+    Alteon_virtHighMpCpuTrap:
+        alert_severity: critical
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.161:
+                event_name: virtHighMpCpuTrap
+    Alteon_MemoryPressureActivated:
+        alert_severity: critical
+        error_events:
+            .1.3.6.1.4.1.1872.2.5.7.0.170:
+                event_name: MemoryPressureActivated
+    Alteon_warmStart:
+        alert_severity: critical
+        error_events:
+            .1.3.6.1.6.3.1.1.5.2:
+                event_name: warmStart

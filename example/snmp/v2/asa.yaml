@@ -1,0 +1,479 @@
+asa.yaml:
+  defaults:
+    source_type: host
+  alerts:
+  - name: FW_sysORUpTime
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_sysORUpTime
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.1.9.1.4
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.1.9.1.4: sysORUpTime
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cempMemPoolUsed
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cempMemPoolUsed
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.221.1.1.1.1.7
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.221.1.1.1.1.7: cempMemPoolUsed
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cfwConnectionStatValue
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cfwConnectionStatValue
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.147.1.2.2.2.1.5
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.147.1.2.2.2.1.5: cfwConnectionStatValue
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_sysORLastChange
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_sysORLastChange
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.1.8
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.1.8: sysORLastChange
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_ifNumberChange
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_ifNumberChange
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.2.1
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.2.1: ifNumber
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_ifAdminStatusChange
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_ifAdminStatusChange
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.2.2.1.7
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.2.2.1.7: ifAdminStatus
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_ifOperStatusChange
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_ifOperStatusChange
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.2.2.1.8
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.2.2.1.8: ifOperStatus
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_ifLinkUpDownTrapEnable
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_ifLinkUpDownTrapEnable
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.31.1.1.1.14
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.31.1.1.1.14: ifLinkUpDownTrapEnable
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cefcFRUPowerOperStatus
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cefcFRUPowerOperStatus
+    - type: set
+      key: alert_severity
+      value: critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.117.1.1.2.1.2
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.117.1.1.2.1.2: cefcFRUPowerOperStatus
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cikeGlobalInitTunnelFails
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cikeGlobalInitTunnelFails
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.171.1.2.1.20
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.171.1.2.1.20: cikeGlobalInitTunnelFails
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cikeGlobalAuthFails
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cikeGlobalAuthFails
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.171.1.2.1.23
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.171.1.2.1.23: cikeGlobalAuthFails
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cvpnLicServerStatus
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cvpnLicServerStatus
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.816.0.2.6
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.816.0.2.6: cvpnLicServerStatus
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_sysUpTime
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_sysUpTime
+    - type: set
+      key: alert_severity
+      value: major
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.1.3
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.1.3: sysUpTime
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_snmpEnableAuthenTraps
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_snmpEnableAuthenTraps
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.11.30
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.11.30: snmpEnableAuthenTraps
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_mteTriggerFailures
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_mteTriggerFailures
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.88.1.2.1
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.88.1.2.1: mteTriggerFailures
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_mteEventFailures
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_mteEventFailures
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.88.1.4.1
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.88.1.4.1: mteEventFailures
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cpmCPURisingThresholdValue
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cpmCPURisingThresholdValue
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.109.1.2.4.1.2
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.109.1.2.4.1.2: cpmCPURisingThresholdValue
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cipSecGlobalInAuthFails
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cipSecGlobalInAuthFails
+    - type: set
+      key: alert_severity
+      value: informational
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.171.1.3.1.13
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.171.1.3.1.13: cipSecGlobalInAuthFails
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: FW_cempMemPoolUsedOvrflw
+    label_mods:
+    - type: set
+      key: alertname
+      value: FW_cempMemPoolUsedOvrflw
+    - type: set
+      key: alert_severity
+      value: warning
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.9.9.221.1.1.1.1.17
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.9.9.221.1.1.1.1.17: cempMemPoolUsedOvrflw
+        - type: set
+          key: compatible_clear_events
+          value: "null"

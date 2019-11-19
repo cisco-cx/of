@@ -1,0 +1,98 @@
+alerts:
+  FW_sysUpTime:
+    alert_severity: major
+    error_events:
+      .1.3.6.1.2.1.1.3:
+        event_name: sysUpTime
+  FW_sysORLastChange:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.2.1.1.8:
+        event_name: sysORLastChange
+  FW_sysORUpTime:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.2.1.1.9.1.4:
+        event_name: sysORUpTime
+  FW_ifNumberChange:
+    alert_severity: warning
+    error_events:
+      .1.3.6.1.2.1.2.1:
+        event_name: ifNumber
+  FW_ifAdminStatusChange:
+    alert_severity: critical
+    error_events:
+      .1.3.6.1.2.1.2.2.1.7:
+        event_name: ifAdminStatus
+  FW_ifOperStatusChange:
+    alert_severity: critical
+    error_events:
+      .1.3.6.1.2.1.2.2.1.8:
+        event_name: ifOperStatus
+  FW_snmpEnableAuthenTraps:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.2.1.11.30:
+        event_name: snmpEnableAuthenTraps
+  FW_ifLinkUpDownTrapEnable:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.2.1.31.1.1.1.14:
+        event_name: ifLinkUpDownTrapEnable
+  FW_mteTriggerFailures:
+    alert_severity: warning
+    error_events:
+      .1.3.6.1.2.1.88.1.2.1:
+        event_name: mteTriggerFailures
+  FW_mteEventFailures:
+    alert_severity: warning
+    error_events:
+      .1.3.6.1.2.1.88.1.4.1:
+        event_name: mteEventFailures
+  FW_cpmCPURisingThresholdValue:
+    alert_severity: warning
+    error_events:
+      .1.3.6.1.4.1.9.9.109.1.2.4.1.2:
+        event_name: cpmCPURisingThresholdValue
+  FW_cefcFRUPowerOperStatus:
+    alert_severity: critical
+    error_events:
+      .1.3.6.1.4.1.9.9.117.1.1.2.1.2:
+        event_name: cefcFRUPowerOperStatus
+  FW_cikeGlobalInitTunnelFails:
+    alert_severity: warning
+    error_events:
+      .1.3.6.1.4.1.9.9.171.1.2.1.20:
+        event_name: cikeGlobalInitTunnelFails
+  FW_cikeGlobalAuthFails:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.9.9.171.1.2.1.23:
+        event_name: cikeGlobalAuthFails
+  FW_cipSecGlobalInAuthFails:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.9.9.171.1.3.1.13:
+        event_name: cipSecGlobalInAuthFails
+  FW_cempMemPoolUsed:
+    alert_severity: warning
+    error_events:
+      .1.3.6.1.4.1.9.9.221.1.1.1.1.7:
+        event_name: cempMemPoolUsed
+  FW_cempMemPoolUsedOvrflw:
+    alert_severity: warning
+    error_events:
+      .1.3.6.1.4.1.9.9.221.1.1.1.1.17:
+        event_name: cempMemPoolUsedOvrflw
+  FW_cvpnLicServerStatus:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.9.9.816.0.2.6:
+        event_name: cvpnLicServerStatus
+  FW_cfwConnectionStatValue:
+    alert_severity: informational
+    error_events:
+      .1.3.6.1.4.1.9.9.147.1.2.2.2.1.5:
+        event_name: cfwConnectionStatValue
+
+

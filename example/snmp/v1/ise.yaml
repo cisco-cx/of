@@ -1,0 +1,41 @@
+alerts:
+  ISE_nsNotifyRestart_Agent:
+    alert_severity: Critical
+    error_events:
+      .1.3.6.1.4.1.8072.4.0.3:
+        event_name: ISE_nsNotifyRestart_Agent
+  ISE_nsNotifyShutdown_Agent:
+    alert_severity: Critical
+    error_events:
+      .1.3.6.1.4.1.8072.4.0.2:
+        event_name: ISE_nsNotifyShutdown_Agent
+  ISE_linkUp:
+    alert_severity: Info
+    error_events:
+      .1.3.6.1.6.3.1.1.5.4:
+        event_name: ISE_linkUp
+  ISE_linkDown:
+    alert_severity: Critical
+    error_events:
+      .1.3.6.1.6.3.1.1.5.3:
+        event_name: ISE_linkDown
+  ISE_coldStart:
+    alert_severity: Critical
+    error_events:
+      .1.3.6.1.6.3.1.1.5.1:
+        event_name: ISE_coldStart
+  ISE_hrSWRunName:
+    alert_severity: Info
+    error_events:
+      .1.3.6.1.2.1.25.4.2.1.2:
+        event_name: ISE_hrSWRunName
+  ISE_dskPercent_Used:
+    alert_severity: Critical
+    error_events:
+      .1.3.6.1.4.1.2021.9.1.9:
+        event_name: ISE_dskPercent_Used
+  ISE_dskPath:
+    alert_severity: Info
+    error_events:
+      .1.3.6.1.4.1.2021.9.1.2:
+        event_name: ISE_dskPath

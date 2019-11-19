@@ -1,0 +1,204 @@
+ise.yaml:
+  defaults:
+    source_type: host
+  alerts:
+  - name: ISE_dskPercent_Used
+    label_mods:
+    - type: set
+      key: alertname
+      value: ISE_dskPercent_Used
+    - type: set
+      key: alert_severity
+      value: Critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.2021.9.1.9
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.2021.9.1.9: ISE_dskPercent_Used
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: ISE_dskPath
+    label_mods:
+    - type: set
+      key: alertname
+      value: ISE_dskPath
+    - type: set
+      key: alert_severity
+      value: Info
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.2021.9.1.2
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.2021.9.1.2: ISE_dskPath
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: ISE_nsNotifyRestart_Agent
+    label_mods:
+    - type: set
+      key: alertname
+      value: ISE_nsNotifyRestart_Agent
+    - type: set
+      key: alert_severity
+      value: Critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8072.4.0.3
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8072.4.0.3: ISE_nsNotifyRestart_Agent
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: ISE_nsNotifyShutdown_Agent
+    label_mods:
+    - type: set
+      key: alertname
+      value: ISE_nsNotifyShutdown_Agent
+    - type: set
+      key: alert_severity
+      value: Critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.4.1.8072.4.0.2
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.4.1.8072.4.0.2: ISE_nsNotifyShutdown_Agent
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: ISE_linkUp
+    label_mods:
+    - type: set
+      key: alertname
+      value: ISE_linkUp
+    - type: set
+      key: alert_severity
+      value: Info
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.6.3.1.1.5.4
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.6.3.1.1.5.4: ISE_linkUp
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: ISE_linkDown
+    label_mods:
+    - type: set
+      key: alertname
+      value: ISE_linkDown
+    - type: set
+      key: alert_severity
+      value: Critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.6.3.1.1.5.3
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.6.3.1.1.5.3: ISE_linkDown
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: ISE_coldStart
+    label_mods:
+    - type: set
+      key: alertname
+      value: ISE_coldStart
+    - type: set
+      key: alert_severity
+      value: Critical
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.6.3.1.1.5.1
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.6.3.1.1.5.1: ISE_coldStart
+        - type: set
+          key: compatible_clear_events
+          value: "null"
+  - name: ISE_hrSWRunName
+    label_mods:
+    - type: set
+      key: alertname
+      value: ISE_hrSWRunName
+    - type: set
+      key: alert_severity
+      value: Info
+    firing:
+      select:
+      - type: equals
+        oid: .1.3.6.1.6.3.1.1.4.1.0
+        as: value
+        values:
+        - .1.3.6.1.2.1.25.4.2.1.2
+        annotation_mods:
+        - type: copy
+          oid: .1.3.6.1.6.3.1.1.4.1.0
+          as: value
+          to_key: event_name
+          map:
+            .1.3.6.1.2.1.25.4.2.1.2: ISE_hrSWRunName
+        - type: set
+          key: compatible_clear_events
+          value: "null"
