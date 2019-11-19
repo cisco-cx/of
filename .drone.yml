@@ -15,19 +15,23 @@ steps:
       - push
   commands:
     - make test
+  depends_on: [clone]
 
-- name: of_PR
+- name: build_docker_image_PR
   image: plugins/gcr
   settings:
     dry_run: true
     registry: docker.io
     repo: ciscocx/of
+    json_key:
+      from_secret: gcr_credentials
   when:
     event:
     - pull_request
-    ref:
-    - refs/heads/master
-    - refs/tags/*
+    - push
+  branches:
+    exclude: master
+  depends_on: [clone]
 
 - name: of
   image: plugins/gcr
