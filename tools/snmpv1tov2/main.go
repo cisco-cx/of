@@ -108,12 +108,15 @@ func newAlert(alertName string, alert *of_snmpv1.AlertEntry) of_snmpv2.Alert {
 					ToKey: "event_name",
 					Map:   firingEventMap,
 				},
-				of_snmpv2.Mod{
-					Type:  of_snmpv2.Set,
-					Key:   "compatible_clear_events",
-					Value: string(clearEvents),
-				},
 			},
+		}
+
+		if len(clearingValues) != 0 {
+			firingSelect.AnnotationMods = append(firingSelect.AnnotationMods, of_snmpv2.Mod{
+				Type:  of_snmpv2.Set,
+				Key:   "compatible_clear_events",
+				Value: string(clearEvents),
+			})
 		}
 
 		newAlert.Firing = map[string][]of_snmpv2.Select{
