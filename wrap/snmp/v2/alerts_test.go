@@ -186,6 +186,27 @@ func TestUnknownForwarding(t *testing.T) {
 	require.Len(t, alerts, 0)
 }
 
+// Test EndsAt.
+func TestEndsAt(t *testing.T) {
+	ag := snmp.Alerter{}
+	alert := of.Alert{}
+
+	require.Equal(t, alert.EndsAt, time.Time{})
+
+	ag.EndsAt(0, 0, &alert)
+	require.Equal(t, alert.EndsAt, time.Time{})
+
+	ag.EndsAt(10, 0, &alert)
+	require.Equal(t, alert.EndsAt.Unix(), time.Now().Add(10*time.Minute).Unix())
+
+	ag.EndsAt(0, 20, &alert)
+	require.Equal(t, alert.EndsAt.Unix(), time.Now().Add(20*time.Minute).Unix())
+
+	ag.EndsAt(10, 20, &alert)
+	require.Equal(t, alert.EndsAt.Unix(), time.Now().Add(20*time.Minute).Unix())
+
+}
+
 // Preparing Alert generator.
 func newAlerter(t *testing.T) *snmp.Alerter {
 	// Prepare snmp.V2Config

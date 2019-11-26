@@ -61,6 +61,7 @@ type Default struct {
 	GeneratorUrlPrefix URLPrefix          `yaml:"generator_url_prefix,omitempty"`
 	LabelMods          []Mod              `yaml:"label_mods,omitempty"`
 	AnnotationMods     []Mod              `yaml:"annotation_mods,omitempty"`
+	EndsAt             int                `yaml:"ends_at,omitempty"`
 }
 
 // Maps IPaddresses to there cluster name.
@@ -93,6 +94,7 @@ type Alert struct {
 	AnnotationMods     []Mod               `yaml:"annotation_mods,omitempty"`
 	Firing             map[string][]Select `yaml:"firing,omitempty"`
 	Clearing           map[string][]Select `yaml:"clearing,omitempty"`
+	EndsAt             int                 `yaml:"ends_at,omitempty"`
 }
 
 // Represents the alert selection criteria.

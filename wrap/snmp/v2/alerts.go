@@ -80,13 +80,13 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 				alertMatchedConfig = true
 
 				fAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Firing)
-
 				// Setting `alert_oid` as the value of of_snmp.SNMPTrapOID
 				fAlert.Labels["alert_oid"] = fAlert.Annotations["event_oid"]
 				a.CntrVec[alertsGeneratedCount].Incr(map[string]string{
 					"alertType": "firing",
 					"alert_oid": fAlert.Labels["alert_oid"],
 				})
+				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &fAlert)
 				allAlerts = append(allAlerts, fAlert)
 				a.Log.WithFields(map[string]interface{}{
 					"alertType":   "firing",
@@ -109,6 +109,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 				// Add end time to clearing alerts.
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
 				cAlert.EndsAt = time.Now().UTC()
+				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &cAlert)
 
 				a.Cntr[clearingEventCount].Incr()
 				// For `selects` under firing.
@@ -172,6 +173,16 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 		}
 	}
 	return allAlerts
+}
+
+func (a *Alerter) EndsAt(defEndsAt int, alertEndsAt int, alert *of.Alert) {
+	if defEndsAt != 0 {
+		alert.EndsAt = time.Now().UTC().Add(time.Duration(defEndsAt) * time.Minute)
+	}
+
+	if alertEndsAt != 0 {
+		alert.EndsAt = time.Now().UTC().Add(time.Duration(alertEndsAt) * time.Minute)
+	}
 }
 
 // Create alert for unknown SNMP trap.
