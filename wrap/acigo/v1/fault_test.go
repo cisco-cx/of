@@ -18,7 +18,7 @@ var fault = of.ACIFaultRaw{
 	ChildAction: "",
 	Code:        "F1678",
 	Created:     "2015-01-19T14:26:13.862+01:00",
-	Desc: "TEST FAULT -- Port is down, reason:sfpAbsent(connected), " +
+	Descr: "TEST FAULT -- Port is down, reason:sfpAbsent(connected), " +
 		"used by:EPG, lastLinkStChg:1970-01-01T01:00:00.000+01:00, operSt:down",
 	DN:              "topology/pod-1/node-101/sys/phys-[eth1/25]/phys/fault-F1678",
 	Domain:          "access",
