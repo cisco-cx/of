@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  of:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    command: ["of", "snmp", "handler", "--am-address", "http://alertmanager:9093", "--config-dir", "/src/example/snmp/v2", "--mibs-dir", "/mibs/mibs.snmplabs.com/json", "--listen-address", "0.0.0.0:8942"]
+  alertmanager:
+    command:
+    - "--config.file=/etc/alertmanager/alertmanager-config.yaml"
+    - "--web.listen-address=:9093"
+    - "--cluster.listen-address=:9999"
+    "image": "prom/alertmanager:v0.17.0"
+    "volumes":
+    - "./:/etc/alertmanager/"
+  test:
+    build:
+      context: ./
+      dockerfile: pytest.dockerfile
+    depends_on:
+      - alertmanager
+      - of
+    command: ["pytest-3", "/src/smoke_tests", "--of-url", "http://of:8942", "--alertmanager-url", "http://alertmanager:9093", "--wait-for-services"]
+    "volumes":
+    - "../:/src"
