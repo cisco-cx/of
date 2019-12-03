@@ -27,7 +27,7 @@ type ACIFaultRaw struct {
 	Created         string `json:"created,omitempty"`
 	DN              string `json:"dn,omitempty"`
 	Delegated       string `json:"delegated,omitempty"`
-	Desc            string `json:"desc,omitempty"`
+	Descr           string `json:"descr,omitempty"`
 	Domain          string `json:"domain,omitempty"`
 	HighestSeverity string `json:"highestSeverity,omitempty"`
 	LC              string `json:"lc,omitempty"`

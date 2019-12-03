@@ -224,7 +224,13 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 
 		// Decode fault into struct.
 		f := of.ACIFaultRaw{}
-		mapstructure.Decode(mapFault, &f)
+		err := mapstructure.Decode(mapFault, &f)
+		if err != nil {
+			h.Log.Errorf("Failed to decode map structure with error: %s, structure: %+v", err.Error(), mapFault)
+			return nil, err
+		}
+		h.Log.Tracef("Decoded fault: %+v\n", f)
+
 		fp := acigo.FaultParser{Fault: f, Log: h.Log}
 		h.counters[faultsScrapedCount].Incr()
 
@@ -237,6 +243,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 
 		// Create alert boilerplate.
 		alert := alertmanager.NewAlert(f)
+		h.Log.Tracef("New Alert: %+v", alert)
 
 		// Get an integer representation of fault severity for numerical comparison.
 		s, err := acigo.NewACIFaultSeverityRaw(fp.Fault.Severity)

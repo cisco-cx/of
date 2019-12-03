@@ -33,7 +33,7 @@ func TestFaultToAlerts(t *testing.T) {
 	_, err = hash.Write(faults_json)
 	require.NoError(t, err)
 	md5sum := fmt.Sprintf("%x", hash.Sum(nil))
-	require.Equal(t, "75d506f347276107b1fe7657b681473b", md5sum)
+	require.Equal(t, "2d61b4b093e4376be98d6b7aaf298ada", md5sum)
 }
 
 //Test Throttle

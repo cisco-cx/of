@@ -85,6 +85,7 @@ func (c *ACIClient) Faults() ([]of.Map, error) {
 	}
 	mm := make([]of.Map, len(list))
 	for i, v := range list {
+		c.Log.Tracef("Recieved fault from ACI: %+v\n", v)
 		mapstructure.NewMap(v).DecodeMap(&mm[i])
 	}
 	return mm, nil
