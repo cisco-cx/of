@@ -56,7 +56,9 @@ var rootCmd = &cobra.Command{
 
 		viper.BindPFlags(cmd.Flags())
 		err := cmd.Flags().Parse(args)
-		if err != nil {
+
+		// skip "unknown flag" error messages for CLI parsing since each subcommand can add it's own flags
+		if err != nil && !strings.Contains(err.Error(), "unknown flag") {
 			return err
 		}
 		logLevel := viper.GetString("log-level")
