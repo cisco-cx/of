@@ -52,11 +52,18 @@ var infoSvc = informer.NewInfoService(
 var rootCmd = &cobra.Command{
 	Use:   "of",
 	Short: "Observability Framework",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+
+		viper.BindPFlags(cmd.Flags())
+		err := cmd.Flags().Parse(args)
+		if err != nil {
+			return err
+		}
 		logLevel := viper.GetString("log-level")
 		log.SetLevel(logLevel)
 		logv2.SetLevel(logLevel)
 		log.Infof("Logging Enabled. Level : %s", log.LogLevel())
+		return nil
 	},
 }
 
