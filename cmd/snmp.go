@@ -24,6 +24,7 @@ import (
 	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
 	profile "github.com/cisco-cx/of/wrap/profile/v1"
 	snmp "github.com/cisco-cx/of/wrap/snmp/v2"
+	watcher "github.com/cisco-cx/of/wrap/watcher/v2"
 )
 
 // cmdSNMP returns the `snmp` command.
@@ -102,6 +103,29 @@ func runSNMPHandler(cmd *cobra.Command, args []string) {
 	ParseSNMPHandlerFlags(cmd, args)
 	config := SNMPConfig(cmd)
 	logv2.Infof("Starting SNMP service")
+
+	fs, err := watcher.NewPath(config.ConfigDir, logv2)
+	if err != nil {
+		logv2.WithError(err).Fatalf("Failed to init watcher for config dir.")
+	}
+
+	handler := initSNMPHandler(config)
+	handler.Run()
+
+	for {
+		select {
+		case _ = <-fs.Changed:
+			handler.Shutdown()
+			handler = initSNMPHandler(config)
+			handler.Run()
+		case err := <-fs.Errored:
+			logv2.WithError(err).Fatalf("Error while watching config dir.")
+		}
+	}
+
+}
+
+func initSNMPHandler(config *of_v2.SNMPConfig) *snmp.Handler {
 	service, err := snmp.NewService(logv2, config)
 	if err != nil {
 		logv2.WithError(err).Fatalf("Failed to init SNMP service.")
@@ -112,11 +136,7 @@ func runSNMPHandler(cmd *cobra.Command, args []string) {
 		SNMP:   service,
 		Log:    logv2,
 	}
-
-	handler.Run()
-
-	// Run forever.
-	<-make(chan (bool))
+	return handler
 }
 
 func ParseSNMPHandlerFlags(cmd *cobra.Command, args []string) {
