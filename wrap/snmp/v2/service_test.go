@@ -69,6 +69,10 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 		},
 	}
 
+	var err error
+	expectedAlerts[0].StartsAt, err = time.Parse(time.RFC3339, "2019-04-26T03:46:57Z")
+	require.NoError(as.t, err)
+
 	expectedClearAlertTemplate := of.Alert{
 		Labels: map[string]string{
 			"alert_severity":    "error",
@@ -104,6 +108,8 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 		".1.3.6.1.4.1.24961.2.103.2.0.5",
 	} {
 		expectedClearAlertTemplate.Labels["alert_oid"] = val
+		expectedClearAlertTemplate.StartsAt, err = time.Parse(time.RFC3339, "2019-04-26T03:46:57Z")
+		require.NoError(as.t, err)
 		expectedAlerts = append(expectedAlerts, expectedClearAlertTemplate)
 	}
 

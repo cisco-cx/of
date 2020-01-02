@@ -86,6 +86,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 					"alertType": "firing",
 					"alert_oid": fAlert.Labels["alert_oid"],
 				})
+				a.StartsAt(&fAlert)
 				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &fAlert)
 				allAlerts = append(allAlerts, fAlert)
 				a.Log.WithFields(map[string]interface{}{
@@ -109,6 +110,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 				// Add end time to clearing alerts.
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
 				cAlert.EndsAt = time.Now().UTC()
+				a.StartsAt(&cAlert)
 				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &cAlert)
 
 				a.Cntr[clearingEventCount].Incr()
@@ -173,6 +175,16 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 		}
 	}
 	return allAlerts
+}
+
+func (a *Alerter) StartsAt(alert *of.Alert) {
+	t, err := time.Parse(time.RFC3339, a.Receipts.Snmptrapd.Timestamp)
+	if err != nil {
+		a.Log.WithError(err).Errorf("Failed to parse time from %s", a.Receipts.Snmptrapd.Timestamp)
+		return
+	}
+
+	alert.StartsAt = t
 }
 
 func (a *Alerter) EndsAt(defEndsAt int, alertEndsAt int, alert *of.Alert) {
