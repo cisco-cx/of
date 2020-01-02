@@ -15,7 +15,10 @@
 package cmd
 
 import (
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -23,6 +26,7 @@ import (
 	of_v2 "github.com/cisco-cx/of/pkg/v2"
 	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
 	profile "github.com/cisco-cx/of/wrap/profile/v1"
+	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 	snmp "github.com/cisco-cx/of/wrap/snmp/v2"
 	watcher "github.com/cisco-cx/of/wrap/watcher/v2"
 )
@@ -109,24 +113,65 @@ func runSNMPHandler(cmd *cobra.Command, args []string) {
 		logv2.WithError(err).Fatalf("Failed to init watcher for config dir.")
 	}
 
-	handler := initSNMPHandler(config)
-	handler.Run()
+	cntr, cntrVec := snmp.InitCounters(config.Application, logv2)
+	handler := initSNMPHandler(config, cntr, cntrVec)
+	cntrVec[snmp.HandlerRestarted].Incr(map[string]string{
+		"op_type": "start",
+	})
+	go handler.Run()
+
+	var restartTimer *time.Timer
+
+	restartFunc := func() {
+		logv2.Infof("Shutting down SNMP handler")
+		cntrVec[snmp.HandlerRestarted].Incr(map[string]string{
+			"op_type": "shutdown",
+		})
+		handler.Shutdown()
+		handler = initSNMPHandler(config, cntr, cntrVec)
+		logv2.Infof("Starting SNMP handler")
+		cntrVec[snmp.HandlerRestarted].Incr(map[string]string{
+			"op_type": "start",
+		})
+		handler.Run()
+		restartTimer = nil
+	}
+
+	err = fs.Watch()
+	if err != nil {
+		logv2.WithError(err).Fatalf("Failed to watch config dir.")
+	}
+
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	for {
 		select {
 		case _ = <-fs.Changed:
+			// Might get multiple events, since we are watching a directory.
+			// Delaying and restarting the service only once.
+			logv2.Infof("Config change detected.")
+			if restartTimer == nil {
+				logv2.Debugf("Started timer to restart handler.")
+				restartTimer = time.AfterFunc(2*time.Second, restartFunc)
+			} else {
+				logv2.Debugf("Delaying handler restart.")
+				if !restartTimer.Stop() {
+					<-restartTimer.C
+				}
+				restartTimer.Reset(time.Second)
+			}
+		case _ = <-signalChan:
+			logv2.Infof("Process killed, shutting down.")
 			handler.Shutdown()
-			handler = initSNMPHandler(config)
-			handler.Run()
-		case err := <-fs.Errored:
-			logv2.WithError(err).Fatalf("Error while watching config dir.")
+			os.Exit(0)
 		}
 	}
 
 }
 
-func initSNMPHandler(config *of_v2.SNMPConfig) *snmp.Handler {
-	service, err := snmp.NewService(logv2, config)
+func initSNMPHandler(config *of_v2.SNMPConfig, cntr map[string]*prometheus.Counter, cntrVec map[string]*prometheus.CounterVec) *snmp.Handler {
+	service, err := snmp.NewService(logv2, config, cntr, cntrVec)
 	if err != nil {
 		logv2.WithError(err).Fatalf("Failed to init SNMP service.")
 	}
