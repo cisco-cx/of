@@ -91,7 +91,8 @@ func checkHandler(t *testing.T, args []string, amAddress string, cn string) {
 	config.Application = cn
 
 	log := logger.New()
-	service, err := snmp.NewService(log, config)
+	cntr, cntrVec := snmp.InitCounters(config.Application, log)
+	service, err := snmp.NewService(log, config, cntr, cntrVec)
 	require.NoError(t, err)
 
 	handler := &snmp.Handler{
@@ -103,6 +104,7 @@ func checkHandler(t *testing.T, args []string, amAddress string, cn string) {
 	handler.Run()
 
 	runHandlerChecks(t, config.ListenAddress)
+
 	handler.Shutdown()
 }
 
