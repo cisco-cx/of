@@ -28,6 +28,7 @@ const (
 	alertsGeneratedCount    = "alerts_generated_count"
 	alertsNotGeneratedCount = "alerts_not_generated_count"
 	unknownAlertsCount      = "unknown_alerts_count"
+	HandlerRestarted        = "handler_restarted"
 )
 
 type Service struct {
@@ -43,11 +44,12 @@ type Service struct {
 	CntrVec map[string]*prometheus.CounterVec
 }
 
-func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
+func NewService(l *logger.Logger, cfg *of.SNMPConfig, cntr map[string]*prometheus.Counter, cntrVec map[string]*prometheus.CounterVec) (*Service, error) {
 
 	// Concatenate configs files.
 	c := concatenator.Files{
 		Path: cfg.ConfigDir,
+		Ext:  "yaml",
 	}
 
 	r, err := c.Concat()
@@ -115,7 +117,6 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig) (*Service, error) {
 
 	u := uuid.UUID{}
 
-	cntr, cntrVec := InitCounters(cfg.Application, l)
 	ag := Alerter{
 		Log:            l,
 		Configs:        &v2Config,
@@ -264,6 +265,14 @@ func InitCounters(namespace string, log *logger.Logger) (map[string]*prometheus.
 				Help:      "Number of times we encountered unknown SNMP traps.",
 			},
 			labels: []string{"level", "alert_oid"},
+		},
+		vectorInfo{
+			vector: &prometheus.CounterVec{
+				Namespace: namespace,
+				Name:      HandlerRestarted,
+				Help:      "Number of times handler was restarted.",
+			},
+			labels: []string{"op_type"},
 		},
 	}
 
