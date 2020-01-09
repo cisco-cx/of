@@ -260,13 +260,13 @@ def should_drop_fault(fault):
 
 def format_csv(faults):
     """Print the CSV formatted results in the format dictated by InnoEye OSS"""
-    header = ["Alarm Code", "Alarm Name", "EMS", "Classification", "Service Affected", "Category", "MO", "Default Severity", "Alarm Type", "Alarming Delay (minutes)", "Estimated time to Close(Minutes)", "Incident Creation", "TT Delay (minutes)", "WO Delay (minutes)", "Clear Name", "Clear Trap", "Software Release", "Description", "Impact", "Suggestion", "Generic Alarm Name", "Probable Cause"]
+    header = ["Vendor Alarm Code", "company Alarm Code", "Alarm Layer", "Alarm Group", "Service Type Affected", "Primary alarm / secondary alarm / independent alarm", "Equipment Type", "Alarm Name", "EMS", "Classification", "Service Affected", "Category", "MO", "EMS Severity", "Alarm Type", "Alarming Delay (minutes)", "Estimated time to Close(Minutes)", "Incident Creation", "TT Delay (minutes)", "WO Delay (minutes)", "Clear Name", "Clear Trap", "Software Release", "Description", "Impact", "Suggestion", "Generic Alarm Name", "Probable Cause", "Discard Planned Event", "Discard Equipment Status", "Priority", "Technology", "Vendor", "Domain"]
     writer = csv.DictWriter(sys.stdout, header, quoting=csv.QUOTE_ALL)
     # output the header
     writer.writeheader()
 
     # process each fault and add it to the CSV file if necessary
-    for fault_name in faults:
+    for fault_name in sorted(faults):
         nice_fault_name = apic_name_to_am(fault_name)
         # pick the fault in this list with the highest severity
         most_severe = most_severe_fault(faults[fault_name])
@@ -276,16 +276,22 @@ def format_csv(faults):
             severity = most_severe["severity"]
 
             row = {
-                "Alarm Code": nice_fault_name,
+                "Vendor Alarm Code": nice_fault_name,
+                "company Alarm Code": company_alarm_code(most_severe),
+                "Alarm Layer": 'Infrastructure',
+                "Alarm Group": 'Network',
+                "Service Type Affected": "Multiple",
+                "Primary alarm / secondary alarm / independent alarm": "Primary",
+                "Equipment Type": "ACI Fabric",
                 "Alarm Name": nice_fault_name,
                 "EMS": "OF",
                 "Classification": apic_severity_to_oss_classification(severity),
                 "Service Affected": apic_severity_to_oss_service_affected(severity),
                 "Category": "-",
                 "MO": "-",
-                "Default Severity": apic_severity_to_oss_severity(severity),
-                "Alarm Type": "-",
-                "Alarming Delay (minutes)": "-",
+                "EMS Severity": apic_severity_to_oss_severity(severity),
+                "Alarm Type": "Equipment alarm",
+                "Alarming Delay (minutes)": "3",
                 "Estimated time to Close(Minutes)": "-",
                 "Incident Creation": apic_severity_to_oss_incident_creation(severity),
                 "TT Delay (minutes)": "-",
@@ -298,6 +304,9 @@ def format_csv(faults):
                 "Suggestion": "-",
                 "Generic Alarm Name": "-",
                 "Probable Cause": "-",
+                "Technology": "LTE",
+                "Vendor": "CISCO",
+                "Domain": "Fabric",
             }
             writer.writerow(row)
 
@@ -316,6 +325,22 @@ def fault_description(fault):
         description = fault["message"]
 
     return description
+
+def company_alarm_code(fault):
+    return "1AML-NET-UHN05-03-" + company_oss_alarm_id(fault)
+
+RAKUTEN_OSS_ID_CURRENT = 40000
+def company_oss_alarm_id(fault):
+    # company has a silly alarm id system of reserved 6 digit numbers that must be unique per alarm.
+    # The ACI space goes from 040000-041500, so just start incrementing.
+    # NOTE: This will cause problems if more alarms are suppressed in future as that will shift up the IDs for everything after that
+    # so maintenance of this id will probably have to be manual
+    global RAKUTEN_OSS_ID_CURRENT
+    oss_id = RAKUTEN_OSS_ID_CURRENT
+    RAKUTEN_OSS_ID_CURRENT += 1
+
+    # format to have leading zero
+    return str(oss_id).zfill(6)
 
 def main():
     req = requests.get(APIC_FAULT_URL, timeout=30)
