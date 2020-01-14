@@ -92,6 +92,13 @@ func TestAlertClear(t *testing.T) {
 	}
 }
 
+// Test configs where device_identifier does not match.
+func TestDeviceNotIdentified(t *testing.T) {
+	ag := newAlerter(t)
+	alerts := ag.Alert([]string{"device_not_found"})
+	require.Len(t, alerts, 0)
+}
+
 // Test Alerts clearing.
 func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 

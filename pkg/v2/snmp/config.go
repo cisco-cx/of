@@ -57,6 +57,7 @@ type Config struct {
 type Default struct {
 	Enabled            Enabled            `yaml:"enabled,omitempty"`
 	SourceType         SourceType         `yaml:"source_type,omitempty"`
+	DeviceIdentifiers  []string           `yaml:"device_identifiers,omitempty"`
 	Clusters           map[string]Cluster `yaml:"clusters,omitempty"`
 	GeneratorUrlPrefix URLPrefix          `yaml:"generator_url_prefix,omitempty"`
 	LabelMods          []Mod              `yaml:"label_mods,omitempty"`
