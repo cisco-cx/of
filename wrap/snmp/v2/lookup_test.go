@@ -29,7 +29,7 @@ func TestFind(t *testing.T) {
 
 	configs, err := lookup.Find(vars)
 	require.NoError(t, err)
-	require.ElementsMatch(t, []string{"epc", "nso"}, configs)
+	require.ElementsMatch(t, []string{"epc", "nso", "device_not_found"}, configs)
 }
 
 // Helper to build lookup map

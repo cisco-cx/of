@@ -57,6 +57,22 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 			a.Log.WithError(err).Errorf("Failed to get SNMPTrapOID value's short name.")
 		}
 
+		// Identify device.
+		a.Log.WithFields(map[string]interface{}{
+			"vars":        a.Receipts.Snmptrapd.Vars,
+			"PduSecurity": a.Receipts.Snmptrapd.PduSecurity,
+			"config":      cfgName,
+		}).Debugf("Trying to identify device.")
+
+		if a.deviceIdentified(cfg.Defaults.DeviceIdentifiers) == false {
+			a.Log.WithFields(map[string]interface{}{
+				"vars":        a.Receipts.Snmptrapd.Vars,
+				"PduSecurity": a.Receipts.Snmptrapd.PduSecurity,
+				"config":      cfgName,
+			}).Debugf("Config not applicable for device.")
+			continue
+		}
+
 		// To check if any alert was generated for `cfgName`.
 		var alertMatchedConfig bool = false
 		// Check through of_snmp.Config.Alerts to find a match.
@@ -509,6 +525,21 @@ func (a *Alerter) generatorURLPrefix(defPrefix of_snmp.URLPrefix, alertPrefix of
 	}
 
 	return defPrefix
+}
+
+// Identify device based on string in PduSecurity.
+// If no identifier are present in the config, consider the config for alerts.
+func (a *Alerter) deviceIdentified(identifiers []string) bool {
+	if len(identifiers) == 0 {
+		return true
+	}
+
+	for _, identifier := range identifiers {
+		if strings.Contains(a.Receipts.Snmptrapd.PduSecurity, identifier) == true {
+			return true
+		}
+	}
+	return false
 }
 
 // Decide if alert should be sent or not based the of_snmp.Config.Defaults.Enabled and of_snmp.Config.Alerts[name].Enabled
