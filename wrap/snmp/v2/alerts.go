@@ -317,7 +317,7 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 	}
 
 	// Apply alert specific labels.
-	alert.Labels["event_id"] = a.U.UUID()
+	alert.Annotations["event_id"] = a.U.UUID()
 	err = a.applyMod(&alert.Labels, alertCfg.LabelMods)
 	if err != nil {
 		a.Log.WithError(err).Errorf("Error while applying alert mods to labels.")
