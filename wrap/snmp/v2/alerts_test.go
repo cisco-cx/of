@@ -49,7 +49,7 @@ func fireAlert(ag *snmp.Alerter, count int, t *testing.T) {
 				"star_slot_num":     "14",
 				"subsystem":         "epc",
 				"vendor":            "cisco",
-				"alert_fingerprint": "39a7842eabe0437a",
+				"alert_fingerprint": "5dd1df6eff3119f4",
 				"alert_oid":         ".1.3.6.1.4.1.8164.1.2.1.1.1",
 			},
 			Annotations: map[string]string{
@@ -115,7 +115,7 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 			"source_address":    "nso1.example.org",
 			"source_hostname":   "nso1.example.org",
 			"subsystem":         "nso",
-			"alert_fingerprint": "362a7c9e679338f1",
+			"alert_fingerprint": "ec92aefbceeb3cd4",
 			"vendor":            "cisco",
 		},
 		Annotations: map[string]string{
@@ -191,7 +191,7 @@ func TestUnknownForwarding(t *testing.T) {
 
 	alerts := ag.Unknown("unknown_logging")
 	require.Len(t, alerts, 1)
-	require.Equal(t, "4a907db964f787a9", alerts[0].Labels[of_snmp.FingerprintText])
+	require.Equal(t, "324ad96bef5033e9", alerts[0].Labels[of_snmp.FingerprintText])
 	require.Equal(t, "unknownSnmpTrap", alerts[0].Labels["alertname"])
 	require.Equal(t, ".1.3.6.1.4.1.8164.2.44", alerts[0].Labels["alert_oid"])
 

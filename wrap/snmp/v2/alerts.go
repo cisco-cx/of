@@ -104,6 +104,11 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 				})
 				a.StartsAt(&fAlert)
 				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &fAlert)
+
+				// Finger print the alert.
+				fingerprint := a.fingerprint(fAlert)
+				fAlert.Labels[of_snmp.FingerprintText] = fingerprint
+
 				allAlerts = append(allAlerts, fAlert)
 				a.Log.WithFields(map[string]interface{}{
 					"alertType":   "firing",
@@ -140,6 +145,11 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 							"alertType": "clearing",
 							"alert_oid": v,
 						})
+
+						// Finger print the alert.
+						fingerprint := a.fingerprint(cAlert)
+						cAlert.Labels[of_snmp.FingerprintText] = fingerprint
+
 						allAlerts = append(allAlerts, cAlert)
 						a.Log.WithFields(map[string]interface{}{
 							"alertType":   "clearing",
@@ -263,6 +273,8 @@ func (a *Alerter) Unknown(level string) []of.Alert {
 
 	alert.Labels["alertname"] = "unknownSnmpTrap"
 	alert.Labels["alert_oid"] = alert.Annotations["event_oid"]
+	alert.Labels["source_address"] = a.Receipts.Snmptrapd.Source.Address
+	alert.Labels["source_hostname"] = a.Receipts.Snmptrapd.Source.Hostname
 
 	alert.Labels[of_snmp.FingerprintText] = a.fingerprint(alert)
 
@@ -350,9 +362,6 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 
 	}
 
-	// Finger print the alert.
-	fingerprint := a.fingerprint(alert)
-	alert.Labels[of_snmp.FingerprintText] = fingerprint
 	return alert, nil
 }
 

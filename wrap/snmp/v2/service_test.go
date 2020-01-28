@@ -46,7 +46,7 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 				"star_slot_num":     "14",
 				"subsystem":         "epc",
 				"vendor":            "cisco",
-				"alert_fingerprint": "39a7842eabe0437a",
+				"alert_fingerprint": "5dd1df6eff3119f4",
 				"alert_oid":         ".1.3.6.1.4.1.8164.1.2.1.1.1",
 			},
 			Annotations: map[string]string{
@@ -80,7 +80,7 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 			"source_address":    "nso1.example.org",
 			"source_hostname":   "nso1.example.org",
 			"subsystem":         "nso",
-			"alert_fingerprint": "362a7c9e679338f1",
+			"alert_fingerprint": "ec92aefbceeb3cd4",
 			"vendor":            "cisco",
 		},
 		Annotations: map[string]string{
