@@ -114,7 +114,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 					"vars":        a.Receipts.Snmptrapd.Vars,
 					"source":      a.Receipts.Snmptrapd.Source,
 					"config":      cfgName,
-				}).Debugf("Generated alerts")
+				}).Infof("Generated alerts")
 			}
 
 			// Check if trap Vars have any alerts matching clearing conditions.
@@ -150,7 +150,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 							"vars":        a.Receipts.Snmptrapd.Vars,
 							"source":      a.Receipts.Snmptrapd.Source,
 							"config":      cfgName,
-						}).Debugf("Generated alerts")
+						}).Infof("Generated alerts")
 					}
 				}
 			}
