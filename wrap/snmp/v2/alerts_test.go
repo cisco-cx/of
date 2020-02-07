@@ -53,9 +53,7 @@ func fireAlert(ag *snmp.Alerter, count int, t *testing.T) {
 				"alert_oid":         ".1.3.6.1.4.1.8164.1.2.1.1.1",
 			},
 			Annotations: map[string]string{
-				"alert_name":                "starCard",
 				"event_id":                  "9dcc77fc-dda5-4edf-a683-64f2589036d6",
-				"alert_severity":            "error",
 				"event_oid":                 ".1.3.6.1.4.1.8164.1.2.1.1.1",
 				"event_type":                "error",
 				"source_address":            "192.168.1.28",
@@ -119,7 +117,6 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 			"vendor":            "cisco",
 		},
 		Annotations: map[string]string{
-			"alert_severity":            "error",
 			"event_id":                  "9dcc77fc-dda5-4edf-a683-64f2589036d6",
 			"event_type":                "clear",
 			"source_address":            "nso1.example.org",

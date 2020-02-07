@@ -50,8 +50,6 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 				"alert_oid":         ".1.3.6.1.4.1.8164.1.2.1.1.1",
 			},
 			Annotations: map[string]string{
-				"alert_name":                "starCard",
-				"alert_severity":            "error",
 				"event_id":                  "9dcc77fc-dda5-4edf-a683-64f2589036d6",
 				"event_oid":                 ".1.3.6.1.4.1.8164.1.2.1.1.1",
 				"event_type":                "error",
@@ -84,7 +82,6 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 			"vendor":            "cisco",
 		},
 		Annotations: map[string]string{
-			"alert_severity":            "error",
 			"event_type":                "clear",
 			"event_id":                  "9dcc77fc-dda5-4edf-a683-64f2589036d6",
 			"source_address":            "nso1.example.org",

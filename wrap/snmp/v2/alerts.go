@@ -119,7 +119,9 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 					"vars":        a.Receipts.Snmptrapd.Vars,
 					"source":      a.Receipts.Snmptrapd.Source,
 					"config":      cfgName,
-				}).Infof("Generated alerts")
+				}).Debugf("Generated alerts")
+				alertJson, _ := json.Marshal(fAlert)
+				a.Log.Tracef("alert_json : %+v", string(alertJson))
 			}
 
 			// Check if trap Vars have any alerts matching clearing conditions.
@@ -160,7 +162,9 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 							"vars":        a.Receipts.Snmptrapd.Vars,
 							"source":      a.Receipts.Snmptrapd.Source,
 							"config":      cfgName,
-						}).Infof("Generated alerts")
+						}).Debugf("Generated alerts")
+						alertJson, _ := json.Marshal(cAlert)
+						a.Log.Tracef("alert_json : %+v", string(alertJson))
 					}
 				}
 			}
@@ -337,7 +341,7 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 	}
 
 	// Apply alert specific annotations.
-	err = a.applyMod(&alert.Annotations, alertCfg.LabelMods)
+	err = a.applyMod(&alert.Annotations, alertCfg.AnnotationMods)
 	if err != nil {
 		a.Log.WithError(err).Errorf("Error while applying alert mods to annotations.")
 		return alert, err
@@ -504,6 +508,8 @@ func (a *Alerter) applyMod(mapPtr *map[string]string, mods []of_snmp.Mod) error 
 	m := Modifier{
 		V: a.Value,
 	}
+
+	a.Log.WithField("value", a.Value).Tracef("Mod values")
 
 	// Apply mods
 	m.Map = mapPtr
