@@ -83,17 +83,19 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 
 			// Check if alert is enabled.
 			a.Log.Debugf("Checking Alert no. %d (%v) in config: %s", aNum, alertCfg.Name, cfgName)
-			if a.enabled(cfg.Defaults.Enabled, alertCfg.Enabled) == false {
-				// Printing alert no., since alert name can be nil.
-				a.Log.Debugf("Alert no. %d (%v), not enabled in config: %s", aNum, alertCfg.Name, cfgName)
-				continue
-			}
+			var enabled = a.enabled(cfg.Defaults.Enabled, alertCfg.Enabled)
 
 			// Check if trap Vars have any alert matching firing conditions.
 			fAlert, err := a.matchAlerts(cfg, alertCfg, of_snmp.Firing, fixedAnnotations)
 			if err == nil {
 				alertMatchedAlertCfg = true
 				alertMatchedConfig = true
+
+				if enabled == false {
+					// Printing alert no., since alert name can be nil.
+					a.Log.Debugf("Alert no. %d (%v), not enabled in config: %s", aNum, alertCfg.Name, cfgName)
+					continue
+				}
 
 				fAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Firing)
 				// Setting `alert_oid` as the value of of_snmp.SNMPTrapOID
@@ -129,6 +131,12 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 			if err == nil {
 				alertMatchedAlertCfg = true
 				alertMatchedConfig = true
+
+				if enabled == false {
+					// Printing alert no., since alert name can be nil.
+					a.Log.Debugf("Alert no. %d (%v), not enabled in config: %s", aNum, alertCfg.Name, cfgName)
+					continue
+				}
 
 				// Add end time to clearing alerts.
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
