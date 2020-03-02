@@ -247,6 +247,36 @@ func newAlerter(t *testing.T) *snmp.Alerter {
 	return &ag
 }
 
+func TestFingerprint(t *testing.T) {
+	ag := newAlerter(t)
+
+	expectedAlert := of.Alert{
+		Labels: map[string]string{
+			"alertname":       "ISE_linkUp",
+			"alert_severity":  "info",
+			"source_address":  "240b:c0e0:101:5476:1c01:2:0:107",
+			"source_hostname": "UHN7KLCS1CVIS001.rmnkiba.local",
+			"subsystem":       "radware",
+			"vendor":          "cisco",
+			"alert_oid":       ".1.3.6.1.4.1.1872.2.5.7.0.154",
+		},
+	}
+	require.Equal(t, "86aa75dc367d1fb5", ag.Fingerprint(expectedAlert))
+
+	expectedAlert2 := of.Alert{
+		Labels: map[string]string{
+			"alert_oid":       ".1.3.6.1.4.1.1872.2.5.7.0.154",
+			"alertname":       "Alteon_HAGroupNewMasterTrap",
+			"alert_severity":  "warning",
+			"source_address":  "240b:c0e0:101:5476:1c01:2:0:107",
+			"source_hostname": "UHN7KLDM1CVLB011.rmnkiba.local",
+			"subsystem":       "radware",
+			"vendor":          "cisco",
+		},
+	}
+	require.Equal(t, "fb393d5be7290b31", ag.Fingerprint(expectedAlert2))
+}
+
 // Fetches current metrics.
 func promMetrics(t *testing.T) string {
 	ts := httptest.NewServer(promhttp.Handler())

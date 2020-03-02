@@ -108,7 +108,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &fAlert)
 
 				// Finger print the alert.
-				fingerprint := a.fingerprint(fAlert)
+				fingerprint := a.Fingerprint(fAlert)
 				fAlert.Labels[of_snmp.FingerprintText] = fingerprint
 
 				allAlerts = append(allAlerts, fAlert)
@@ -157,7 +157,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 						})
 
 						// Finger print the alert.
-						fingerprint := a.fingerprint(cAlert)
+						fingerprint := a.Fingerprint(cAlert)
 						cAlert.Labels[of_snmp.FingerprintText] = fingerprint
 
 						allAlerts = append(allAlerts, cAlert)
@@ -288,7 +288,7 @@ func (a *Alerter) Unknown(level string) []of.Alert {
 	alert.Labels["source_address"] = a.Receipts.Snmptrapd.Source.Address
 	alert.Labels["source_hostname"] = a.Receipts.Snmptrapd.Source.Hostname
 
-	alert.Labels[of_snmp.FingerprintText] = a.fingerprint(alert)
+	alert.Labels[of_snmp.FingerprintText] = a.Fingerprint(alert)
 
 	return []of.Alert{alert}
 }
@@ -603,7 +603,7 @@ func (a *Alerter) enabled(defEnabled *bool, alertEnabled *bool) bool {
 }
 
 // Fingerprint the alert.
-func (a *Alerter) fingerprint(al of.Alert) string {
+func (a *Alerter) Fingerprint(al of.Alert) string {
 	labels := make(prommodel.LabelSet)
 	for k, v := range al.Labels {
 		labels[prommodel.LabelName(k)] = prommodel.LabelValue(v)
