@@ -78,7 +78,7 @@ func fireAlert(ag *snmp.Alerter, count int, t *testing.T) {
 	metrics := promMetrics(t)
 	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_alerts_generated_count{alertType=\"firing\",alert_oid=\".1.3.6.1.4.1.8164.1.2.1.1.1\"} %d", count))
 	require.Contains(t, metrics, "TestAlertFire_clearing_alert_count 0")
-	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_unknown_cluster_ip_count %d", count))
+	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_unknown_cluster_ip_count 0"))
 
 }
 
@@ -245,6 +245,36 @@ func newAlerter(t *testing.T) *snmp.Alerter {
 		CntrVec:  cntrVec,
 	}
 	return &ag
+}
+
+func TestFingerprint(t *testing.T) {
+	ag := newAlerter(t)
+
+	expectedAlert := of.Alert{
+		Labels: map[string]string{
+			"alertname":       "ISE_linkUp",
+			"alert_severity":  "info",
+			"source_address":  "dead:beef::1",
+			"source_hostname": "randomhost",
+			"subsystem":       "radware",
+			"vendor":          "cisco",
+			"alert_oid":       ".1.3.6.1.4.1.1872.2.5.7.0.154",
+		},
+	}
+	require.Equal(t, "5dc17c71ffb8f3e9", ag.Fingerprint(expectedAlert))
+
+	expectedAlert2 := of.Alert{
+		Labels: map[string]string{
+			"alert_oid":       ".1.3.6.1.4.1.1872.2.5.7.0.154",
+			"alertname":       "Alteon_HAGroupNewMasterTrap",
+			"alert_severity":  "warning",
+			"source_address":  "dead:beef::1",
+			"source_hostname": "randomhost",
+			"subsystem":       "radware",
+			"vendor":          "cisco",
+		},
+	}
+	require.Equal(t, "2fdaaf908f8b8703", ag.Fingerprint(expectedAlert2))
 }
 
 // Fetches current metrics.

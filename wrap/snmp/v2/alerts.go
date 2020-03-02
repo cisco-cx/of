@@ -108,7 +108,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &fAlert)
 
 				// Finger print the alert.
-				fingerprint := a.fingerprint(fAlert)
+				fingerprint := a.Fingerprint(fAlert)
 				fAlert.Labels[of_snmp.FingerprintText] = fingerprint
 
 				allAlerts = append(allAlerts, fAlert)
@@ -157,7 +157,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 						})
 
 						// Finger print the alert.
-						fingerprint := a.fingerprint(cAlert)
+						fingerprint := a.Fingerprint(cAlert)
 						cAlert.Labels[of_snmp.FingerprintText] = fingerprint
 
 						allAlerts = append(allAlerts, cAlert)
@@ -288,7 +288,7 @@ func (a *Alerter) Unknown(level string) []of.Alert {
 	alert.Labels["source_address"] = a.Receipts.Snmptrapd.Source.Address
 	alert.Labels["source_hostname"] = a.Receipts.Snmptrapd.Source.Hostname
 
-	alert.Labels[of_snmp.FingerprintText] = a.fingerprint(alert)
+	alert.Labels[of_snmp.FingerprintText] = a.Fingerprint(alert)
 
 	return []of.Alert{alert}
 }
@@ -439,7 +439,9 @@ func (a *Alerter) prepareBaseAlert(alert *of.Alert, cfg *of_snmp.Config) error {
 	// If no cluster is found or host type is not cluster.
 	if found == false {
 		a.Log.Debugf("Setting default source info for IP : %s", a.Receipts.Snmptrapd.Source.Address)
-		a.Cntr[unknownClusterIPCount].Incr()
+		if cfg.Defaults.SourceType == of_snmp.ClusterType {
+			a.Cntr[unknownClusterIPCount].Incr()
+		}
 		a.updateSource(alert)
 	}
 
@@ -603,7 +605,7 @@ func (a *Alerter) enabled(defEnabled *bool, alertEnabled *bool) bool {
 }
 
 // Fingerprint the alert.
-func (a *Alerter) fingerprint(al of.Alert) string {
+func (a *Alerter) Fingerprint(al of.Alert) string {
 	labels := make(prommodel.LabelSet)
 	for k, v := range al.Labels {
 		labels[prommodel.LabelName(k)] = prommodel.LabelValue(v)
