@@ -439,7 +439,9 @@ func (a *Alerter) prepareBaseAlert(alert *of.Alert, cfg *of_snmp.Config) error {
 	// If no cluster is found or host type is not cluster.
 	if found == false {
 		a.Log.Debugf("Setting default source info for IP : %s", a.Receipts.Snmptrapd.Source.Address)
-		a.Cntr[unknownClusterIPCount].Incr()
+		if cfg.Defaults.SourceType == of_snmp.ClusterType {
+			a.Cntr[unknownClusterIPCount].Incr()
+		}
 		a.updateSource(alert)
 	}
 

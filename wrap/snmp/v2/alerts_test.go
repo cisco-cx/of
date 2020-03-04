@@ -78,7 +78,7 @@ func fireAlert(ag *snmp.Alerter, count int, t *testing.T) {
 	metrics := promMetrics(t)
 	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_alerts_generated_count{alertType=\"firing\",alert_oid=\".1.3.6.1.4.1.8164.1.2.1.1.1\"} %d", count))
 	require.Contains(t, metrics, "TestAlertFire_clearing_alert_count 0")
-	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_unknown_cluster_ip_count %d", count))
+	require.Contains(t, metrics, fmt.Sprintf("TestAlertFire_unknown_cluster_ip_count 0"))
 
 }
 
