@@ -29,6 +29,7 @@ const (
 	alertsNotGeneratedCount = "alerts_not_generated_count"
 	unknownAlertsCount      = "unknown_alerts_count"
 	HandlerRestarted        = "handler_restarted"
+	alertsGenerationFailed  = "alerts_generation_failed_count"
 )
 
 type Service struct {
@@ -273,6 +274,14 @@ func InitCounters(namespace string, log *logger.Logger) (map[string]*prometheus.
 				Help:      "Number of times handler was restarted.",
 			},
 			labels: []string{"op_type"},
+		},
+		vectorInfo{
+			vector: &prometheus.CounterVec{
+				Namespace: namespace,
+				Name:      alertsGenerationFailed,
+				Help:      "Number of times alert generation failed.",
+			},
+			labels: []string{"alertType", "alert_oid"},
 		},
 	}
 

@@ -159,8 +159,27 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 						// Finger print the alert.
 						fingerprint := a.Fingerprint(cAlert)
 						cAlert.Labels[of_snmp.FingerprintText] = fingerprint
+						alertJson, err := json.Marshal(cAlert)
+						if err != nil {
+							a.CntrVec[alertsGenerationFailed].Incr(map[string]string{
+								"alertType": "clearing",
+								"alert_oid": v,
+							})
+							a.Log.WithError(err).Errorf("Failed to marshal clear alert, %+v", cAlert)
+							continue
+						}
+						newCAlert := of.Alert{}
+						err = json.Unmarshal(alertJson, &newCAlert)
+						if err != nil {
+							a.CntrVec[alertsGenerationFailed].Incr(map[string]string{
+								"alertType": "clearing",
+								"alert_oid": v,
+							})
+							a.Log.WithError(err).Errorf("Failed to unmarshal clear alert, %s", string(alertJson))
+							continue
+						}
 
-						allAlerts = append(allAlerts, cAlert)
+						allAlerts = append(allAlerts, newCAlert)
 						a.Log.WithFields(map[string]interface{}{
 							"alertType":   "clearing",
 							"labels":      cAlert.Labels,
@@ -171,7 +190,6 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 							"source":      a.Receipts.Snmptrapd.Source,
 							"config":      cfgName,
 						}).Debugf("Generated alerts")
-						alertJson, _ := json.Marshal(cAlert)
 						a.Log.Tracef("alert_json : %+v", string(alertJson))
 					}
 				}
@@ -211,6 +229,11 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 			})
 			allAlerts = append(allAlerts, a.Unknown("config")...)
 		}
+	}
+
+	if len(allAlerts) > 0 {
+		allAlertsJson, _ := json.Marshal(allAlerts)
+		a.Log.Tracef("all_alerts_json : %+v", string(allAlertsJson))
 	}
 	return allAlerts
 }

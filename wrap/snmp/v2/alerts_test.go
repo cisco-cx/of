@@ -2,6 +2,7 @@ package v2_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -108,13 +109,12 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 
 	expectedAlertTemplate := of.Alert{
 		Labels: map[string]string{
-			"alert_severity":    "error",
-			"alertname":         "nsoPackageLoadFailure",
-			"source_address":    "nso1.example.org",
-			"source_hostname":   "nso1.example.org",
-			"subsystem":         "nso",
-			"alert_fingerprint": "ab89464e06ae596f",
-			"vendor":            "cisco",
+			"alert_severity":  "error",
+			"alertname":       "nsoPackageLoadFailure",
+			"source_address":  "nso1.example.org",
+			"source_hostname": "nso1.example.org",
+			"subsystem":       "nso",
+			"vendor":          "cisco",
 		},
 		Annotations: map[string]string{
 			"event_id":                  "9dcc77fc-dda5-4edf-a683-64f2589036d6",
@@ -136,15 +136,28 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 	}
 
 	expectedAlerts := make([]of.Alert, 3)
-	OIDs := []string{
-		".1.3.6.1.4.1.24961.2.103.2.0.3",
-		".1.3.6.1.4.1.24961.2.103.2.0.4",
-		".1.3.6.1.4.1.24961.2.103.2.0.5",
+	OIDs := []map[string]string{
+		map[string]string{
+			"oid": ".1.3.6.1.4.1.24961.2.103.2.0.3",
+			"fp":  "ef451c2db05fdd5d",
+		},
+		map[string]string{
+			"oid": ".1.3.6.1.4.1.24961.2.103.2.0.4",
+			"fp":  "14b93f772f8125e0",
+		},
+		map[string]string{
+			"oid": ".1.3.6.1.4.1.24961.2.103.2.0.5",
+			"fp":  "ab89464e06ae596f",
+		},
 	}
 
 	for idx, val := range OIDs {
-		expectedAlertTemplate.Labels["alert_oid"] = val
-		expectedAlerts[idx] = expectedAlertTemplate
+		newAlert := of.Alert{}
+		alertJSON, _ := json.Marshal(expectedAlertTemplate)
+		json.Unmarshal(alertJSON, &newAlert)
+		newAlert.Labels["alert_oid"] = val["oid"]
+		newAlert.Labels["alert_fingerprint"] = val["fp"]
+		expectedAlerts[idx] = newAlert
 	}
 
 	// EndsAt is time.Now, so individually matching other components.
@@ -155,7 +168,7 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 	require.ElementsMatch(t, expectedAlerts, alerts)
 	metrics := promMetrics(t)
 	for _, val := range OIDs {
-		require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_alerts_generated_count{alertType=\"clearing\",alert_oid=\"%s\"} %d", val, count))
+		require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_alerts_generated_count{alertType=\"clearing\",alert_oid=\"%s\"} %d", val["oid"], count))
 	}
 	require.Contains(t, metrics, fmt.Sprintf("TestAlertClear_clearing_alert_count %d", count))
 	require.Contains(t, metrics, "TestAlertClear_unknown_cluster_ip_count 0")
