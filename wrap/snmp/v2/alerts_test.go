@@ -113,7 +113,7 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 			"source_address":    "nso1.example.org",
 			"source_hostname":   "nso1.example.org",
 			"subsystem":         "nso",
-			"alert_fingerprint": "ec92aefbceeb3cd4",
+			"alert_fingerprint": "ab89464e06ae596f",
 			"vendor":            "cisco",
 		},
 		Annotations: map[string]string{
@@ -275,6 +275,20 @@ func TestFingerprint(t *testing.T) {
 		},
 	}
 	require.Equal(t, "2fdaaf908f8b8703", ag.Fingerprint(expectedAlert2))
+
+	expectedAlert3 := of.Alert{
+		Labels: map[string]string{
+			"alert_oid":       ".1.3.6.1.4.1.8164.2.22",
+			"alert_severity":  "critical",
+			"alertname":       "starCardTempOverheat",
+			"source_address":  "192.168.1.28",
+			"source_hostname": "localhost",
+		},
+	}
+	require.Equal(t, "a046e8b60b11f977", ag.Fingerprint(expectedAlert3))
+
+	expectedAlert3.Labels["alert_fingerprint"] = "a046e8b60b11f977"
+	require.Equal(t, "a046e8b60b11f977", ag.Fingerprint(expectedAlert3))
 }
 
 // Fetches current metrics.

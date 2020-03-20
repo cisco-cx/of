@@ -78,7 +78,7 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 			"source_address":    "nso1.example.org",
 			"source_hostname":   "nso1.example.org",
 			"subsystem":         "nso",
-			"alert_fingerprint": "ec92aefbceeb3cd4",
+			"alert_fingerprint": "ab89464e06ae596f",
 			"vendor":            "cisco",
 		},
 		Annotations: map[string]string{
