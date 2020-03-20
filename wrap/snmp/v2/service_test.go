@@ -99,15 +99,31 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 		GeneratorURL: "http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.44",
 	}
 
-	for _, val := range []string{
-		".1.3.6.1.4.1.24961.2.103.2.0.3",
-		".1.3.6.1.4.1.24961.2.103.2.0.4",
-		".1.3.6.1.4.1.24961.2.103.2.0.5",
-	} {
-		expectedClearAlertTemplate.Labels["alert_oid"] = val
-		expectedClearAlertTemplate.StartsAt, err = time.Parse(time.RFC3339, "2019-04-26T03:46:57Z")
+	OIDs := []map[string]string{
+		map[string]string{
+			"oid": ".1.3.6.1.4.1.24961.2.103.2.0.3",
+			"fp":  "ef451c2db05fdd5d",
+		},
+		map[string]string{
+			"oid": ".1.3.6.1.4.1.24961.2.103.2.0.4",
+			"fp":  "14b93f772f8125e0",
+		},
+		map[string]string{
+			"oid": ".1.3.6.1.4.1.24961.2.103.2.0.5",
+			"fp":  "ab89464e06ae596f",
+		},
+	}
+
+	for _, val := range OIDs {
+		newAlert := of.Alert{}
+		alertJSON, _ := json.Marshal(expectedClearAlertTemplate)
+		err := json.Unmarshal(alertJSON, &newAlert)
 		require.NoError(as.t, err)
-		expectedAlerts = append(expectedAlerts, expectedClearAlertTemplate)
+		newAlert.Labels["alert_oid"] = val["oid"]
+		newAlert.Labels["alert_fingerprint"] = val["fp"]
+		newAlert.StartsAt, err = time.Parse(time.RFC3339, "2019-04-26T03:46:57Z")
+		require.NoError(as.t, err)
+		expectedAlerts = append(expectedAlerts, newAlert)
 	}
 
 	require.ElementsMatch(as.t, expectedAlerts, *alerts)
