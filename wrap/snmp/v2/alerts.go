@@ -608,6 +608,9 @@ func (a *Alerter) enabled(defEnabled *bool, alertEnabled *bool) bool {
 func (a *Alerter) Fingerprint(al of.Alert) string {
 	labels := make(prommodel.LabelSet)
 	for k, v := range al.Labels {
+		if k == "alert_fingerprint" {
+			continue
+		}
 		labels[prommodel.LabelName(k)] = prommodel.LabelValue(v)
 	}
 	return labels.Fingerprint().String()
