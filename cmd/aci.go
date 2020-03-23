@@ -61,10 +61,14 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 
 	cmd.Flags().String("aci-listen-address", "localhost:9011", "host:port on which to listen, for metrics scraping")
 	cmd.Flags().Int("aci-cycle-interval", 60, "Number of seconds to sleep between APIC -> AM notification cycles (default: 60)")
-	cmd.Flags().String("aci-am-url", "", "AlertManager's URL")
-	cmd.Flags().String("aci-host", "", "ACI host")
-	cmd.Flags().String("aci-user", "", "ACI username")
-	cmd.Flags().String("aci-password", "", "ACI password")
+	cmd.Flags().String("aci-am-url", "", "[Required] AlertManager's URL")
+	cmd.Flags().SetAnnotation("aci-am-url", "required", []string{"true"})
+	cmd.Flags().String("aci-host", "", "[Required] ACI host (Value is ignored when --aci-enable-consul is set")
+	cmd.Flags().SetAnnotation("aci-host", "required", []string{"true"})
+	cmd.Flags().String("aci-user", "", "[Required] ACI username")
+	cmd.Flags().SetAnnotation("aci-user", "required", []string{"true"})
+	cmd.Flags().String("aci-password", "", "[Required] ACI password")
+	cmd.Flags().SetAnnotation("aci-password", "required", []string{"true"})
 	cmd.Flags().String("aci-alerts-config", "alerts.yaml", "Alerts config file (default: alerts.yaml)")
 	cmd.Flags().String("aci-secrets-config", "secrets.yaml", "Secrets config file (default: secrets.yaml)")
 	cmd.Flags().Duration("aci-timeout", 10*time.Second, "ACI Read/Write timeout  (default: 10s)")
@@ -73,6 +77,7 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 	cmd.Flags().Int("aci-post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
 	cmd.Flags().Int("aci-sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
 	cmd.Flags().Int("aci-send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
+	cmd.Flags().Bool("aci-enable-consul", false, "Whether to use consul for host discovery (default: false)")
 
 	checkRequiredFlags(cmd, args, []string{})
 
@@ -106,6 +111,8 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 	cfg.PostTime = viper.GetInt("aci-post-time")
 	cfg.SleepTime = viper.GetInt("aci-sleep-time")
 	cfg.SendTime = viper.GetInt("aci-send-time")
+
+	cfg.ConsulEnabled = viper.GetBool("aci-enable-consul")
 
 	if strings.HasPrefix(cfg.AmURL, "http") == false {
 		log.Fatalf("aci-am-url must begin with http/https")

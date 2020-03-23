@@ -21,6 +21,7 @@ import (
 	"strings"
 	"time"
 
+	consul "github.com/hashicorp/consul/api"
 	"github.com/mitchellh/mapstructure"
 	of "github.com/cisco-cx/of/pkg/v1"
 	aci_config "github.com/cisco-cx/of/pkg/v1/aci"
@@ -69,7 +70,25 @@ func (h *Handler) Run() {
 	h.InitHandler()
 
 	go func() {
+		iter := 0
 		for {
+			if h.Config.ConsulEnabled {
+				nodes := h.GetConsulNodes()
+				h.Log.Debugf("ACI nodes received from consul: %s\n", nodes)
+				n := len(nodes)
+
+				if n != 0 {
+					// Round-Robin over the nodes
+					if iter >= n {
+						iter = 0
+					}
+					h.Config.SourceHostname = nodes[iter%n]
+					iter += 1
+				} else {
+					h.Log.Fatalf("No nodes could be found in consul. Consul config: %s", h.sc.Consul)
+				}
+			}
+
 			h.PushAlerts()
 			time.Sleep(time.Duration(h.Config.CycleInterval) * time.Second)
 		}
@@ -133,6 +152,29 @@ func (h *Handler) InitHandler() {
 			h.Log.WithError(err).Fatalf("Failed to init counter, %s", name)
 		}
 	}
+}
+
+// GetConsulNodes Lists the nodes from consul, matching given service and node metadata
+func (h *Handler) GetConsulNodes() []string {
+	config := consul.Config{Address: h.sc.Consul.Host}
+	consulClient, err := consul.NewClient(&config)
+	if err != nil {
+		h.Log.WithError(err).Fatalf("Failed to create Consul client")
+	}
+
+	queryOptions := consul.QueryOptions{NodeMeta: h.sc.Consul.NodeMeta}
+	service, _, err := consulClient.Catalog().Service(h.sc.Consul.Service, "", &queryOptions)
+
+	if err != nil {
+		h.Log.WithError(err).Fatalf("Failed to get Nodes from the Consul Service")
+	}
+
+	nodes := make([]string, 0)
+	for _, node := range service {
+		nodes = append(nodes, node.Node)
+	}
+
+	return nodes
 }
 
 // Pull ACI faults and forward to Alertmanager.

@@ -44,7 +44,8 @@ type AlertConfigFault struct {
 }
 
 type Secrets struct {
-	APIC SecretsConfigAPIC `yaml:"apic,omitempty"`
+	APIC   SecretsConfigAPIC `yaml:"apic,omitempty"`
+	Consul ConsulConfig      `yaml:"consul,omitempty"`
 }
 
 type SecretsConfigAPIC struct {
@@ -53,4 +54,10 @@ type SecretsConfigAPIC struct {
 
 type SecretsConfigAPICCluster struct {
 	Name string `yaml:"name,omitempty"`
+}
+
+type ConsulConfig struct {
+	Host     string            `yaml:"host"`
+	Service  string            `yaml:"service"`
+	NodeMeta map[string]string `yaml:"node_meta,omitempty"`
 }
