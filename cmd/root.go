@@ -17,7 +17,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -158,11 +157,12 @@ func checkRequiredFlags(cmd *cobra.Command, args []string, optArgs []string) {
 
 // Check if flag is set.
 func isFlagSet(f *pflag.Flag) bool {
-	// If flag value is not set return false
-	val := viper.Get(f.Name)
-	if val == reflect.Zero(reflect.TypeOf(val)).Interface() {
+	// If flag is "required" and is still no value is passed from commang line, return false
+	requiredAnnotation := f.Annotations["required"]
+	if len(requiredAnnotation) == 0 {
+		return true
+	} else if requiredAnnotation[0] == "true" && !f.Changed {
 		return false
 	}
-
 	return true
 }
