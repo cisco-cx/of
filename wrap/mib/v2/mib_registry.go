@@ -52,11 +52,7 @@ func (mib *MIBRegistry) ShortString(oid string) string {
 
 // Return display string for given OID.
 func (mib *MIBRegistry) String(oid string) string {
-	if value, hasValue := mib.index[oid]; hasValue == true {
-		return strings.Join(value, ".")
-	}
-	mib.index[oid] = mib.getStrOID(oid)
-	return mib.String(oid)
+	return strings.Join(mib.getStrOID(oid), ".")
 }
 
 func (mib *MIBRegistry) getStrOID(oid string) []string {
