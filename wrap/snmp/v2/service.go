@@ -2,7 +2,6 @@ package v2
 
 import (
 	"encoding/json"
-	"fmt"
 
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
@@ -186,26 +185,27 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 
 	configs := s.lookupConfigs(events)
 
+	var alerts []of.Alert
 	for index, event := range events {
 		snmptrapd := event.Document.Receipts.Snmptrapd
 		s.Alerter.Receipts = &event.Document.Receipts
 		s.Alerter.Value = NewValue(&snmptrapd.Vars, s.MR)
 
 		s.Log.WithFields(map[string]interface{}{"index": index, "timestamp": snmptrapd.Timestamp, "source": snmptrapd.Source}).Debugf("Processing event")
-		var alerts []of.Alert
 		if len(configs[index]) != 0 {
 			alerts = s.Alerter.Alert(configs[index])
 		} else {
 			alerts = s.Alerter.Unknown("lookup")
 		}
 
-		s.Log.Infof("Generated %d alerts for event[%s]", len(alerts), fmt.Sprintf("%d", index))
-		err := s.As.Notify(&alerts)
-		if err != nil {
-			s.Log.WithError(err).Errorf("Failed to publish alert(s) for received event")
-			continue
-		}
 		s.Cntr[eventsProcessedCount].Incr()
+	}
+	s.Log.Infof("Generated %d alerts ", len(alerts))
+	err := s.As.Notify(&alerts)
+	if err != nil {
+		s.Log.WithError(err).Errorf("Failed to publish alert(s) for received event")
+		s.Writer.WriteCode(w, r, 503, nil)
+		return
 	}
 	s.Writer.WriteCode(w, r, 200, nil)
 }
