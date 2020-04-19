@@ -196,7 +196,7 @@ func ParseSNMPHandlerFlags(cmd *cobra.Command, args []string) {
 	cmd.Flags().Bool("throttle", true, "Trottle posts to Alertmanager (default: true)")
 	cmd.Flags().Int("post-time", 300, "Approx time in ms, that it takes to HTTP POST to AM. (default: 300)")
 	cmd.Flags().Int("sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
-	cmd.Flags().Int("send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
+	cmd.Flags().Int("send-time", 10000, "Time in ms, to complete HTTP POST to AM. (default: 10000)")
 	cmd.Flags().Bool("dry-run", false, "Log generated alerts, instead of sending to Alertmanager. (default: false)")
 	cmd.Flags().Bool("log-unknown", false, "Log unknown alerts at info level. (default: false)")
 	cmd.Flags().Bool("forward-unknown", false, "send unknown alerts to Alertmanager. (default: false)")
