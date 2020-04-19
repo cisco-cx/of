@@ -105,7 +105,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 					"alert_oid": fAlert.Labels["alert_oid"],
 				})
 				a.StartsAt(&fAlert)
-				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &fAlert)
+				a.AutoClear(cfg.Defaults.EndsAt, alertCfg.EndsAt, &fAlert)
 
 				// Finger print the alert.
 				fingerprint := a.Fingerprint(fAlert)
@@ -141,8 +141,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 				// Add end time to clearing alerts.
 				cAlert.Annotations[string(of_snmp.EventTypeText)] = string(of_snmp.Clearing)
 				cAlert.EndsAt = time.Now().UTC()
-				a.StartsAt(&cAlert)
-				a.EndsAt(cfg.Defaults.EndsAt, alertCfg.EndsAt, &cAlert)
+				a.EndsAt(&cAlert)
 
 				a.Cntr[clearingEventCount].Incr()
 				// For `selects` under firing.
@@ -248,7 +247,17 @@ func (a *Alerter) StartsAt(alert *of.Alert) {
 	alert.StartsAt = t
 }
 
-func (a *Alerter) EndsAt(defEndsAt int, alertEndsAt int, alert *of.Alert) {
+func (a *Alerter) EndsAt(alert *of.Alert) {
+	t, err := time.Parse(time.RFC3339, a.Receipts.Snmptrapd.Timestamp)
+	if err != nil {
+		a.Log.WithError(err).Errorf("Failed to parse time from %s", a.Receipts.Snmptrapd.Timestamp)
+		return
+	}
+
+	alert.EndsAt = t
+}
+
+func (a *Alerter) AutoClear(defEndsAt int, alertEndsAt int, alert *of.Alert) {
 	if defEndsAt != 0 {
 		alert.EndsAt = time.Now().UTC().Add(time.Duration(defEndsAt) * time.Minute)
 	}

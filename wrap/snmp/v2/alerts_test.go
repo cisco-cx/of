@@ -104,7 +104,7 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 	// All possible alerts for given configs and trapVars.
 	alerts := ag.Alert([]string{"nso"})
 
-	startsAt, err := time.Parse(time.RFC3339, "2019-04-26T03:46:57Z")
+	endsAt, err := time.Parse(time.RFC3339, "2019-04-26T03:46:57Z")
 	require.NoError(t, err)
 
 	expectedAlertTemplate := of.Alert{
@@ -130,8 +130,8 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 			"event_vars_json":           "[{\"oid\":\".1.3.6.1.6.1.1.1.4.1\",\"oid_string\":\"1.3.6.1.6.1.1.1.4.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.6.1.1.1.4.1\",\"type\":\"\",\"value\":\".1.3.6.1.4.1.8164.1.2.1.1.1\"},{\"oid\":\".1.3.6.1.4.1.8164.1.2.1.1.1\",\"oid_string\":\"1.3.6.1.4.1.8164.1.2.1.1.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.8164.1.2.1.1.1\",\"type\":\"\",\"value\":\"14\"},{\"oid\":\".1.3.6.1.4.1.24961.2.103.1.1.5.1.2\",\"oid_string\":\"1.3.6.1.4.1.24961.2.103.1.1.5.1.2\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.24961.2.103.1.1.5.1.2\",\"type\":\"\",\"value\":\"package-load-failure\"},{\"oid\":\".1.3.6.1.2.1.1.3.0\",\"oid_string\":\"1.3.6.1.2.1.1.3.0\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.2.1.1.3.0\",\"type\":\"Timeticks\",\"value\":\"(123) 0:00:01.23\"},{\"oid\":\".1.3.6.1.6.3.1.1.4.1\",\"oid_string\":\"1.3.6.1.6.3.1.1.4.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.6.3.1.1.4.1\",\"type\":\"OID\",\"value\":\".1.3.6.1.4.1.8164.2.13\"},{\"oid\":\".1.3.6.1.6.3.1.1.4.1.0\",\"oid_string\":\"1.3.6.1.6.3.1.1.4.1.0\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.6.3.1.1.4.1.0\",\"type\":\"OID\",\"value\":\".1.3.6.1.4.1.8164.2.44\"},{\"oid\":\".1.3.6.1.4.1.8164.2.44\",\"oid_string\":\"1.3.6.1.4.1.8164.2.44\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.44\",\"type\":\"STRING\",\"value\":\"foo\"},{\"oid\":\".1.3.6.1.6.3.1.1.4.1.1\",\"oid_string\":\"1.3.6.1.6.3.1.1.4.1.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.6.3.1.1.4.1.1\",\"type\":\"OID\",\"value\":\".1.3.6.1.4.1.8164.2.45\"},{\"oid\":\".1.3.6.1.4.1.8164.2.45\",\"oid_string\":\"1.3.6.1.4.1.8164.2.45\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.45\",\"type\":\"OID\",\"value\":\".1.3.6.1.4.1.65000.1.1.1.1.1\"},{\"oid\":\".1.3.6.1.4.1.65000.1.1.1.1.1\",\"oid_string\":\"1.3.6.1.4.1.65000.1.1.1.1.1\",\"oid_uri\":\"http://www.oid-info.com/get/1.3.6.1.4.1.65000.1.1.1.1.1\",\"type\":\"STRING\",\"value\":\"bar\"}]",
 			"event_oid":                 ".1.3.6.1.4.1.8164.2.44",
 		},
-		StartsAt:     startsAt,
-		EndsAt:       time.Time{},
+		StartsAt:     time.Time{},
+		EndsAt:       endsAt,
 		GeneratorURL: "http://www.oid-info.com/get/1.3.6.1.4.1.8164.2.44",
 	}
 
@@ -162,9 +162,6 @@ func clearAlert(ag *snmp.Alerter, count int, t *testing.T) {
 
 	// EndsAt is time.Now, so individually matching other components.
 	require.Len(t, alerts, 3)
-	for idx, _ := range alerts {
-		alerts[idx].EndsAt = time.Time{}
-	}
 	require.ElementsMatch(t, expectedAlerts, alerts)
 	metrics := promMetrics(t)
 	for _, val := range OIDs {
@@ -211,23 +208,23 @@ func TestUnknownForwarding(t *testing.T) {
 	require.Len(t, alerts, 0)
 }
 
-// Test EndsAt.
-func TestEndsAt(t *testing.T) {
+// Test Auto Clear.
+func TestAutoClear(t *testing.T) {
 	ag := snmp.Alerter{}
 	alert := of.Alert{}
 
 	require.Equal(t, alert.EndsAt, time.Time{})
 
-	ag.EndsAt(0, 0, &alert)
+	ag.AutoClear(0, 0, &alert)
 	require.Equal(t, alert.EndsAt, time.Time{})
 
-	ag.EndsAt(10, 0, &alert)
+	ag.AutoClear(10, 0, &alert)
 	require.Equal(t, alert.EndsAt.Unix(), time.Now().Add(10*time.Minute).Unix())
 
-	ag.EndsAt(0, 20, &alert)
+	ag.AutoClear(0, 20, &alert)
 	require.Equal(t, alert.EndsAt.Unix(), time.Now().Add(20*time.Minute).Unix())
 
-	ag.EndsAt(10, 20, &alert)
+	ag.AutoClear(10, 20, &alert)
 	require.Equal(t, alert.EndsAt.Unix(), time.Now().Add(20*time.Minute).Unix())
 
 }

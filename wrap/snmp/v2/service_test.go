@@ -121,7 +121,6 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 		require.NoError(as.t, err)
 		newAlert.Labels["alert_oid"] = val["oid"]
 		newAlert.Labels["alert_fingerprint"] = val["fp"]
-		newAlert.StartsAt, err = time.Parse(time.RFC3339, "2019-04-26T03:46:57Z")
 		require.NoError(as.t, err)
 		expectedAlerts = append(expectedAlerts, newAlert)
 	}
