@@ -49,7 +49,7 @@ func TestDryRun(t *testing.T) {
 	err = as.Notify(alerts)
 	require.NoError(t, err)
 	dryRunContents := string(output.Bytes())
-	require.Contains(t, dryRunContents, "level=info msg=\"Dry run.\" file=\"alertmanager.go:75\" annotations=\"map[]\" endsAt=\"0001-01-01 00:00:00 +0000 UTC\" generatorURL= labels=\"map[dryRun:true]\" startsAt=\"0001-01-01 00:00:00 +0000 UTC\"")
+	require.Contains(t, dryRunContents, "level=info msg=\"Dry run.\" annotations=\"map[]\" endsAt=\"0001-01-01 00:00:00 +0000 UTC\" generatorURL= labels=\"map[dryRun:true]\" startsAt=\"0001-01-01 00:00:00 +0000 UTC\"")
 
 	// Disable dry run.
 	as.DryRun = false
