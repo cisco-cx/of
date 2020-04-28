@@ -15,24 +15,23 @@
 package v2
 
 import (
-	"fmt"
 	"io"
 	"log"
-	"path/filepath"
 	"runtime"
-	"sync"
 
 	"github.com/sirupsen/logrus"
 	of "github.com/cisco-cx/of/pkg/v2"
 )
 
-var mutex = &sync.Mutex{}
-
 // Represents loggo logger and fields to support structured logging.
 type Logger struct {
 	entry *logrus.Entry
-	// if true , Will clear any field that is set using WithField(s) call after a log line is logged/printed.
-	autoClearFields bool // Default: true
+}
+
+type WithLogger struct {
+	logger *Logger
+	fields map[string]interface{}
+	err    error
 }
 
 // Initiate logger.
@@ -45,40 +44,12 @@ func New() *Logger {
 	})
 	e := logrus.NewEntry(logger)
 	l := Logger{entry: e}
-	l.AutoClearFields(true)
 	return &l
 }
 
 // Log correct file name and line number from where Logger call was invoked.
 func prettyfier(r *runtime.Frame) (string, string) {
-
-	// Restrict the lookback frames to avoid runaway lookups
-	pcs := make([]uintptr, 25)
-	depth := runtime.Callers(4, pcs)
-	frames := runtime.CallersFrames(pcs[:depth])
-
-	for f, again := frames.Next(); again; f, again = frames.Next() {
-
-		file := filepath.Base(f.File)
-		// If the caller isn't part of logrus files, we're done
-		if file != "log.go" && file != "entry.go" {
-			return "", fmt.Sprintf("%s:%d", file, f.Line)
-		}
-	}
-
 	return "", ""
-}
-
-// if true , Will clear any field that is set using WithField(s) call after a log line is logged/printed.
-func (l *Logger) AutoClearFields(enabled bool) {
-	l.autoClearFields = enabled
-}
-
-// Reset all fields set by WithField(s) method.
-func (l *Logger) ClearFields() {
-	mutex.Lock()
-	defer mutex.Unlock()
-	l.entry.Data = make(logrus.Fields)
 }
 
 // Log at error level.
@@ -124,37 +95,36 @@ func (l *Logger) Warningf(msg string, args ...interface{}) {
 
 // Log the given error as a seperate field.
 func (l *Logger) WithError(err error) of.Logger {
-	mutex.Lock()
-	defer mutex.Unlock()
-	l.entry = l.entry.WithError(err)
-	return l
+	wl := WithLogger{
+		logger: l,
+		err:    err,
+	}
+	return &wl
 }
 
 // Add given key, value as custom field and value in log.
 func (l *Logger) WithField(k string, v interface{}) of.Logger {
-	mutex.Lock()
-	defer mutex.Unlock()
-	l.entry = l.entry.WithField(k, v)
-	return l
+	wl := WithLogger{
+		logger: l,
+		fields: map[string]interface{}{
+			k: v,
+		},
+	}
+	return &wl
 }
 
 // Add given key, value pairs as custom fields and values in log.
 func (l *Logger) WithFields(kv map[string]interface{}) of.Logger {
-	mutex.Lock()
-	defer mutex.Unlock()
-	l.entry = l.entry.WithFields(logrus.Fields(kv))
-	return l
+	wl := WithLogger{
+		logger: l,
+		fields: kv,
+	}
+	return &wl
 }
 
 // Log at given log level.
 func (l *Logger) Logf(level logrus.Level, msg string, args ...interface{}) {
-	mutex.Lock()
 	l.entry.Logf(level, msg, args...)
-	delete(l.entry.Data, logrus.ErrorKey)
-	mutex.Unlock()
-	if l.autoClearFields == true {
-		l.ClearFields()
-	}
 }
 
 // Set log level
@@ -177,4 +147,90 @@ func (l *Logger) SetOutput(w io.Writer) {
 // Change output. Default output is os.Stderr.
 func (l *Logger) Logger() *logrus.Logger {
 	return l.entry.Logger
+}
+
+// Log at given log level.
+func (wl *WithLogger) Logf(level logrus.Level, msg string, args ...interface{}) {
+	e := wl.logger.entry
+	if wl.err != nil {
+		e = e.WithError(wl.err)
+	}
+
+	if len(wl.fields) != 0 {
+		e = e.WithFields(wl.fields)
+	}
+	e.Logf(level, msg, args...)
+}
+
+// Log at error level.
+func (wl *WithLogger) Errorf(msg string, args ...interface{}) {
+	wl.Logf(logrus.ErrorLevel, msg, args...)
+}
+
+// Log at info level.
+func (wl *WithLogger) Infof(msg string, args ...interface{}) {
+	wl.Logf(logrus.InfoLevel, msg, args...)
+}
+
+// Log at fatal level.
+func (wl *WithLogger) Fatalf(msg string, args ...interface{}) {
+	if wl.logger.entry.Logger.IsLevelEnabled(logrus.FatalLevel) {
+		wl.Logf(logrus.FatalLevel, msg, args...)
+		wl.logger.entry.Logger.Exit(1)
+	}
+}
+
+// Log at debug level.
+func (wl *WithLogger) Debugf(msg string, args ...interface{}) {
+	wl.Logf(logrus.DebugLevel, msg, args...)
+}
+
+// Log at trace level.
+func (wl *WithLogger) Tracef(msg string, args ...interface{}) {
+	wl.Logf(logrus.TraceLevel, msg, args...)
+}
+
+// Log at warning level.
+func (wl *WithLogger) Warningf(msg string, args ...interface{}) {
+	wl.Logf(logrus.WarnLevel, msg, args...)
+}
+
+func (l *WithLogger) Panicf(msg string, args ...interface{}) {
+	l.logger.entry.Logger.Panicf(msg, args...)
+}
+
+// Log the given error as a seperate field.
+func (wl *WithLogger) WithError(err error) of.Logger {
+	wl.err = err
+	return wl
+}
+
+// Add given key, value as custom field and value in log.
+func (wl *WithLogger) WithField(k string, v interface{}) of.Logger {
+	wl.fields = map[string]interface{}{
+		k: v,
+	}
+	return wl
+}
+
+// Add given key, value pairs as custom fields and values in log.
+func (wl *WithLogger) WithFields(kv map[string]interface{}) of.Logger {
+	wl.fields = kv
+	return wl
+}
+
+// Set log level
+func (wl *WithLogger) SetLevel(level_str string) {
+	wl.logger.Panicf("Unsupported method.")
+}
+
+// Current log level
+func (wl *WithLogger) LogLevel() string {
+	wl.logger.Panicf("Unsupported method.")
+	return ""
+}
+
+// Change output. Default output is os.Stderr.
+func (wl *WithLogger) SetOutput(w io.Writer) {
+	wl.logger.Panicf("Unsupported method.")
 }
