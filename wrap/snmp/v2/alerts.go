@@ -367,7 +367,13 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 		return alert, of.ErrNoMatch
 	}
 
-	a.Log.WithField("alertType", alertType).Tracef("Alert matched.")
+	a.Log.WithFields(map[string]interface{}{
+		"alertType":        alertType,
+		"alertCfg":         alertCfg,
+		"SNMPTrapOIDValue": fixedAnnotations["event_oid"],
+		"selects":          selects,
+		"vars":             a.Receipts.Snmptrapd.Vars,
+	}).Debugf("Alert matched.")
 
 	// Prepare alert since the selects have matched.
 

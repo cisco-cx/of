@@ -32,16 +32,16 @@ const (
 )
 
 type Service struct {
-	Writer  of.Writer
-	Log     *logger.Logger
-	Configs *of_snmp.V2Config
-	MR      *mibs.MIBRegistry
-	U       of.UUIDGen
-	Lookup  of_snmp.Lookup
-	As      of.Notifier
-	Alerter *Alerter
-	Cntr    map[string]*prometheus.Counter
-	CntrVec map[string]*prometheus.CounterVec
+	Writer     of.Writer
+	Log        *logger.Logger
+	Configs    *of_snmp.V2Config
+	MR         *mibs.MIBRegistry
+	U          of.UUIDGen
+	Lookup     of_snmp.Lookup
+	As         of.Notifier
+	Cntr       map[string]*prometheus.Counter
+	CntrVec    map[string]*prometheus.CounterVec
+	SNMPConfig *of.SNMPConfig
 }
 
 func NewService(l *logger.Logger, cfg *of.SNMPConfig, cntr map[string]*prometheus.Counter, cntrVec map[string]*prometheus.CounterVec) (*Service, error) {
@@ -117,29 +117,18 @@ func NewService(l *logger.Logger, cfg *of.SNMPConfig, cntr map[string]*prometheu
 
 	u := uuid.UUID{}
 
-	ag := Alerter{
-		Log:            l,
-		Configs:        &v2Config,
-		MR:             mr,
-		U:              &u,
-		Cntr:           cntr,
-		CntrVec:        cntrVec,
-		LogUnknown:     cfg.LogUnknown,
-		ForwardUnknown: cfg.ForwardUnknown,
-	}
-
 	// INIT SNMP service.
 	s := &Service{
-		Writer:  herodot.New(l),
-		Log:     l,
-		MR:      mr,
-		Configs: &v2Config,
-		U:       &u,
-		As:      &as,
-		Lookup:  &lookup,
-		Alerter: &ag,
-		Cntr:    cntr,
-		CntrVec: cntrVec,
+		Writer:     herodot.New(l),
+		Log:        l,
+		MR:         mr,
+		Configs:    &v2Config,
+		U:          &u,
+		As:         &as,
+		Lookup:     &lookup,
+		Cntr:       cntr,
+		CntrVec:    cntrVec,
+		SNMPConfig: cfg,
 	}
 	return s, nil
 }
@@ -185,13 +174,24 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 
 	configs := s.lookupConfigs(events)
 
+	alerter := Alerter{
+		Log:            s.Log,
+		Configs:        s.Configs,
+		MR:             s.MR,
+		U:              s.U,
+		Cntr:           s.Cntr,
+		CntrVec:        s.CntrVec,
+		LogUnknown:     s.SNMPConfig.LogUnknown,
+		ForwardUnknown: s.SNMPConfig.ForwardUnknown,
+	}
+
 	var alerts []of.Alert
 	for index, event := range events {
 		snmptrapd := event.Document.Receipts.Snmptrapd
-		s.Alerter.Receipts = &event.Document.Receipts
-		s.Alerter.Value = NewValue(&snmptrapd.Vars, s.MR)
+		alerter.Receipts = &event.Document.Receipts
+		alerter.Value = NewValue(&snmptrapd.Vars, s.MR)
 
-		trapV, _ := s.Alerter.Value.Value(of_snmp.SNMPTrapOID)
+		trapV, _ := alerter.Value.Value(of_snmp.SNMPTrapOID)
 		s.Log.WithFields(map[string]interface{}{
 			"index":            index,
 			"timestamp":        snmptrapd.Timestamp,
@@ -199,9 +199,9 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 			"SNMPTrapOIDValue": trapV,
 		}).Infof("Processing event")
 		if len(configs[index]) != 0 {
-			alerts = s.Alerter.Alert(configs[index])
+			alerts = alerter.Alert(configs[index])
 		} else {
-			alerts = s.Alerter.Unknown("lookup")
+			alerts = alerter.Unknown("lookup")
 		}
 
 		s.Cntr[eventsProcessedCount].Incr()
