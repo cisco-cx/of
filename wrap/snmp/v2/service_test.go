@@ -190,28 +190,23 @@ func initService(t *testing.T, namespace string) *snmp.Service {
 	u := uuid.FixedUUID{}
 
 	cntr, cntrVec := snmp.InitCounters(namespace, l)
-
-	ag := snmp.Alerter{
-		Log:     l,
-		Configs: &v2Config,
-		MR:      mr,
-		U:       &u,
-		Cntr:    cntr,
-		CntrVec: cntrVec,
+	cfg := &of.SNMPConfig{
+		LogUnknown:     true,
+		ForwardUnknown: true,
 	}
 
 	// INIT SNMP service.
 	s := &snmp.Service{
-		Writer:  herodot.New(l),
-		Log:     l,
-		MR:      mr,
-		Configs: &v2Config,
-		U:       &u,
-		As:      &testAlertService{t: t},
-		Lookup:  &lookup,
-		Alerter: &ag,
-		Cntr:    cntr,
-		CntrVec: cntrVec,
+		Writer:     herodot.New(l),
+		Log:        l,
+		MR:         mr,
+		Configs:    &v2Config,
+		U:          &u,
+		As:         &testAlertService{t: t},
+		Lookup:     &lookup,
+		Cntr:       cntr,
+		CntrVec:    cntrVec,
+		SNMPConfig: cfg,
 	}
 	return s
 }
