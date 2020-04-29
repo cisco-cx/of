@@ -191,7 +191,13 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 		s.Alerter.Receipts = &event.Document.Receipts
 		s.Alerter.Value = NewValue(&snmptrapd.Vars, s.MR)
 
-		s.Log.WithFields(map[string]interface{}{"index": index, "timestamp": snmptrapd.Timestamp, "source": snmptrapd.Source}).Debugf("Processing event")
+		trapV, _ := s.Alerter.Value.Value(of_snmp.SNMPTrapOID)
+		s.Log.WithFields(map[string]interface{}{
+			"index":            index,
+			"timestamp":        snmptrapd.Timestamp,
+			"source":           snmptrapd.Source,
+			"SNMPTrapOIDValue": trapV,
+		}).Infof("Processing event")
 		if len(configs[index]) != 0 {
 			alerts = s.Alerter.Alert(configs[index])
 		} else {

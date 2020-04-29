@@ -59,16 +59,17 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 
 		// Identify device.
 		a.Log.WithFields(map[string]interface{}{
-			"vars":        a.Receipts.Snmptrapd.Vars,
-			"PduSecurity": a.Receipts.Snmptrapd.PduSecurity,
-			"config":      cfgName,
-		}).Debugf("Trying to identify device.")
+			"vars":             a.Receipts.Snmptrapd.Vars,
+			"PduSecurity":      a.Receipts.Snmptrapd.PduSecurity,
+			"config":           cfgName,
+			"SNMPTrapOIDValue": trapV,
+		}).Tracef("Trying to identify device.")
 
 		if a.deviceIdentified(cfg.Defaults.DeviceIdentifiers) == false {
 			a.Log.WithFields(map[string]interface{}{
-				"vars":        a.Receipts.Snmptrapd.Vars,
-				"PduSecurity": a.Receipts.Snmptrapd.PduSecurity,
-				"config":      cfgName,
+				"PduSecurity":      a.Receipts.Snmptrapd.PduSecurity,
+				"config":           cfgName,
+				"SNMPTrapOIDValue": trapV,
 			}).Debugf("Config not applicable for device.")
 			continue
 		}
@@ -82,7 +83,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 			var alertMatchedAlertCfg bool = false
 
 			// Check if alert is enabled.
-			a.Log.Debugf("Checking Alert no. %d (%v) in config: %s", aNum, alertCfg.Name, cfgName)
+			a.Log.Tracef("Checking Alert no. %d (%v) in config: %s", aNum, alertCfg.Name, cfgName)
 			var enabled = a.enabled(cfg.Defaults.Enabled, alertCfg.Enabled)
 
 			// Check if trap Vars have any alert matching firing conditions.
@@ -93,7 +94,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 
 				if enabled == false {
 					// Printing alert no., since alert name can be nil.
-					a.Log.Debugf("Alert no. %d (%v), not enabled in config: %s", aNum, alertCfg.Name, cfgName)
+					a.Log.Tracef("Alert no. %d (%v), not enabled in config: %s", aNum, alertCfg.Name, cfgName)
 					continue
 				}
 
@@ -121,7 +122,15 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 					"vars":        a.Receipts.Snmptrapd.Vars,
 					"source":      a.Receipts.Snmptrapd.Source,
 					"config":      cfgName,
-				}).Debugf("Generated alerts")
+				}).Tracef("Generated alerts")
+				a.Log.WithFields(map[string]interface{}{
+					"alertType":        "firing",
+					"labels":           fAlert.Labels,
+					"startsAt":         fAlert.StartsAt,
+					"endsAt":           fAlert.EndsAt,
+					"config":           cfgName,
+					"SNMPTrapOIDValue": trapV,
+				}).Infof("Generating alert")
 				alertJson, _ := json.Marshal(fAlert)
 				a.Log.Tracef("alert_json : %+v", string(alertJson))
 			}
@@ -134,7 +143,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 
 				if enabled == false {
 					// Printing alert no., since alert name can be nil.
-					a.Log.Debugf("Alert no. %d (%v), not enabled in config: %s", aNum, alertCfg.Name, cfgName)
+					a.Log.Tracef("Alert no. %d (%v), not enabled in config: %s", aNum, alertCfg.Name, cfgName)
 					continue
 				}
 
@@ -188,7 +197,15 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 							"vars":        a.Receipts.Snmptrapd.Vars,
 							"source":      a.Receipts.Snmptrapd.Source,
 							"config":      cfgName,
-						}).Debugf("Generated alerts")
+						}).Tracef("Generated alerts")
+						a.Log.WithFields(map[string]interface{}{
+							"alertType":        "clearing",
+							"labels":           cAlert.Labels,
+							"startsAt":         cAlert.StartsAt,
+							"endsAt":           cAlert.EndsAt,
+							"config":           cfgName,
+							"SNMPTrapOIDValue": trapV,
+						}).Infof("Generating alert")
 						a.Log.Tracef("alert_json : %+v", string(alertJson))
 					}
 				}
@@ -204,7 +221,7 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 					"config":           cfgName,
 					"SNMPTrapOIDValue": trapV,
 					"SNMPTrapOIDName":  trapVStrShort,
-				}).Debugf("No match found for alertCfg.")
+				}).Tracef("No match found for alertCfg.")
 
 				a.CntrVec[alertsNotGeneratedCount].Incr(map[string]string{
 					"level":     "alert",
@@ -217,10 +234,8 @@ func (a *Alerter) Alert(cfgNames []string) []of.Alert {
 		if alertMatchedConfig == false {
 			a.Log.WithFields(map[string]interface{}{
 				"config":           cfgName,
-				"vars":             a.Receipts.Snmptrapd.Vars,
 				"source":           a.Receipts.Snmptrapd.Source,
 				"SNMPTrapOIDValue": trapV,
-				"SNMPTrapOIDName":  trapVStrShort,
 			}).Debugf("No match found for config.")
 			a.CntrVec[alertsNotGeneratedCount].Incr(map[string]string{
 				"level":     "config",
@@ -348,11 +363,11 @@ func (a *Alerter) matchAlerts(cfg of_snmp.Config, alertCfg of_snmp.Alert, alertT
 	}
 
 	if matched == false {
-		a.Log.WithError(of.ErrNoMatch).WithField("alertType", alertType).Debugf("")
+		a.Log.WithError(of.ErrNoMatch).WithField("alertType", alertType).Tracef("")
 		return alert, of.ErrNoMatch
 	}
 
-	a.Log.WithField("alertType", alertType).Debugf("Alert matched.")
+	a.Log.WithField("alertType", alertType).Tracef("Alert matched.")
 
 	// Prepare alert since the selects have matched.
 
@@ -470,7 +485,7 @@ func (a *Alerter) prepareBaseAlert(alert *of.Alert, cfg *of_snmp.Config) error {
 
 	// If no cluster is found or host type is not cluster.
 	if found == false {
-		a.Log.Debugf("Setting default source info for IP : %s", a.Receipts.Snmptrapd.Source.Address)
+		a.Log.Tracef("Setting default source info for IP : %s", a.Receipts.Snmptrapd.Source.Address)
 		if cfg.Defaults.SourceType == of_snmp.ClusterType {
 			a.Cntr[unknownClusterIPCount].Incr()
 		}
