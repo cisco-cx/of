@@ -168,7 +168,8 @@ func isFlagSet(f *pflag.Flag) bool {
 	requiredAnnotation := f.Annotations["required"]
 	if len(requiredAnnotation) == 0 {
 		return true
-	} else if requiredAnnotation[0] == "true" && !f.Changed {
+	} else if requiredAnnotation[0] == "true" && viper.Get(f.Name) == f.DefValue {
+		// f.Changed gets set only when passed on command line, thus environment variables, even if set correctly, fail the check
 		return false
 	}
 	return true
