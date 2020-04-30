@@ -38,18 +38,28 @@ type WithLogger struct {
 func New() *Logger {
 	logger := logrus.New()
 	logger.SetReportCaller(true)
-	logger.SetFormatter(&logrus.TextFormatter{
-		CallerPrettyfier:       prettyfier,
-		DisableLevelTruncation: true,
-	})
 	e := logrus.NewEntry(logger)
 	l := Logger{entry: e}
+	l.EnableTextLogging()
 	return &l
 }
 
 // Log correct file name and line number from where Logger call was invoked.
 func prettyfier(r *runtime.Frame) (string, string) {
 	return "", ""
+}
+
+func (l *Logger) EnableJSONLogging() {
+	l.entry.Logger.SetFormatter(&logrus.JSONFormatter{
+		CallerPrettyfier: prettyfier,
+	})
+}
+
+func (l *Logger) EnableTextLogging() {
+	l.entry.Logger.SetFormatter(&logrus.TextFormatter{
+		CallerPrettyfier:       prettyfier,
+		DisableLevelTruncation: true,
+	})
 }
 
 // Log at error level.

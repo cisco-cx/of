@@ -15,7 +15,9 @@
 package v2_test
 
 import (
+	"bufio"
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -98,7 +100,8 @@ func TestConcurrentMods(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
 	require.NoError(t, err)
 	fileName := filepath.Join(dir, fmt.Sprintf("tc%d", time.Now().Unix()))
-	defer os.Remove(fileName)
+	fmt.Println(fileName)
+	//defer os.Remove(fileName)
 	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_RDWR|os.O_SYNC, 777)
 	require.NoError(t, err)
 	defer f.Close()
@@ -120,6 +123,50 @@ func TestConcurrentMods(t *testing.T) {
 	require.NoError(t, err)
 	for i := 0; i < count; i++ {
 		require.Contains(t, string(output), fmt.Sprintf("level=%s msg=\"Run %d\" error=\"No alert matched in alert config.\" key%d=value%d", "debug", i, i, i))
+	}
+}
+
+// Test concurrent modifications to fields with JSON formatter.
+func TestJSONConcurrentMods(t *testing.T) {
+	var count = 15000
+	dir, err := ioutil.TempDir("", "")
+	require.NoError(t, err)
+	fileName := filepath.Join(dir, fmt.Sprintf("tc%d", time.Now().Unix()))
+	defer os.Remove(fileName)
+	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_RDWR|os.O_SYNC, 777)
+	require.NoError(t, err)
+	defer f.Close()
+	log := logger.New()
+	log.SetOutput(f)
+	log.SetLevel("debug")
+	log.EnableJSONLogging()
+	wg := &sync.WaitGroup{}
+	for i := 0; i < count; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			iStr := fmt.Sprintf("%d", i)
+			log.WithError(of.ErrNoMatch).WithField("key"+iStr, "value"+iStr).Debugf("Run %d", i)
+		}(i)
+	}
+	wg.Wait()
+	f.Seek(0, 0)
+
+	logs := make(map[string]map[string]string)
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Bytes()
+		lineJson := make(map[string]string)
+		err := json.Unmarshal(line, &lineJson)
+		require.NoError(t, err)
+		logs[lineJson["msg"]] = lineJson
+	}
+
+	for i := 0; i < count; i++ {
+		line := logs[fmt.Sprintf("Run %d", i)]
+		key := fmt.Sprintf("key%d", i)
+		expectedValue := fmt.Sprintf("value%d", i)
+		require.Equal(t, expectedValue, line[key])
 	}
 }
 

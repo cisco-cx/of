@@ -61,8 +61,13 @@ var rootCmd = &cobra.Command{
 			return err
 		}
 		logLevel := viper.GetString("log-level")
+		jsonLogging := viper.GetBool("json-logging")
 		log.SetLevel(logLevel)
 		logv2.SetLevel(logLevel)
+		if jsonLogging == true {
+			log.EnableJSONLogging()
+			logv2.EnableJSONLogging()
+		}
 		log.Infof("Logging Enabled. Level : %s", log.LogLevel())
 		return nil
 	},
@@ -86,6 +91,8 @@ func Execute() {
 func init() {
 	// Define flags and configuration settings.
 	rootCmd.PersistentFlags().String("log-level", "info", "Log Level")
+	rootCmd.PersistentFlags().Bool("json-logging", false, "Enable logging in JSON format. (default: false)")
+
 	viper.BindPFlags(rootCmd.PersistentFlags())
 	// Define configuration settings.
 	cobra.OnInitialize(initConfig)
