@@ -10,7 +10,6 @@ import (
 	herodot "github.com/cisco-cx/of/wrap/herodot/v2"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
 	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
-	mibs "github.com/cisco-cx/of/wrap/mib/v2"
 	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 	uuid "github.com/cisco-cx/of/wrap/uuid/v2"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v2"
@@ -35,7 +34,7 @@ type Service struct {
 	Writer     of.Writer
 	Log        *logger.Logger
 	Configs    *of_snmp.V2Config
-	MR         *mibs.MIBRegistry
+	MR         of.MIBRegistry
 	U          of.UUIDGen
 	Lookup     of_snmp.Lookup
 	As         of.Notifier
@@ -210,9 +209,9 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 	var clearAlerts []of.Alert
 	for _, alert := range alerts {
 		if alert.EndsAt.IsZero() {
-			clearAlerts = append(clearAlerts, alert)
-		} else {
 			fireAlerts = append(fireAlerts, alert)
+		} else {
+			clearAlerts = append(clearAlerts, alert)
 		}
 	}
 	s.Log.Infof("Generated %d alerts firing : %d, clearing : %d", len(alerts), len(fireAlerts), len(clearAlerts))

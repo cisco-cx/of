@@ -1,4 +1,3 @@
----
 cpnr_system:
   defaults:
     source_type: cluster  # (host|cluster)...

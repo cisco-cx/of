@@ -61,10 +61,21 @@ func TestHandlerRun(t *testing.T) {
 	checkResponse(t, 200, "http://"+cfg.ListenAddress+"/api/v2/status", "{ AlertManager Client for SNMP Traps {https://github.com/cisco-cx/am-client-snmp} success}")
 
 	// Test Posting SNMP event
-	dataBytes, err := json.Marshal(TrapEvents())
+	docs := []of.Document{}
+	err = json.Unmarshal([]byte(StarEvents), &docs)
 	require.NoError(t, err)
 
-	data := bytes.NewBuffer(dataBytes)
+	events := make([]*of.PostableEvent, len(docs))
+	for i, doc := range docs {
+		events[i] = &of.PostableEvent{
+			Document: doc,
+		}
+	}
+
+	dataJson, err := json.Marshal(events)
+	require.NoError(t, err)
+
+	data := bytes.NewBuffer(dataJson)
 	c := http.NewClient()
 	req, err := http.NewRequest("Post", "http://"+cfg.ListenAddress+"/api/v2/events", data)
 	require.NoError(t, err)
