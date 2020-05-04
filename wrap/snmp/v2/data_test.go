@@ -557,7 +557,7 @@ var testEvents = `[{
   }]`
 
 // Test mibs data.
-func mibRegistry(t *testing.T) *mib_registry.MIBRegistry {
+func mibRegistry(t *testing.T) of.MIBRegistry {
 	mibs := map[string]of.MIB{
 		".1.3.6.1.2.1.1.3.0": of.MIB{
 			Name: "oid1",

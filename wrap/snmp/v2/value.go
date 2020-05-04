@@ -6,17 +6,16 @@ import (
 
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
-	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
 )
 
 // Implements of_snmp.ValueGenerator
 type Value struct {
 	vars map[string]string
-	mr   *mib_registry.MIBRegistry
+	mr   of.MIBRegistry
 }
 
 // Initialize Value. trapVars are converted into a map[oid]value
-func NewValue(trapVars *[]of.TrapVar, mr *mib_registry.MIBRegistry) *Value {
+func NewValue(trapVars *[]of.TrapVar, mr of.MIBRegistry) *Value {
 	vars := make(map[string]string)
 	for _, v := range *trapVars {
 		vars[v.Oid] = v.Value

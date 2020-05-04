@@ -9,7 +9,6 @@ import (
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
-	mibs "github.com/cisco-cx/of/wrap/mib/v2"
 	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 )
 
@@ -19,7 +18,7 @@ type Alerter struct {
 	Configs        *of_snmp.V2Config
 	Receipts       *of.Receipts
 	Value          *Value
-	MR             *mibs.MIBRegistry
+	MR             of.MIBRegistry
 	U              of.UUIDGen
 	Cntr           map[string]*prometheus.Counter
 	CntrVec        map[string]*prometheus.CounterVec
