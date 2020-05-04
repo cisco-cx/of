@@ -199,17 +199,32 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 			"SNMPTrapOIDValue": trapV,
 		}).Infof("Processing event")
 		if len(configs[index]) != 0 {
-			alerts = alerter.Alert(configs[index])
+			alerts = append(alerts, alerter.Alert(configs[index])...)
 		} else {
-			alerts = alerter.Unknown("lookup")
+			alerts = append(alerts, alerter.Unknown("lookup")...)
 		}
 
 		s.Cntr[eventsProcessedCount].Incr()
 	}
-	s.Log.Infof("Generated %d alerts ", len(alerts))
-	err := s.As.Notify(&alerts)
+	var fireAlerts []of.Alert
+	var clearAlerts []of.Alert
+	for _, alert := range alerts {
+		if alert.EndsAt.IsZero() {
+			clearAlerts = append(clearAlerts, alert)
+		} else {
+			fireAlerts = append(fireAlerts, alert)
+		}
+	}
+	s.Log.Infof("Generated %d alerts firing : %d, clearing : %d", len(alerts), len(fireAlerts), len(clearAlerts))
+	err := s.As.Notify(&fireAlerts)
 	if err != nil {
-		s.Log.WithError(err).Errorf("Failed to publish alert(s) for received event")
+		s.Log.WithError(err).Errorf("Failed to publish firing alert(s) for received event")
+		s.Writer.WriteCode(w, r, 503, nil)
+		return
+	}
+	err = s.As.Notify(&clearAlerts)
+	if err != nil {
+		s.Log.WithError(err).Errorf("Failed to publish clearing alert(s) for received event")
 		s.Writer.WriteCode(w, r, 503, nil)
 		return
 	}

@@ -121,22 +121,14 @@ func startFakeAM(t *testing.T, amAddress string) *http.Server {
 		var alerts []of_v2.Alert
 		err := json.NewDecoder(r.Body).Decode(&alerts)
 		require.NoError(t, err)
-		require.Len(t, alerts, 4)
-		expectedOIDStrs := []string{
-			"iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured",
-			"iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured",
-			"iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured",
-			"iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured",
-		}
-		eventOIDStrs := make([]string, 0)
+		expectedOIDStr := "iso.org.dod.internet.private.enterprises.starentMIB.starentTraps.starAAAAccServerMisconfigured"
 		for _, alert := range alerts {
 			for k, v := range alert.Annotations {
 				if k == "event_oid_string" {
-					eventOIDStrs = append(eventOIDStrs, v)
+					require.Equal(t, expectedOIDStr, v)
 				}
 			}
 		}
-		require.ElementsMatch(t, expectedOIDStrs, eventOIDStrs)
 	})
 
 	err := srv.ListenAndServe()
