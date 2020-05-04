@@ -25,17 +25,15 @@ type testAlertService struct {
 
 // Test Notify function.
 func (as *testAlertService) Notify(alerts *[]of.Alert) error {
-	require.Len(as.t, *alerts, 4)
-
-	nonEmpty := 0
-	for idx, alert := range *alerts {
-		if alert.EndsAt.IsZero() == false {
-			nonEmpty += 1
-			(*alerts)[idx].EndsAt = time.Time{}
-		}
+	if len(*alerts) == 3 {
+		as.verifyClearNotify(alerts)
+	} else {
+		as.verifyFireNotify(alerts)
 	}
+	return nil
+}
 
-	require.Equal(as.t, nonEmpty, 3)
+func (as *testAlertService) verifyFireNotify(alerts *[]of.Alert) {
 	expectedAlerts := []of.Alert{
 		of.Alert{
 			Labels: map[string]string{
@@ -70,6 +68,20 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 	var err error
 	expectedAlerts[0].StartsAt, err = time.Parse(time.RFC3339, "2019-04-26T03:46:57Z")
 	require.NoError(as.t, err)
+	require.ElementsMatch(as.t, expectedAlerts, *alerts)
+}
+
+func (as *testAlertService) verifyClearNotify(alerts *[]of.Alert) {
+
+	nonEmpty := 0
+	for idx, alert := range *alerts {
+		if alert.EndsAt.IsZero() == false {
+			nonEmpty += 1
+			(*alerts)[idx].EndsAt = time.Time{}
+		}
+	}
+
+	require.Equal(as.t, nonEmpty, 3)
 
 	expectedClearAlertTemplate := of.Alert{
 		Labels: map[string]string{
@@ -114,6 +126,7 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 		},
 	}
 
+	expectedAlerts := make([]of.Alert, 0)
 	for _, val := range OIDs {
 		newAlert := of.Alert{}
 		alertJSON, _ := json.Marshal(expectedClearAlertTemplate)
@@ -126,7 +139,6 @@ func (as *testAlertService) Notify(alerts *[]of.Alert) error {
 	}
 
 	require.ElementsMatch(as.t, expectedAlerts, *alerts)
-	return nil
 }
 
 func TestSNMPService(t *testing.T) {
