@@ -4,7 +4,6 @@ import (
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
-	mib_registry "github.com/cisco-cx/of/wrap/mib/v2"
 )
 
 type configs map[string]bool       // string -> config name. bool to be ignored, Not using array to avoid looping to dedup and search.
@@ -15,7 +14,7 @@ type lookupMap map[string]asMap    // string -> OID from select.
 type Lookup struct {
 	lm      lookupMap        // Lookup map
 	Configs of_snmp.V2Config // Concatenate list of configs
-	MR      *mib_registry.MIBRegistry
+	MR      of.MIBRegistry
 	Log     *logger.Logger
 }
 

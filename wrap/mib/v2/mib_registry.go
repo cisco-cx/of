@@ -28,7 +28,7 @@ type MIBRegistry struct {
 }
 
 // Return a new MIBRegistry pointer
-func New() *MIBRegistry {
+func New() of.MIBRegistry {
 	regs := make(map[string]*of.MIB)
 	index := make(map[string][]string)
 	return &MIBRegistry{
