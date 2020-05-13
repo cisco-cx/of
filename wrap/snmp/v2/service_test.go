@@ -24,16 +24,11 @@ type testAlertService struct {
 
 // Test Notify function.
 func (as *testAlertService) Notify(alerts *[]of.Alert) error {
-	if len(*alerts) == 3 {
-		as.verifyFireNotify(alerts)
-	} else {
-		as.verifyClearNotify(alerts)
-	}
+	as.verifyNotify(alerts)
 	return nil
 }
 
-func (as *testAlertService) verifyFireNotify(alerts *[]of.Alert) {
-
+func (as *testAlertService) verifyNotify(alerts *[]of.Alert) {
 	expectedLabels := []map[string]string{
 		map[string]string{
 			"alert_fingerprint": "26c5384f07068e37",
@@ -56,28 +51,20 @@ func (as *testAlertService) verifyFireNotify(alerts *[]of.Alert) {
 			"vendor":            "cisco",
 		},
 		map[string]string{
-			"alert_fingerprint": "a8e70c001d09366f",
-			"alert_oid":         ".1.3.6.1.4.1.8164.2.151",
+			"alert_fingerprint": "26c5384f07068e37",
+			"alert_oid":         ".1.3.6.1.4.1.8164.2.150",
 			"alert_severity":    "major",
-			"alertname":         "starTaskRestart",
+			"alertname":         "starTaskFailure",
 			"source_address":    "dead::beef",
 			"source_hostname":   "test-device-01",
 			"subsystem":         "config1",
 			"vendor":            "cisco",
 		},
-	}
-
-	compareLabels(as.t, alerts, expectedLabels)
-}
-
-func (as *testAlertService) verifyClearNotify(alerts *[]of.Alert) {
-
-	expectedLabels := []map[string]string{
 		map[string]string{
-			"alert_fingerprint": "26c5384f07068e37",
-			"alert_oid":         ".1.3.6.1.4.1.8164.2.150",
+			"alert_fingerprint": "a8e70c001d09366f",
+			"alert_oid":         ".1.3.6.1.4.1.8164.2.151",
 			"alert_severity":    "major",
-			"alertname":         "starTaskFailure",
+			"alertname":         "starTaskRestart",
 			"source_address":    "dead::beef",
 			"source_hostname":   "test-device-01",
 			"subsystem":         "config1",

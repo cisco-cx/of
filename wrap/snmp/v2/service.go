@@ -205,25 +205,10 @@ func (s Service) AlertHandler(w of.ResponseWriter, r of.Request) {
 
 		s.Cntr[eventsProcessedCount].Incr()
 	}
-	var fireAlerts []of.Alert
-	var clearAlerts []of.Alert
-	for _, alert := range alerts {
-		if alert.EndsAt.IsZero() {
-			fireAlerts = append(fireAlerts, alert)
-		} else {
-			clearAlerts = append(clearAlerts, alert)
-		}
-	}
-	s.Log.Infof("Generated %d alerts firing : %d, clearing : %d", len(alerts), len(fireAlerts), len(clearAlerts))
-	err := s.As.Notify(&fireAlerts)
+	s.Log.Infof("Generated %d alerts", len(alerts))
+	err := s.As.Notify(&alerts)
 	if err != nil {
 		s.Log.WithError(err).Errorf("Failed to publish firing alert(s) for received event")
-		s.Writer.WriteCode(w, r, 503, nil)
-		return
-	}
-	err = s.As.Notify(&clearAlerts)
-	if err != nil {
-		s.Log.WithError(err).Errorf("Failed to publish clearing alert(s) for received event")
 		s.Writer.WriteCode(w, r, 503, nil)
 		return
 	}
