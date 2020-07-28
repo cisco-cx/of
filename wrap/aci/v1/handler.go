@@ -54,6 +54,8 @@ const (
 	faultsUnmatchedCount    = "faults_unmatched_count"
 	faultsUnknownIgnored    = "faults_unknown_ignored_count"
 	notificationCycleCount  = "notification_cycle_count"
+	nodeMatchedCount        = "nodes_matched_count"
+	nodeUnmatchedCount      = "nodes_unmatched_count"
 )
 
 type Handler struct {
@@ -146,6 +148,10 @@ func (h *Handler) InitHandler() {
 			Help: "Number of times we found an alertConfig that mentioned the encountered fault code."},
 		faultsUnmatchedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: faultsUnmatchedCount,
 			Help: "Number of times we could not find an alertConfig that mentioned the encountered fault code."},
+		nodeMatchedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: nodeMatchedCount,
+			Help: "Number of times we matched an alarm to a node in nodes list."},
+		nodeUnmatchedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: nodeUnmatchedCount,
+			Help: "Number of times we failed to match an alarm to a node in nodes list."},
 		faultsUnknownIgnored: &prometheus.Counter{Namespace: h.Config.Application, Name: faultsUnknownIgnored,
 			Help: "Number of times we could not find an alertConfig that mentioned the encountered fault code and the fault was ignored."},
 		notificationCycleCount: &prometheus.Counter{Namespace: h.Config.Application, Name: notificationCycleCount,
@@ -200,6 +206,12 @@ func (h *Handler) PushAlerts() {
 	}
 	defer h.Aci.Logout()
 
+	nodes, err := h.Aci.NodeList()
+	if err != nil {
+		h.counters[apicConnectErrorCount].Incr()
+		h.Log.WithError(err).Errorf("Failed to get nodes.")
+		return
+	}
 	h.counters[apicConnectAttemptCount].Incr()
 	faults, err := h.Aci.Faults()
 	h.Log.Debugf("Retrieved %d faults from ACI", len(faults))
@@ -209,7 +221,7 @@ func (h *Handler) PushAlerts() {
 		return
 	}
 
-	alerts, err = h.FaultsToAlerts(faults)
+	alerts, err = h.FaultsToAlerts(faults, nodes)
 	h.Log.Debugf("Converted faults to %d alerts", len(alerts))
 	if err != nil {
 		h.Log.WithError(err).Errorf("Failed to convert faults to alerts.")
@@ -274,7 +286,7 @@ func (h *Handler) Throttle(totalCount int, f func(int, int)) {
 }
 
 // Convert acigo faults to Alertmanager alerts.
-func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error) {
+func (h *Handler) FaultsToAlerts(faults []of.Map, nodes map[string]map[string]interface{}) ([]*alertmanager.Alert, error) {
 	var alerts []*alertmanager.Alert
 	for _, mapFault := range faults {
 		h.Log.Tracef("Processing fault: %s\n", mapFault)
@@ -378,6 +390,11 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 			alert.EndsAt = faultLastTransition
 		}
 
+		// Identify node
+		if h.ac.IdentifyNode.Enabled == true {
+			h.IdentifyNode(alert, nodes)
+		}
+
 		alert.Labels[amAlertFingerprintLabel] = of.LabelValue(alert.Fingerprint())
 
 		// Debug sample code.
@@ -396,6 +413,30 @@ func (h *Handler) FaultsToAlerts(faults []of.Map) ([]*alertmanager.Alert, error)
 		h.counters[alertsGeneratedCount].Incr()
 	}
 	return alerts, nil
+
+}
+
+// Wrapper to update Labels with node and subsystem.
+func (h *Handler) IdentifyNode(alert *alertmanager.Alert, nodes map[string]map[string]interface{}) {
+	faultDN := alert.Annotations["fault_dn"]
+	if h.ac.IdentifyNode.DefaultSubsystem != "" {
+		alert.Labels["subsystem"] = of.LabelValue(h.ac.IdentifyNode.DefaultSubsystem)
+	}
+
+	if strings.HasPrefix(faultDN, "topology") {
+		nodeDN := strings.Join(strings.Split(faultDN, "/")[0:3], "/")
+		if nodeInfo, ok := nodes[nodeDN]; ok == true {
+			h.counters[nodeMatchedCount].Incr()
+			if h.ac.IdentifyNode.NodeLabel != "" {
+				alert.Labels[of.LabelName(h.ac.IdentifyNode.NodeLabel)] = of.LabelValue(nodeInfo["name"].(string))
+			}
+			if role, ok := h.ac.IdentifyNode.Subsystems[nodeInfo["role"].(string)]; ok == true {
+				alert.Labels["subsystem"] = of.LabelValue(role)
+			}
+		} else {
+			h.counters[nodeUnmatchedCount].Incr()
+		}
+	}
 
 }
 

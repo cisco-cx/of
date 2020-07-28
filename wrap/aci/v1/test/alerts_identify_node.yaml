@@ -1,0 +1,66 @@
+# alerts.yaml
+
+apic:
+  ## apic.alert_severity_threshold is the **APIC** (not syslog) severity threshold
+  ## below which all faults are handled as resolved.
+  ##
+  ## ref: https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/1-x/faults/guide/b_APIC_Faults_Errors/b_IFC_Faults_Errors_chapter_01.html
+  alert_severity_threshold: minor
+
+defaults:
+  ## defaults.alert_severity is the severity to use when alert not mapped in this config.
+  ## You must use a syslog severity value, e.g. "error", in this field.
+  alert_severity: error
+
+  ## NOTE: Annotations operations will be implemented in a future release.
+  # annotations:  ## order of operations: add, move, delete
+  #   add:
+  #   - sector: zero
+  #   move_to_label:
+  #   - fault_subject
+  #   - fault_cause
+  #   - sector
+  #   delete:
+  #   - fault_descr
+
+alerts:
+  apicFabricSelectorIssuesConfig:  ## human-defined alert name
+    ## alertSeverity at this level is the human-defined alert severity for a given alert.
+    ## You must use a syslog severity value, e.g. "error", in this field.
+    alert_severity: error
+
+    ## NOTE: Annotations operations will be implemented in a future release.
+    # annotations:  ## order of operations: add, move, delete
+    #   add:
+    #   - category: pager
+    #   - network: external
+    #   move_to_label:
+    #   - category
+    #   - network
+    #   delete: []
+
+    faults:  ## APIC fault codes to consider as causing this alert
+      F0020:  ## example of an APIC fault code
+        fault_name: fltFabricSelectorIssuesConfig-failed  ## from APIC doc
+
+dropped_faults:  ## faults that should never generate alerts
+  F3104:
+    fault_name: xxx  ## from APIC doc
+  F2100:
+    fault_name: yyy  ## from APIC doc
+  F675299:
+    fault_name: fsmFailHcloudHealthUpdateSyncHealth
+
+identify_node: ## Identify node based on role of node.
+  enabled: true ## If set to true, alert will have label `alarm_device` set to `name` in `topSystem` API.
+
+  default_subsystem: aci 
+  ## Default Value of `subsystem` label in alert, when `identify_node.enabled = true`
+  # To set subsystem when `identify_node.enabled = false`, use the static label feature.
+  
+  node_label: alarm_device ## Label for node name.
+
+  subsystems: ## Custom subsystem based on `role` of node.
+    controller: aci_controller
+    leaf: aci_leaf
+    spine: aci_spine
