@@ -15,11 +15,11 @@
 package aci
 
 type Alerts struct {
-	APIC          AlertsConfigAPIC                    `yaml:"apic,omitempty"`
-	Defaults      AlertsConfigDefaults                `yaml:"defaults,omitempty"`
-	DroppedFaults map[string]AlertsConfigDroppedFault `yaml:"dropped_faults,omitempty"`
-	Alerts        map[string]AlertConfig              `yaml:"alerts,omitempty"`
-	IdentifyNode  AlertsIdentifyNode                  `yaml:"identify_node,omitempty"`
+	APIC           AlertsConfigAPIC                    `yaml:"apic,omitempty"`
+	Defaults       AlertsConfigDefaults                `yaml:"defaults,omitempty"`
+	DroppedFaults  map[string]AlertsConfigDroppedFault `yaml:"dropped_faults,omitempty"`
+	Alerts         map[string]AlertConfig              `yaml:"alerts,omitempty"`
+	EnrichTopology AlertsEnrichTopology                `yaml:"enrich_topology,omitempty"`
 }
 
 type AlertsConfigAPIC struct {
@@ -31,7 +31,7 @@ type AlertsConfigDefaults struct {
 	AlertSeverity string `yaml:"alert_severity,omitempty"`
 }
 
-type AlertsIdentifyNode struct {
+type AlertsEnrichTopology struct {
 	Enabled          bool              `yaml:"enabled,omitempty"`
 	DefaultSubsystem string            `yaml:"default_subsystem,omitempty"`
 	Subsystems       map[string]string `yaml:"subsystems,omitempty"`

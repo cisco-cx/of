@@ -390,9 +390,9 @@ func (h *Handler) FaultsToAlerts(faults []of.Map, nodes map[string]map[string]in
 			alert.EndsAt = faultLastTransition
 		}
 
-		// Identify node
-		if h.ac.IdentifyNode.Enabled == true {
-			h.IdentifyNode(alert, nodes)
+		// Enrich topology
+		if h.ac.EnrichTopology.Enabled == true {
+			h.EnrichTopology(alert, nodes)
 		}
 
 		alert.Labels[amAlertFingerprintLabel] = of.LabelValue(alert.Fingerprint())
@@ -417,20 +417,20 @@ func (h *Handler) FaultsToAlerts(faults []of.Map, nodes map[string]map[string]in
 }
 
 // Wrapper to update Labels with node and subsystem.
-func (h *Handler) IdentifyNode(alert *alertmanager.Alert, nodes map[string]map[string]interface{}) {
+func (h *Handler) EnrichTopology(alert *alertmanager.Alert, nodes map[string]map[string]interface{}) {
 	faultDN := alert.Annotations["fault_dn"]
-	if h.ac.IdentifyNode.DefaultSubsystem != "" {
-		alert.Labels["subsystem"] = of.LabelValue(h.ac.IdentifyNode.DefaultSubsystem)
+	if h.ac.EnrichTopology.DefaultSubsystem != "" {
+		alert.Labels["subsystem"] = of.LabelValue(h.ac.EnrichTopology.DefaultSubsystem)
 	}
 
 	if strings.HasPrefix(faultDN, "topology") {
 		nodeDN := strings.Join(strings.Split(faultDN, "/")[0:3], "/")
 		if nodeInfo, ok := nodes[nodeDN]; ok == true {
 			h.counters[nodeMatchedCount].Incr()
-			if h.ac.IdentifyNode.NodeLabel != "" {
-				alert.Labels[of.LabelName(h.ac.IdentifyNode.NodeLabel)] = of.LabelValue(nodeInfo["name"].(string))
+			if h.ac.EnrichTopology.NodeLabel != "" {
+				alert.Labels[of.LabelName(h.ac.EnrichTopology.NodeLabel)] = of.LabelValue(nodeInfo["name"].(string))
 			}
-			if role, ok := h.ac.IdentifyNode.Subsystems[nodeInfo["role"].(string)]; ok == true {
+			if role, ok := h.ac.EnrichTopology.Subsystems[nodeInfo["role"].(string)]; ok == true {
 				alert.Labels["subsystem"] = of.LabelValue(role)
 			}
 		} else {
