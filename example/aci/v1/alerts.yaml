@@ -53,3 +53,28 @@ dropped_faults:  ## faults that should never generate alerts
     fault_name: yyy  ## from APIC doc
   F675299:
     fault_name: fsmFailHcloudHealthUpdateSyncHealth
+
+identify_node: ## Identify node based on role of node.
+  enabled: false ## If set to true, alert will have label `alarm_device` set to `name` in `topSystem` API.
+
+  default_subsystem: aci 
+  ## Default Value of `subsystem` label in alert, when `identify_node.enabled = true`
+  # To set subsystem when `identify_node.enabled = false`, use the static label feature.
+  
+  node_label: alarm_device ## Label for node name.
+
+  subsystems: ## Custom subsystem based on `role` of node.
+    controller: aci_controller
+    leaf: aci_leaf
+    spine: aci_spine
+
+  ## NOTE: Annotations operations will be implemented in a future release.
+  # annotations:  ## order of operations: add, move, delete
+  #   add:
+  #   - sector: zero
+  #   move_to_label:
+  #   - fault_subject
+  #   - fault_cause
+  #   - sector
+  #   delete:
+  #   - fault_descr
