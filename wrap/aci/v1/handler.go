@@ -25,11 +25,12 @@ import (
 	"github.com/mitchellh/mapstructure"
 	of "github.com/cisco-cx/of/pkg/v1"
 	aci_config "github.com/cisco-cx/of/pkg/v1/aci"
+	of_v2 "github.com/cisco-cx/of/pkg/v2"
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1"
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1"
-	http "github.com/cisco-cx/of/wrap/http/v1"
+	http "github.com/cisco-cx/of/wrap/http/v2"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
-	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v1"
+	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v1"
 )
 
@@ -54,19 +55,19 @@ const (
 	faultsUnmatchedCount    = "faults_unmatched_count"
 	faultsUnknownIgnored    = "faults_unknown_ignored_count"
 	notificationCycleCount  = "notification_cycle_count"
-	nodeMatchedCount        = "nodes_matched_count"
-	nodeUnmatchedCount      = "nodes_unmatched_count"
+	nodeEnriched            = "nodes_enriched_count"
 )
 
 type Handler struct {
-	Config   *of.ACIConfig
-	counters map[string]*prometheus.Counter
-	server   *http.Server
-	Aci      *acigo.ACIClient
-	Ams      *alertmanager.AlertService
-	ac       *yaml.Alerts
-	sc       *yaml.Secrets
-	Log      *logger.Logger
+	Config      *of.ACIConfig
+	counters    map[string]*prometheus.Counter
+	counterVecs map[string]*prometheus.CounterVec
+	server      *http.Server
+	Aci         *acigo.ACIClient
+	Ams         *alertmanager.AlertService
+	ac          *yaml.Alerts
+	sc          *yaml.Secrets
+	Log         *logger.Logger
 }
 
 func (h *Handler) Run() {
@@ -98,14 +99,14 @@ func (h *Handler) Run() {
 		}
 	}()
 
-	httpConfig := of.HTTPConfig{
+	httpConfig := of_v2.HTTPConfig{
 		ListenAddress: h.Config.ListenAddress,
 		ReadTimeout:   h.Config.ACITimeout,
 		WriteTimeout:  h.Config.ACITimeout,
 	}
 	h.server = http.NewServer(&httpConfig)
 
-	h.server.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
+	h.server.HandleFunc("/", func(w of_v2.ResponseWriter, r of_v2.Request) {
 		fmt.Fprint(w, h.Config.Version)
 	})
 
@@ -148,10 +149,6 @@ func (h *Handler) InitHandler() {
 			Help: "Number of times we found an alertConfig that mentioned the encountered fault code."},
 		faultsUnmatchedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: faultsUnmatchedCount,
 			Help: "Number of times we could not find an alertConfig that mentioned the encountered fault code."},
-		nodeMatchedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: nodeMatchedCount,
-			Help: "Number of times we matched an alarm to a node in nodes list."},
-		nodeUnmatchedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: nodeUnmatchedCount,
-			Help: "Number of times we failed to match an alarm to a node in nodes list."},
 		faultsUnknownIgnored: &prometheus.Counter{Namespace: h.Config.Application, Name: faultsUnknownIgnored,
 			Help: "Number of times we could not find an alertConfig that mentioned the encountered fault code and the fault was ignored."},
 		notificationCycleCount: &prometheus.Counter{Namespace: h.Config.Application, Name: notificationCycleCount,
@@ -163,6 +160,33 @@ func (h *Handler) InitHandler() {
 		if err != nil {
 			h.Log.WithError(err).Fatalf("Failed to init counter, %s", name)
 		}
+	}
+
+	// Represents the details needed to init a counter vector.
+	type vectorInfo struct {
+		vector *prometheus.CounterVec
+		labels []string
+	}
+
+	// Available vectors
+	vis := []vectorInfo{
+		vectorInfo{
+			vector: &prometheus.CounterVec{
+				Namespace: h.Config.Application,
+				Name:      nodeEnriched,
+				Help:      "Number of times we enriched topology.",
+			},
+			labels: []string{"fault_dn", "node_dn", "enriched", "node", "role"},
+		},
+	}
+
+	h.counterVecs = make(map[string]*prometheus.CounterVec)
+	for _, vi := range vis {
+		err := vi.vector.Create(vi.labels)
+		if err != nil {
+			h.Log.WithError(err).Fatalf("Failed to init counterVec, %s", vi.vector.Name)
+		}
+		h.counterVecs[vi.vector.Name] = vi.vector
 	}
 }
 
@@ -426,7 +450,13 @@ func (h *Handler) EnrichTopology(alert *alertmanager.Alert, nodes map[string]map
 	if strings.HasPrefix(faultDN, "topology") {
 		nodeDN := strings.Join(strings.Split(faultDN, "/")[0:3], "/")
 		if nodeInfo, ok := nodes[nodeDN]; ok == true {
-			h.counters[nodeMatchedCount].Incr()
+			h.counterVecs[nodeEnriched].Incr(map[string]string{
+				"fault_dn": faultDN,
+				"node_dn":  nodeDN,
+				"enriched": "true",
+				"node":     nodeInfo["name"].(string),
+				"role":     nodeInfo["role"].(string),
+			})
 			if h.ac.EnrichTopology.NodeLabel != "" {
 				alert.Labels[of.LabelName(h.ac.EnrichTopology.NodeLabel)] = of.LabelValue(nodeInfo["name"].(string))
 			}
@@ -434,7 +464,13 @@ func (h *Handler) EnrichTopology(alert *alertmanager.Alert, nodes map[string]map
 				alert.Labels["subsystem"] = of.LabelValue(role)
 			}
 		} else {
-			h.counters[nodeUnmatchedCount].Incr()
+			h.counterVecs[nodeEnriched].Incr(map[string]string{
+				"fault_dn": faultDN,
+				"node_dn":  nodeDN,
+				"enriched": "false",
+				"node":     "unknown",
+				"role":     "unknown",
+			})
 			h.Log.WithFields(map[string]interface{}{
 				"fault_dn": faultDN,
 				"node_dn":  nodeDN,
