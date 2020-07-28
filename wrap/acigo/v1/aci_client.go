@@ -39,6 +39,8 @@
 package v1
 
 import (
+	"strings"
+
 	"github.com/udhos/acigo/aci"
 
 	of "github.com/cisco-cx/of/pkg/v1"
@@ -89,6 +91,21 @@ func (c *ACIClient) Faults() ([]of.Map, error) {
 		mapstructure.NewMap(v).DecodeMap(&mm[i])
 	}
 	return mm, nil
+}
+
+// NodeList retrieves the list of top level system elements (APICs, spines, leaves).
+func (c *ACIClient) NodeList() (map[string]map[string]interface{}, error) {
+	nodeMap := make(map[string]map[string]interface{})
+	nodes, err := c.client.NodeList()
+	if err != nil {
+		return nodeMap, err
+	}
+	for _, node := range nodes {
+		c.Log.Tracef("Recieved node from ACI: %+v\n", node)
+		dn := strings.Replace(node["dn"].(string), "/sys", "", -1)
+		nodeMap[dn] = node
+	}
+	return nodeMap, nil
 }
 
 // Logout closes the API session.

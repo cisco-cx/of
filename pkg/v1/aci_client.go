@@ -42,5 +42,6 @@ package v1
 type ACIClient interface {
 	Login() error
 	Faults() ([]Map, error)
+	NodeList() (map[string]map[string]interface{}, error)
 	Logout() error
 }
