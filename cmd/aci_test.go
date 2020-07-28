@@ -30,13 +30,18 @@ func TestHandlerRun(t *testing.T) {
 	cfg.CycleInterval = 10
 	cfg.AmURL = "locahost:9093"
 	cfg.ACIHost = "::1"
+	cfg.User = "user"
+	cfg.Pass = "pass"
 
 	cfg.AlertsCFGFile = "test/alerts.yaml"
 	cfg.SecretsCFGFile = "test/secrets.yaml"
 
+	var err error
 	log := logger.New()
 	handler := *&aci.Handler{Config: cfg, Log: log}
-	handler.Aci = &acigo.ACIService{ACIConfig: cfg, Logger: log}
+	handler.Aci, err = acigo.NewACIClient(of.ACIClientConfig{Hosts: []string{cfg.SourceHostname},
+		User: cfg.User, Pass: cfg.Pass}, log)
+	require.NoError(t, err)
 	handler.Ams = &alertmanager.AlertService{AmURL: cfg.AmURL, Version: cfg.Version}
 	go handler.Run()
 

@@ -45,6 +45,8 @@ const (
 	amConnectErrorCount     = "am_connect_error_count"
 	apicConnectAttemptCount = "apic_connect_attempt_total"
 	apicConnectErrorCount   = "apic_connect_error_count"
+	apicLoginAttemptCount   = "apic_login_attempt_total"
+	apicLoginErrorCount     = "apic_login_error_count"
 	alertsGeneratedCount    = "alerts_generated_count"
 	faultsDroppedCount      = "faults_dropped_count"
 	faultsScrapedCount      = "faults_scraped_count"
@@ -58,7 +60,7 @@ type Handler struct {
 	Config   *of.ACIConfig
 	counters map[string]*prometheus.Counter
 	server   *http.Server
-	Aci      *acigo.ACIService
+	Aci      *acigo.ACIClient
 	Ams      *alertmanager.AlertService
 	ac       *yaml.Alerts
 	sc       *yaml.Secrets
@@ -130,6 +132,10 @@ func (h *Handler) InitHandler() {
 			Help: "Number of times we tried to connect to APIC."},
 		apicConnectErrorCount: &prometheus.Counter{Namespace: h.Config.Application, Name: apicConnectErrorCount,
 			Help: "Number of errors encountered while trying to connect to APIC."},
+		apicLoginAttemptCount: &prometheus.Counter{Namespace: h.Config.Application, Name: apicLoginAttemptCount,
+			Help: "Number of times we tried to login to APIC."},
+		apicLoginErrorCount: &prometheus.Counter{Namespace: h.Config.Application, Name: apicLoginErrorCount,
+			Help: "Number of errors encountered while trying to login to APIC."},
 		alertsGeneratedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: alertsGeneratedCount,
 			Help: "Number of times we generated an alert object for sending to AlertManager."},
 		faultsDroppedCount: &prometheus.Counter{Namespace: h.Config.Application, Name: faultsDroppedCount,
@@ -184,6 +190,15 @@ func (h *Handler) PushAlerts() {
 	var err error
 	h.counters[notificationCycleCount].Incr()
 	h.Log.Debugf("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
+
+	h.counters[apicLoginAttemptCount].Incr()
+	err = h.Aci.Login()
+	if err != nil {
+		h.counters[apicLoginErrorCount].Incr()
+		h.Log.WithError(err).Errorf("Failed to login.")
+		return
+	}
+	defer h.Aci.Logout()
 
 	h.counters[apicConnectAttemptCount].Incr()
 	faults, err := h.Aci.Faults()
