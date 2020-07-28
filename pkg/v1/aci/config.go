@@ -19,6 +19,7 @@ type Alerts struct {
 	Defaults      AlertsConfigDefaults                `yaml:"defaults,omitempty"`
 	DroppedFaults map[string]AlertsConfigDroppedFault `yaml:"dropped_faults,omitempty"`
 	Alerts        map[string]AlertConfig              `yaml:"alerts,omitempty"`
+	IdentifyNode  AlertsIdentifyNode                  `yaml:"identify_node,omitempty"`
 }
 
 type AlertsConfigAPIC struct {
@@ -28,6 +29,13 @@ type AlertsConfigAPIC struct {
 
 type AlertsConfigDefaults struct {
 	AlertSeverity string `yaml:"alert_severity,omitempty"`
+}
+
+type AlertsIdentifyNode struct {
+	Enabled          bool              `yaml:"enabled,omitempty"`
+	DefaultSubsystem string            `yaml:"default_subsystem,omitempty"`
+	Subsystems       map[string]string `yaml:"subsystems,omitempty"`
+	NodeLabel        string            `yaml:"node_label,omitempty"`
 }
 
 type AlertsConfigDroppedFault struct {
