@@ -38,10 +38,10 @@ func TestHandlerRun(t *testing.T) {
 
 	var err error
 	log := logger.New()
-	handler := *&aci.Handler{Config: cfg, Log: log}
-	handler.Aci, err = acigo.NewACIClient(of.ACIClientConfig{Hosts: []string{cfg.SourceHostname},
+	client, err := acigo.NewACIClient(of.ACIClientConfig{Hosts: []string{cfg.SourceHostname},
 		User: cfg.User, Pass: cfg.Pass}, log)
 	require.NoError(t, err)
+	handler := *&aci.Handler{Config: cfg, Log: log, Aci: client}
 	handler.Ams = &alertmanager.AlertService{AmURL: cfg.AmURL, Version: cfg.Version}
 	go handler.Run()
 

@@ -82,14 +82,13 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 	checkRequiredFlags(cmd, args, []string{})
 
 	config := ACIConfig(cmd)
-	handler := &aci.Handler{Config: config, Log: log}
 
-	var err error
-	handler.Aci, err = acigo.NewACIClient(of.ACIClientConfig{Hosts: []string{config.SourceHostname},
+	client, err := acigo.NewACIClient(of.ACIClientConfig{Hosts: []string{config.SourceHostname},
 		User: config.User, Pass: config.Pass}, log)
 	if err != nil {
 		log.WithError(err).Fatalf("Failed to get ACI client.")
 	}
+	handler := &aci.Handler{Config: config, Log: log, Aci: client}
 	handler.Ams = &alertmanager.AlertService{AmURL: config.AmURL, Version: config.Version}
 	handler.Run()
 }

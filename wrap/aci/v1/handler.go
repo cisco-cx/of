@@ -435,6 +435,10 @@ func (h *Handler) IdentifyNode(alert *alertmanager.Alert, nodes map[string]map[s
 			}
 		} else {
 			h.counters[nodeUnmatchedCount].Incr()
+			h.Log.WithFields(map[string]interface{}{
+				"fault_dn": faultDN,
+				"node_dn":  nodeDN,
+			}).Errorf("Failed to match fault with node.")
 		}
 	}
 
