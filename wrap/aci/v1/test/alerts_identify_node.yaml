@@ -51,7 +51,7 @@ dropped_faults:  ## faults that should never generate alerts
   F675299:
     fault_name: fsmFailHcloudHealthUpdateSyncHealth
 
-identify_node: ## Identify node based on role of node.
+enrich_topology: ## Identify node based on role of node.
   enabled: true ## If set to true, alert will have label `alarm_device` set to `name` in `topSystem` API.
 
   default_subsystem: aci 
