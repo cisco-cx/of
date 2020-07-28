@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -15,16 +16,17 @@ import (
 )
 
 const faultJson = "test/faultInst.json"
+const nodeJson = "test/node.json"
 
 // Test FaultToAlerts.
 func TestFaultToAlerts(t *testing.T) {
 	c := &of.ACIConfig{}
-	c.Application = "testing_handler"
+	c.Application = t.Name()
 	c.AlertsCFGFile = "test/alerts.yaml"
 	c.SecretsCFGFile = "test/secrets.yaml"
 	handler := &aci.Handler{Config: c, Log: logger.New()}
 	handler.InitHandler()
-	faults, err := handler.FaultsToAlerts(getFaults(t))
+	faults, err := handler.FaultsToAlerts(getFaults(t), getNodes(t))
 	require.NoError(t, err)
 	faults_json, err := json.Marshal(faults)
 	require.NoError(t, err)
@@ -34,6 +36,27 @@ func TestFaultToAlerts(t *testing.T) {
 	require.NoError(t, err)
 	md5sum := fmt.Sprintf("%x", hash.Sum(nil))
 	require.Equal(t, "2d61b4b093e4376be98d6b7aaf298ada", md5sum)
+}
+
+// Test FaultToAlerts.
+func TestIdentifyNodes(t *testing.T) {
+	c := &of.ACIConfig{}
+	c.Application = t.Name()
+	c.AlertsCFGFile = "test/alerts_identify_node.yaml"
+	c.SecretsCFGFile = "test/secrets.yaml"
+	handler := &aci.Handler{Config: c, Log: logger.New()}
+	handler.InitHandler()
+	faults, err := handler.FaultsToAlerts(getFaults(t), getNodes(t))
+	require.NoError(t, err)
+	faults_json, err := json.Marshal(faults)
+	require.NoError(t, err)
+	hash := md5.New()
+	_, err = hash.Write(faults_json)
+	require.NoError(t, err)
+	md5sum := fmt.Sprintf("%x", hash.Sum(nil))
+	// Hash of test result that handles, mapping to leaf, controller and spine,
+	// as well as alerts, where topology is present, but does not map to any node.
+	require.Equal(t, "8ce3e06e2cd306b0890be7bfb0a3ce75", md5sum)
 }
 
 //Test Throttle
@@ -53,6 +76,24 @@ func TestThrottle(t *testing.T) {
 	handler.Throttle(15000, f)
 	fmt.Printf("count : %d\n", count)
 	require.Equal(t, 75, count)
+}
+
+// Returns faults in faultJson file.
+func getNodes(t *testing.T) map[string]map[string]interface{} {
+	data, err := ioutil.ReadFile(nodeJson)
+	require.NoError(t, err)
+	require.NoError(t, err)
+
+	nodes := make([]map[string]interface{}, 0)
+	err = json.Unmarshal(data, &nodes)
+	require.NoError(t, err)
+
+	nodeMap := make(map[string]map[string]interface{})
+	for _, node := range nodes {
+		dn := strings.Replace(node["dn"].(string), "/sys", "", -1)
+		nodeMap[dn] = node
+	}
+	return nodeMap
 }
 
 // Returns faults in faultJson file.
