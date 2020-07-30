@@ -458,7 +458,11 @@ func (h *Handler) EnrichTopology(alert *alertmanager.Alert, nodes map[string]map
 				"role":     nodeInfo["role"].(string),
 			})
 			if h.ac.EnrichTopology.NodeLabel != "" {
-				alert.Labels[of.LabelName(h.ac.EnrichTopology.NodeLabel)] = of.LabelValue(nodeInfo["name"].(string))
+				nodeName := nodeInfo["name"].(string)
+				if strings.HasSuffix(nodeName, h.ac.EnrichTopology.NodeTLD) == false {
+					nodeName = fmt.Sprintf("%s%s", nodeName, h.ac.EnrichTopology.NodeTLD)
+				}
+				alert.Labels[of.LabelName(h.ac.EnrichTopology.NodeLabel)] = of.LabelValue(nodeName)
 			}
 			if role, ok := h.ac.EnrichTopology.Subsystems[nodeInfo["role"].(string)]; ok == true {
 				alert.Labels["subsystem"] = of.LabelValue(role)

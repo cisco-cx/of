@@ -56,7 +56,8 @@ func TestIdentifyNodes(t *testing.T) {
 	md5sum := fmt.Sprintf("%x", hash.Sum(nil))
 	// Hash of test result that handles, mapping to leaf, controller and spine,
 	// as well as alerts, where topology is present, but does not map to any node.
-	require.Equal(t, "8ce3e06e2cd306b0890be7bfb0a3ce75", md5sum)
+	// Handles TLD suffix too.
+	require.Equal(t, "94da3cdef371267fe04525b6889c94a9", md5sum)
 }
 
 //Test Throttle
