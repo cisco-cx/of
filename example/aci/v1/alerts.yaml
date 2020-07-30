@@ -62,6 +62,7 @@ enrich_topology: ## Identify node based on role of node.
   # To set subsystem when `identify_node.enabled = false`, use the static label feature.
   
   node_label: alarm_device ## Label for node name.
+  node_tld: .example.com  ## Top-Level Domain. If defined, value of `node_label` will be suffixed with TLD. 
 
   subsystems: ## Custom subsystem based on `role` of node.
     controller: aci_controller

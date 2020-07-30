@@ -36,6 +36,7 @@ type AlertsEnrichTopology struct {
 	DefaultSubsystem string            `yaml:"default_subsystem,omitempty"`
 	Subsystems       map[string]string `yaml:"subsystems,omitempty"`
 	NodeLabel        string            `yaml:"node_label,omitempty"`
+	NodeTLD          string            `yaml:"node_tld,omitempty"`
 }
 
 type AlertsConfigDroppedFault struct {
