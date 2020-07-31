@@ -46,11 +46,6 @@ clean:  ## Clean temporary files.
 docker:  ## Build a docker image for local dev.
 	docker build . -t of:local
 
-.PHONY: demo-docker
-demo-docker:  ## Run the demo using Docker image
-	# TODO: Use docker-compose and add Alertmanager.
-	docker run --rm --net=host -v /keybase/path -it of:local demo
-
 .PHONY: refine
 refine:  ## Run all formatters and static analysis.
 	@echo "==> Running all formatters and static analysis."
