@@ -6,6 +6,7 @@ require (
 	github.com/InVisionApp/go-health v2.1.0+incompatible
 	github.com/InVisionApp/go-logger v1.0.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a
+	github.com/cisco-cx/informer v0.0.0-20190919211820-fa476aa76966
 	github.com/ghodss/yaml v1.0.0
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/google/uuid v1.1.1
@@ -35,7 +36,7 @@ require (
 	github.com/udhos/acigo v0.0.0-20190702182318-b04b827bd920
 	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297 // indirect
 	golang.org/x/text v0.3.2 // indirect
+	gopkg.in/DATA-DOG/go-sqlmock.v1 v1.3.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8
 	gotest.tools v2.2.0+incompatible
-	github.com/cisco-cx/informer v0.0.0-20190919211820-a5093ad9e094
 )

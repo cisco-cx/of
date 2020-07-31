@@ -9,6 +9,8 @@ github.com/armon/go-metrics
 github.com/asaskevich/govalidator
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
+# github.com/cisco-cx/informer v0.0.0-20190919211820-fa476aa76966
+github.com/cisco-cx/informer/v1
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/fatih/color v1.9.0
@@ -141,5 +143,3 @@ gotest.tools/assert/cmp
 gotest.tools/internal/difflib
 gotest.tools/internal/format
 gotest.tools/internal/source
-# github.com/cisco-cx/informer v0.0.0-20190919211820-a5093ad9e094
-github.com/cisco-cx/informer/v1
