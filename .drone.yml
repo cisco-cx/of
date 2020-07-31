@@ -1,6 +1,7 @@
 ---
 kind: pipeline
 name: default
+type: docker
 
 platform:
   os: linux
@@ -18,13 +19,11 @@ steps:
   depends_on: [clone]
 
 - name: build_docker_image_PR
-  image: plugins/gcr
+  image: plugins/docker
   settings:
     dry_run: true
     registry: docker.io
     repo: ciscocx/of
-    json_key:
-      from_secret: gcr_credentials
   when:
     event:
     - pull_request
@@ -34,11 +33,13 @@ steps:
   depends_on: [clone]
 
 - name: of
-  image: plugins/gcr
+  image: plugins/docker
   settings:
     auto_tag: true
-    json_key:
-      from_secret: gcr_credentials
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
     registry: docker.io
     repo: ciscocx/of
   when:
@@ -64,5 +65,9 @@ steps:
     - refs/heads/master
     - refs/tags/*
 
+
+---
+kind: signature
+hmac: 64e0f6604f25b201ad4e912d591566b703891a816c4089a90266730618000d55
 
 ...
