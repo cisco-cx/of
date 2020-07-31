@@ -63,12 +63,8 @@ Starts a daemon for processing SNMP trap notifications into Alertmanager alerts.
 
 ## Docker Image
 
-Pulling this image from our private GCR registry requires prior configuration of `gcloud`. An introduction to how to configure `gcloud` for `docker pull` is mentioned [here](https://github.com/cisco-cx/kusanagi-sre-ao/tree/master/sandboxes/of#start-all-dockerized-services).
-
-[Tags](https://console.cloud.google.com/gcr/images/ciscocx/ASIA/of)
-
 ```bash
-docker pull docker.io/ciscocx/of:${DOCKER_TAG}  # Requires pre-existing gcloud config.
+docker pull docker.io/ciscocx/of:${DOCKER_TAG}
 ```
 
 ## Profiling
