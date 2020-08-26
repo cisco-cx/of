@@ -18,8 +18,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/cisco-cx/of/info"
 	of "github.com/cisco-cx/of/pkg/v1"
 	aci "github.com/cisco-cx/of/wrap/aci/v1"
@@ -27,6 +25,8 @@ import (
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1"
 	net "github.com/cisco-cx/of/wrap/net/v1"
 	profile "github.com/cisco-cx/of/wrap/profile/v1"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const staticLabelUsage = "Static labels to be added with each alert posted to Alertmanager. Expected format : 'label1=value1,label2=value2'"
@@ -78,13 +78,14 @@ func runACIHandler(cmd *cobra.Command, args []string) {
 	cmd.Flags().Int("aci-sleep-time", 100, "Time in ms, to sleep between HTTP POST to AM. (default: 100)")
 	cmd.Flags().Int("aci-send-time", 60000, "Time in ms, to complete HTTP POST to AM. (default: 60000)")
 	cmd.Flags().Bool("aci-enable-consul", false, "Whether to use consul for host discovery (default: false)")
+	cmd.Flags().Bool("aci-debug", false, "Enable debug level logs for acigo. (default: false)")
 
 	checkRequiredFlags(cmd, args, []string{})
 
 	config := ACIConfig(cmd)
 
 	client, err := acigo.NewACIClient(of.ACIClientConfig{Hosts: []string{config.SourceHostname},
-		User: config.User, Pass: config.Pass}, log)
+		User: config.User, Pass: config.Pass, Debug: config.Debug}, log)
 	if err != nil {
 		log.WithError(err).Fatalf("Failed to get ACI client.")
 	}
@@ -118,6 +119,7 @@ func ACIConfig(cmd *cobra.Command) *of.ACIConfig {
 	cfg.SendTime = viper.GetInt("aci-send-time")
 
 	cfg.ConsulEnabled = viper.GetBool("aci-enable-consul")
+	cfg.Debug = viper.GetBool("aci-debug")
 
 	if strings.HasPrefix(cfg.AmURL, "http") == false {
 		log.Fatalf("aci-am-url must begin with http/https")

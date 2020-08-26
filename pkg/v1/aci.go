@@ -67,4 +67,5 @@ type ACIConfig struct {
 	SleepTime      int
 	SendTime       int
 	ConsulEnabled  bool
+	Debug          bool
 }
