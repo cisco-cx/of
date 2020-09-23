@@ -127,7 +127,7 @@ github.com/spf13/viper
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/require
 github.com/stretchr/testify/assert
-# github.com/udhos/acigo v0.0.0-20200901023631-9fbde99297e7
+# github.com/udhos/acigo v0.0.0-20200923151928-251ab39d1e13
 github.com/udhos/acigo/aci
 # golang.org/x/sys v0.0.0-20200124204421-9fbb57f87de9
 golang.org/x/sys/windows
