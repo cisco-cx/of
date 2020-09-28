@@ -19,7 +19,6 @@ import (
 	"time"
 )
 
-type ResponseWriter http.ResponseWriter
 type Request *http.Request
 
 type HTTPConfig struct {
@@ -49,3 +48,11 @@ type Serve interface {
 
 // Represents HTTP client
 type Client http.Client
+
+// Represents HTTP ResponseWriter
+type ResponseWriter interface {
+	Header() http.Header
+	Write([]byte) (int, error)
+	WriteHeader(int)
+	StatusCode() int
+}
