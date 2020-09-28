@@ -8,11 +8,12 @@ import (
 
 // Interface to convert of.* to http.*
 type handlerOveride struct {
+	m          of.Measurer
 	serverHTTP func(of.ResponseWriter, of.Request)
 }
 
 // Pass on http.ResponseWriter and http.Request to of.Handler
 func (h *handlerOveride) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	wrappedRW := NewResponseWriter(rw)
-	h.serverHTTP(wrappedRW, r)
+	h.m.Measure(wrappedRW, r, h.serverHTTP)
 }

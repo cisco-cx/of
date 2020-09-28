@@ -31,6 +31,7 @@ type Server struct {
 	Srv *http.Server
 	Mux *http.ServeMux
 	G   Graceful
+	M   Measurer
 }
 
 // Represents HTTP handler
@@ -48,6 +49,11 @@ type Serve interface {
 
 // Represents HTTP client
 type Client http.Client
+
+// Represents HTTP Response code/time measurements
+type Measurer interface {
+	Measure(ResponseWriter, Request, func(ResponseWriter, Request))
+}
 
 // Represents HTTP ResponseWriter
 type ResponseWriter interface {
