@@ -127,7 +127,7 @@ func TestHealthChecker_State(t *testing.T) {
 	thc.msg = make(chan string, 1)
 
 	hc := &of.HTTPConfig{ListenAddress: "localhost:63333", ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second}
-	srv := http.NewServer(hc)
+	srv := http.NewServer(hc, t.Name())
 	srv.HandleFunc("/foo", thc.UrlHandler)
 	srv.HandleFunc("/bar", thc.UrlHandler)
 

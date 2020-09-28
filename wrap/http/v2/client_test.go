@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-	"gotest.tools/assert"
 	of "github.com/cisco-cx/of/pkg/v2"
 	http "github.com/cisco-cx/of/wrap/http/v2"
+	"github.com/stretchr/testify/require"
+	"gotest.tools/assert"
 )
 
 // Test http.Get
@@ -34,7 +34,7 @@ func startServer(t *testing.T, server_addr string) *http.Server {
 
 	c := &of.HTTPConfig{ListenAddress: server_addr}
 
-	srv := http.NewServer(c)
+	srv := http.NewServer(c, t.Name())
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, response_text)
 	})
