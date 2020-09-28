@@ -91,7 +91,8 @@ func (s *Server) Handle(pattern string, h of.Handler) {
 // HandleFunc registers the handler function for the given pattern.
 func (s *Server) HandleFunc(pattern string, h func(of.ResponseWriter, of.Request)) {
 	newHandler := func(rw http.ResponseWriter, r *http.Request) {
-		h(rw, r)
+		wrappedRW := NewResponseWriter(rw)
+		h(wrappedRW, r)
 	}
 	s.Mux.HandleFunc(pattern, newHandler)
 }
