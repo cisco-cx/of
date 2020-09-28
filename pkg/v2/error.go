@@ -24,7 +24,8 @@ const (
 	ErrCounterDestroyFailed = Error("Failed to remove counter.")
 
 	// CounterVec errors.
-	ErrCounterVecCreateFailed = Error("Failed to create counter vector.")
+	ErrCounterVecCreateFailed   = Error("Failed to create counter vector.")
+	ErrHistogramVecCreateFailed = Error("Failed to create histogram vector.")
 )
 
 // Error represents an OF error.
