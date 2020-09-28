@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v2"
 	am "github.com/cisco-cx/of/wrap/alertmanager/v2"
 	http "github.com/cisco-cx/of/wrap/http/v2"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDryRun(t *testing.T) {
@@ -20,7 +20,7 @@ func TestDryRun(t *testing.T) {
 
 	hc := &of.HTTPConfig{ListenAddress: addr, ReadTimeout: timeout, WriteTimeout: timeout}
 
-	srv := http.NewServer(hc)
+	srv := http.NewServer(hc, t.Name())
 	srv.HandleFunc("/api/v1/alerts", func(w of.ResponseWriter, r of.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	})

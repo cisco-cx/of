@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 	herodot "github.com/cisco-cx/of/wrap/herodot/v2"
@@ -15,6 +14,7 @@ import (
 	snmp "github.com/cisco-cx/of/wrap/snmp/v2"
 	uuid "github.com/cisco-cx/of/wrap/uuid/v2"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v2"
+	"github.com/stretchr/testify/require"
 )
 
 // Represents of.Notifier interface
@@ -85,7 +85,7 @@ func TestSNMPService(t *testing.T) {
 
 	hc := &of.HTTPConfig{ListenAddress: addr}
 
-	srv := http.NewServer(hc)
+	srv := http.NewServer(hc, t.Name())
 	srv.HandleFunc("/", s.AlertHandler)
 	err := srv.ListenAndServe()
 	require.NoError(t, err)
