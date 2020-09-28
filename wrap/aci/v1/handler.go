@@ -21,8 +21,6 @@ import (
 	"strings"
 	"time"
 
-	consul "github.com/hashicorp/consul/api"
-	"github.com/mitchellh/mapstructure"
 	of "github.com/cisco-cx/of/pkg/v1"
 	aci_config "github.com/cisco-cx/of/pkg/v1/aci"
 	of_v2 "github.com/cisco-cx/of/pkg/v2"
@@ -32,6 +30,8 @@ import (
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
 	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v1"
+	consul "github.com/hashicorp/consul/api"
+	"github.com/mitchellh/mapstructure"
 )
 
 // Alertmanager alert specific constants.
@@ -104,13 +104,12 @@ func (h *Handler) Run() {
 		ReadTimeout:   h.Config.ACITimeout,
 		WriteTimeout:  h.Config.ACITimeout,
 	}
-	h.server = http.NewServer(&httpConfig)
+	h.server = http.NewServer(&httpConfig, h.Config.Application)
 
 	h.server.HandleFunc("/", func(w of_v2.ResponseWriter, r of_v2.Request) {
 		fmt.Fprint(w, h.Config.Version)
 	})
 
-	h.server.Handle("/metrics", prometheus.NewHandler())
 	err := h.server.ListenAndServe()
 	if err != nil {
 		h.Log.WithError(err).Fatalf("Failed to listen at %s", h.Config.ListenAddress)

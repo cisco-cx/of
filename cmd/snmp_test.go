@@ -11,13 +11,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/spf13/cobra"
-	"github.com/stretchr/testify/require"
 	snmp_cmd "github.com/cisco-cx/of/cmd"
 	of_v2 "github.com/cisco-cx/of/pkg/v2"
 	http "github.com/cisco-cx/of/wrap/http/v2"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
 	snmp "github.com/cisco-cx/of/wrap/snmp/v2"
+	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/require"
 )
 
 // Test SNMP mibs pre process
@@ -112,7 +112,7 @@ func startFakeAM(t *testing.T, amAddress string) *http.Server {
 
 	hc := &of_v2.HTTPConfig{ListenAddress: amAddress, ReadTimeout: 1 * time.Second, WriteTimeout: 1 * time.Second}
 
-	srv := http.NewServer(hc)
+	srv := http.NewServer(hc, t.Name())
 	srv.HandleFunc("/-/healthy", func(w of_v2.ResponseWriter, r of_v2.Request) {
 		w.WriteHeader(http.StatusBadGateway)
 	})

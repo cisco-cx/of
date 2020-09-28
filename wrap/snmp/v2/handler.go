@@ -8,7 +8,6 @@ import (
 	health "github.com/cisco-cx/of/wrap/health/v2"
 	http "github.com/cisco-cx/of/wrap/http/v2"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
-	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 )
 
 type Handler struct {
@@ -42,7 +41,7 @@ func (h *Handler) Run() {
 	h.Log.Debugf("Init health check.")
 
 	// Configure HTTP server to handle various requests.
-	h.server = http.NewServer(&httpConfig)
+	h.server = http.NewServer(&httpConfig, h.Config.Application)
 
 	h.server.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		h.Log.Tracef("Version endpoint accessed.")
@@ -62,10 +61,6 @@ func (h *Handler) Run() {
 		w.WriteHeader(http.StatusOK)
 	})
 	h.Log.Debugf("Added health handler.")
-
-	// Handling prometheus calls.
-	h.server.Handle("/metrics", prometheus.NewHandler())
-	h.Log.Debugf("Added metrics handler.")
 
 	// Handling status calls.
 	h.server.HandleFunc("/api/v2/status", func(w of.ResponseWriter, r of.Request) {

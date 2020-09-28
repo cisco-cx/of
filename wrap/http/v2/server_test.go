@@ -5,9 +5,9 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v2"
 	http "github.com/cisco-cx/of/wrap/http/v2"
+	"github.com/stretchr/testify/require"
 )
 
 // Implementation of of.Handler to test http.Handle
@@ -30,7 +30,7 @@ func TestServer(t *testing.T) {
 
 	c := &of.HTTPConfig{ListenAddress: addr}
 
-	srv := http.NewServer(c)
+	srv := http.NewServer(c, t.Name())
 
 	err := srv.ListenAndServe()
 	require.NoError(t, err)
@@ -45,7 +45,7 @@ func TestHandleFunc(t *testing.T) {
 	addr := "localhost:64932"
 	c := &of.HTTPConfig{ListenAddress: addr}
 
-	srv := http.NewServer(c)
+	srv := http.NewServer(c, t.Name())
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, response_text)
 	})
@@ -62,7 +62,7 @@ func TestHandle(t *testing.T) {
 	addr := "localhost:64933"
 	c := &of.HTTPConfig{ListenAddress: addr}
 
-	srv := http.NewServer(c)
+	srv := http.NewServer(c, t.Name())
 	srv.Handle("/", &testHandler{})
 
 	err := srv.ListenAndServe()
