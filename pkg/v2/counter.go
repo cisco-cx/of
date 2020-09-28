@@ -31,3 +31,10 @@ type CounterVector interface {
 	Create([]string) error        // Labels.
 	Incr(map[string]string) error // map[Label]Value
 }
+
+// HistogramVector is a Domain Type that represents the options for creating
+// a HistogramVector is based on `prometheus/HistogramVector`
+type HistogramVector interface {
+	Create([]string) error            // Labels.
+	Observed([]string, float64) error // []LabelValues, seconds
+}
