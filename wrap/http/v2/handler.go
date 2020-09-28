@@ -13,5 +13,6 @@ type handlerOveride struct {
 
 // Pass on http.ResponseWriter and http.Request to of.Handler
 func (h *handlerOveride) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	h.serverHTTP(rw, r)
+	wrappedRW := NewResponseWriter(rw)
+	h.serverHTTP(wrappedRW, r)
 }
