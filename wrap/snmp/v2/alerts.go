@@ -5,11 +5,11 @@ import (
 	"strings"
 	"time"
 
-	prommodel "github.com/prometheus/common/model"
 	of "github.com/cisco-cx/of/pkg/v2"
 	of_snmp "github.com/cisco-cx/of/pkg/v2/snmp"
 	logger "github.com/cisco-cx/of/wrap/logrus/v2"
 	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
+	prommodel "github.com/prometheus/common/model"
 )
 
 // Implements of_snmp.AlertGenerator
@@ -518,7 +518,7 @@ func (a *Alerter) prepareBaseAlert(alert *of.Alert, cfg *of_snmp.Config) error {
 func (a *Alerter) fixedAnnotations() map[string]string {
 
 	enrichedVars := make([]map[string]string, len(a.Receipts.Snmptrapd.Vars))
-	var oid, eventStrOid, eventDesc string
+	var oid, eventStrOid, eventDesc, eventGenTime string
 	for i, v := range a.Receipts.Snmptrapd.Vars {
 
 		enrichedVar := make(map[string]string)
@@ -536,6 +536,9 @@ func (a *Alerter) fixedAnnotations() map[string]string {
 		enrichedVar["oid_string"] = a.MR.String(varOid)
 		enrichedVar["oid_uri"] = "http://www.oid-info.com/get/" + varOid
 		enrichedVars[i] = enrichedVar
+		if v.Oid == of_snmp.SysUpTime {
+			eventGenTime = v.Value
+		}
 		if v.Oid == of_snmp.SNMPTrapOID {
 			oid = v.Value
 			eventOid := oid[1:]
@@ -559,6 +562,7 @@ func (a *Alerter) fixedAnnotations() map[string]string {
 		"event_type":                "unknown",
 		"event_vars_json":           string(enrichedVarsJson),
 		"event_description":         eventDesc,
+		"event_generated_time":      eventGenTime,
 	}
 
 	return fixedAnnotations
