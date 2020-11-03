@@ -112,3 +112,18 @@ func (c *ACIClient) NodeList() (map[string]map[string]interface{}, error) {
 func (c *ACIClient) Logout() error {
 	return c.client.Logout()
 }
+
+// Allow set the ACI host on runtime
+func (c *ACIClient) SetHost(host string) {
+	c.client.Opt.Hosts = []string{host}
+}
+
+// Get the current ACI host
+func (c *ACIClient) GetHost() string {
+	if c != nil {
+		if len(c.client.Opt.Hosts) >= 1 {
+			return c.client.Opt.Hosts[0]
+		}
+	}
+	return ""
+}
