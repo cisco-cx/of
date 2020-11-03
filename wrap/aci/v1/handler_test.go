@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	of "github.com/cisco-cx/of/pkg/v1"
 	aci "github.com/cisco-cx/of/wrap/aci/v1"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
 	mapstructure "github.com/cisco-cx/of/wrap/mapstructure/v1"
+	"github.com/stretchr/testify/require"
 )
 
 const faultJson = "test/faultInst.json"
@@ -174,4 +174,33 @@ func mapGet(i interface{}, member string) (interface{}, error) {
 		return nil, fmt.Errorf("json mapGet: member [%s] not found", member)
 	}
 	return mem, nil
+}
+
+type DNSEntry struct {
+	Hostname string
+	Address  string
+	Result   bool
+}
+
+// Test DNS lookup.
+func TestVerifiedHost(t *testing.T) {
+	c := &of.ACIConfig{}
+	c.Application = t.Name()
+	c.AlertsCFGFile = "test/alerts.yaml"
+	c.SecretsCFGFile = "test/secrets.yaml"
+	handler := &aci.Handler{Config: c, Log: logger.New()}
+	handler.InitHandler()
+	entries := []DNSEntry{
+		{Hostname: "google.com", Address: "fe80::800:27ff:fe00:1", Result: false},
+		{Hostname: "www1.cisco.com.", Address: "2001:420:1101:1::a", Result: true},
+		{Hostname: "edge-star-mini6-shv-01-sjc3.facebook.com.", Address: "2a03:2880:f131:83:face:b00c:0:25de", Result: true},
+		{Hostname: "localhost", Address: "::1", Result: true},
+	}
+	for _, entry := range entries {
+		hostname, ip := handler.VerifiedHost(entry.Address)
+		if (ip == entry.Address && hostname == entry.Hostname) != entry.Result {
+			require.EqualValues(t, entry.Hostname, hostname)
+			require.EqualValues(t, entry.Address, ip)
+		}
+	}
 }

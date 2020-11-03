@@ -46,26 +46,25 @@ import (
 
 // Represents ACI settings.
 type ACIConfig struct {
-	Application    string
-	ListenAddress  string
-	CycleInterval  int
-	ACITimeout     time.Duration
-	AmURL          string
-	ACIHost        string
-	AlertsCFGFile  string
-	SecretsCFGFile string
-	Version        string
-	User           string
-	Pass           string
-	ac             aci_config.Alerts
-	sc             aci_config.Secrets
-	SourceHostname string
-	SourceAddress  string
-	StaticLabels   LabelMap
-	Throttle       bool
-	PostTime       int
-	SleepTime      int
-	SendTime       int
-	ConsulEnabled  bool
-	Debug          bool
+	Application        string
+	ListenAddress      string
+	CycleInterval      int
+	ACITimeout         time.Duration
+	AmURL              string
+	ACIHosts           []string
+	AlertsCFGFile      string
+	SecretsCFGFile     string
+	Version            string
+	User               string
+	Pass               string
+	ac                 aci_config.Alerts
+	sc                 aci_config.Secrets
+	StaticLabels       LabelMap
+	Throttle           bool
+	PostTime           int
+	SleepTime          int
+	SendTime           int
+	ConsulEnabled      bool
+	ConsulACIGroupHost string
+	Debug              bool
 }
