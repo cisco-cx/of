@@ -28,6 +28,7 @@ import (
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1"
 	http "github.com/cisco-cx/of/wrap/http/v2"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
+	net "github.com/cisco-cx/of/wrap/net/v1"
 	prometheus "github.com/cisco-cx/of/wrap/prometheus/client_golang/v2"
 	yaml "github.com/cisco-cx/of/wrap/yaml/v1"
 	consul "github.com/hashicorp/consul/api"
@@ -75,27 +76,27 @@ func (h *Handler) Run() {
 	h.InitHandler()
 
 	go func() {
-		iter := 0
+		nodes := h.Config.ACIHosts
 		for {
 			if h.Config.ConsulEnabled {
-				nodes := h.GetConsulNodes()
-				h.Log.Debugf("ACI nodes received from consul: %s\n", nodes)
-				n := len(nodes)
-
-				if n != 0 {
-					// Round-Robin over the nodes
-					if iter >= n {
-						iter = 0
-					}
-					h.Config.SourceHostname = nodes[iter%n]
-					iter += 1
-				} else {
-					h.Log.Fatalf("No nodes could be found in consul. Consul config: %s", h.sc.Consul)
-				}
+				nodes = h.GetConsulNodes()
+				h.Log.Infof("ACI nodes received from consul: %s\n", nodes)
 			}
-
-			h.PushAlerts()
-			time.Sleep(time.Duration(h.Config.CycleInterval) * time.Second)
+			if len(nodes) <= 0 {
+				h.Log.Warningf("Empty host list.\n")
+			}
+			startTime := time.Now()
+			for i := 0; i < len(nodes); i++ {
+				h.Log.Debugf("Fetching errors from %s\n", nodes[i])
+				h.Aci.SetHost(nodes[i])
+				h.PushAlerts()
+			}
+			elapsedTime := time.Duration(time.Since(startTime).Seconds())
+			sleepTime := time.Duration(h.Config.CycleInterval) - elapsedTime
+			if sleepTime > 0 {
+				h.Log.Debugf("Sleeping for %d seconds.\n", sleepTime)
+				time.Sleep(sleepTime * time.Second)
+			}
 		}
 	}()
 
@@ -198,6 +199,12 @@ func (h *Handler) GetConsulNodes() []string {
 	}
 
 	queryOptions := consul.QueryOptions{NodeMeta: h.sc.Consul.NodeMeta}
+	if queryOptions.NodeMeta == nil {
+		queryOptions.NodeMeta = make(map[string]string)
+	}
+	if strings.TrimSpace(h.Config.ConsulACIGroupHost) != "" {
+		queryOptions.NodeMeta["aci-group-host"] = h.Config.ConsulACIGroupHost
+	}
 	service, _, err := consulClient.Catalog().Service(h.sc.Consul.Service, "", &queryOptions)
 
 	if err != nil {
@@ -218,7 +225,7 @@ func (h *Handler) PushAlerts() {
 	var alerts []*alertmanager.Alert
 	var err error
 	h.counters[notificationCycleCount].Incr()
-	h.Log.Debugf("Running APIC -> AlertManager notification cycle. (cycle-sleep-seconds=%d)\n", h.Config.CycleInterval)
+	h.Log.Debugf("Running APIC -> AlertManager notification cycle.\n")
 
 	h.counters[apicLoginAttemptCount].Incr()
 	err = h.Aci.Login()
@@ -269,8 +276,6 @@ func (h *Handler) PushAlerts() {
 	} else {
 		h.Log.Errorf("No faults found")
 	}
-
-	h.Log.Debugf("Notification cycle succeeded. Sleeping for %d seconds.\n", h.Config.CycleInterval)
 }
 
 // Divide alerts into smaller chunks and spread posting to Alertmanager over h.Config.SendTime milliseconds.
@@ -369,8 +374,7 @@ func (h *Handler) FaultsToAlerts(faults []of.Map, nodes map[string]map[string]in
 
 		sub_id, _ := fp.SubID()
 		alert.Labels["sub_id"] = of.LabelValue(sub_id)
-		alert.Annotations["source_address"] = h.Config.SourceAddress
-		alert.Annotations["source_hostname"] = h.Config.SourceHostname
+		alert.Annotations["source_hostname"], alert.Annotations["source_address"] = h.VerifiedHost(h.Aci.GetHost())
 
 		// Try to find this fault code in alerts config.
 		alertName, newAlertConfig, err := h.GetAlertConfig(f)
@@ -437,6 +441,49 @@ func (h *Handler) FaultsToAlerts(faults []of.Map, nodes map[string]map[string]in
 	}
 	return alerts, nil
 
+}
+
+// Do a forward and reverse lookup to verify the ACI Host.
+// If DNS entry is found, Hostname and IP from DNS Query is returned
+// else aciHost is returned
+func (h *Handler) VerifiedHost(aciHost string) (string, string) {
+
+	hostname := aciHost
+	ipAddr := aciHost
+
+	// DNS reverse lookup
+	ip, err := net.NewIP(aciHost)
+	if err != nil {
+		h.Log.WithError(err).Errorf("")
+	}
+
+	hostnames, err := ip.Hostnames()
+	if err != nil {
+		h.Log.WithError(err).Errorf("Failed to find hostname.")
+	}
+	if len(hostnames) == 0 {
+		h.Log.Errorf("No reverse lookup available for %s", ip.String())
+	} else {
+		hostname = string(hostnames[0])
+	}
+
+	// DNS forward lookup
+	host, err := net.NewHostname(hostname)
+	if err != nil {
+		h.Log.WithError(err).Fatalf("")
+	}
+
+	var ips []of.IP
+	ips, err = host.IPv6()
+	if err != nil || len(ips) == 0 {
+		ips, err = host.IPv4()
+	}
+
+	if err == nil && len(ips) != 0 {
+		ipAddr = string(ips[len(ips)-1])
+	}
+
+	return hostname, ipAddr
 }
 
 // Wrapper to update Labels with node and subsystem.

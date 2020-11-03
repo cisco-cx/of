@@ -5,22 +5,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
-	"gotest.tools/assert"
-	"github.com/cisco-cx/of/cmd"
 	of "github.com/cisco-cx/of/pkg/v1"
 	aci "github.com/cisco-cx/of/wrap/aci/v1"
 	acigo "github.com/cisco-cx/of/wrap/acigo/v1"
 	alertmanager "github.com/cisco-cx/of/wrap/alertmanager/v1"
 	http "github.com/cisco-cx/of/wrap/http/v1"
 	logger "github.com/cisco-cx/of/wrap/logrus/v1"
+	"github.com/stretchr/testify/require"
+	"gotest.tools/assert"
 )
-
-type DNSEntry struct {
-	Hostname string
-	Address  string
-	Result   bool
-}
 
 // Test handler.run
 func TestHandlerRun(t *testing.T) {
@@ -29,7 +22,7 @@ func TestHandlerRun(t *testing.T) {
 	cfg.ListenAddress = "127.0.0.1:9011"
 	cfg.CycleInterval = 10
 	cfg.AmURL = "locahost:9093"
-	cfg.ACIHost = "::1"
+	cfg.ACIHosts = []string{"::1"}
 	cfg.User = "user"
 	cfg.Pass = "pass"
 
@@ -38,8 +31,7 @@ func TestHandlerRun(t *testing.T) {
 
 	var err error
 	log := logger.New()
-	client, err := acigo.NewACIClient(of.ACIClientConfig{Hosts: []string{cfg.SourceHostname},
-		User: cfg.User, Pass: cfg.Pass}, log)
+	client, err := acigo.NewACIClient(of.ACIClientConfig{User: cfg.User, Pass: cfg.Pass}, log)
 	require.NoError(t, err)
 	handler := *&aci.Handler{Config: cfg, Log: log, Aci: client}
 	handler.Ams = &alertmanager.AlertService{AmURL: cfg.AmURL, Version: cfg.Version}
@@ -55,21 +47,4 @@ func TestHandlerRun(t *testing.T) {
 	require.NoError(t, err)
 	require.Contains(t, string(all), "testing_aci_notification_cycle_count 1")
 	handler.Shutdown()
-}
-
-// Test DNS lookup.
-func TestVerifiedHost(t *testing.T) {
-	entries := []DNSEntry{
-		{Hostname: "google.com", Address: "fe80::800:27ff:fe00:1", Result: false},
-		{Hostname: "www1.cisco.com.", Address: "2001:420:1101:1::a", Result: true},
-		{Hostname: "edge-star-mini6-shv-01-sjc3.facebook.com.", Address: "2a03:2880:f131:83:face:b00c:0:25de", Result: true},
-		{Hostname: "localhost", Address: "::1", Result: true},
-	}
-	for _, entry := range entries {
-		hostname, ip := cmd.VerifiedHost(entry.Address)
-		if (ip == entry.Address && hostname == entry.Hostname) != entry.Result {
-			require.EqualValues(t, entry.Hostname, hostname)
-			require.EqualValues(t, entry.Address, ip)
-		}
-	}
 }

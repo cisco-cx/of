@@ -66,6 +66,9 @@ func NewACIClient(cfg of.ACIClientConfig, log *logger.Logger) (*ACIClient, error
 		Pass:  cfg.Pass,
 		Debug: cfg.Debug,
 	}
+	if len(opts.Hosts) < 1 {
+		opts.Hosts = []string{"ignored"}
+	}
 	// Configure the new internal client.
 	client, err := aci.New(opts)
 	if err != nil {
