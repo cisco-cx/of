@@ -15,6 +15,7 @@
 package v2
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,12 +31,13 @@ import (
 type Server of.Server
 
 // Initialize a server.
-func NewServer(config *of.HTTPConfig, appName string) *Server {
+func NewServer(config *of.HTTPConfig, appName string, tlsCfg *tls.Config) *Server {
 
 	srv := &http.Server{
 		Addr:         config.ListenAddress,
 		ReadTimeout:  config.ReadTimeout,
 		WriteTimeout: config.WriteTimeout,
+		TLSConfig:    tlsCfg,
 	}
 
 	mux := http.NewServeMux()
@@ -67,6 +69,17 @@ func NewServer(config *of.HTTPConfig, appName string) *Server {
 // This is not a blocking call.
 func (s *Server) ListenAndServe() error {
 
+	c := NewClient()
+	scheme := "http"
+	if len(s.Srv.TLSConfig.Certificates) > 0 {
+		scheme = "https"
+		c.Transport = &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		}
+	}
+
 	// 5809095455300d637e414389a9fd5957 = md5("This is an internal URI to check if the server has started.")
 	path := "/5809095455300d637e414389a9fd5957"
 	s.HandleFunc(path, func(w of.ResponseWriter, r of.Request) {
@@ -81,9 +94,8 @@ func (s *Server) ListenAndServe() error {
 	}()
 
 	started := false
-	c := NewClient()
 	for i := 0; i < 10; i++ {
-		resp, err := c.Get(fmt.Sprintf("http://%s%s", s.Srv.Addr, path))
+		resp, err := c.Get(fmt.Sprintf("%s://%s%s", scheme, s.Srv.Addr, path))
 		if err == nil && resp.StatusCode == 200 {
 			started = true
 			break

@@ -85,7 +85,7 @@ func TestSNMPService(t *testing.T) {
 
 	hc := &of.HTTPConfig{ListenAddress: addr}
 
-	srv := http.NewServer(hc, t.Name())
+	srv := http.NewServer(hc, t.Name(), nil)
 	srv.HandleFunc("/", s.AlertHandler)
 	err := srv.ListenAndServe()
 	require.NoError(t, err)

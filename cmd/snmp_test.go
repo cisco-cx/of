@@ -112,7 +112,7 @@ func startFakeAM(t *testing.T, amAddress string) *http.Server {
 
 	hc := &of_v2.HTTPConfig{ListenAddress: amAddress, ReadTimeout: 1 * time.Second, WriteTimeout: 1 * time.Second}
 
-	srv := http.NewServer(hc, t.Name())
+	srv := http.NewServer(hc, t.Name(), nil)
 	srv.HandleFunc("/-/healthy", func(w of_v2.ResponseWriter, r of_v2.Request) {
 		w.WriteHeader(http.StatusBadGateway)
 	})

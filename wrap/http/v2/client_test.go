@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
@@ -34,7 +35,7 @@ func startServer(t *testing.T, server_addr string) *http.Server {
 
 	c := &of.HTTPConfig{ListenAddress: server_addr}
 
-	srv := http.NewServer(c, t.Name())
+	srv := http.NewServer(c, t.Name(), nil)
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, response_text)
 	})
@@ -55,7 +56,7 @@ func startServer(t *testing.T, server_addr string) *http.Server {
 
 // Test client.Do request.
 func TestDo(t *testing.T) {
-	server_addr := "localhost:64942"
+	server_addr := unusedAddress()
 	srv := startServer(t, server_addr)
 	defer srv.Shutdown()
 	c := http.NewClient()
@@ -76,7 +77,7 @@ func TestDo(t *testing.T) {
 
 // Test client.Do request.
 func TestDoPost(t *testing.T) {
-	server_addr := "localhost:64942"
+	server_addr := unusedAddress()
 	srv := startServer(t, server_addr)
 	defer srv.Shutdown()
 	c := http.NewClient()
@@ -93,4 +94,10 @@ func TestDoPost(t *testing.T) {
 	all, err := ioutil.ReadAll(res.Body)
 	require.NoError(t, err)
 	assert.Equal(t, "Post test called.", string(all))
+}
+
+func unusedAddress() string {
+	s := httptest.NewUnstartedServer(nil)
+	defer s.Close()
+	return s.Listener.Addr().String()
 }

@@ -30,7 +30,7 @@ func TestHandlerRun(t *testing.T) {
 	// Start fake AM Server.
 	hc := &of.HTTPConfig{ListenAddress: addr, ReadTimeout: cfg.AMTimeout, WriteTimeout: cfg.AMTimeout}
 
-	srv := http.NewServer(hc, t.Name())
+	srv := http.NewServer(hc, t.Name(), nil)
 	srv.HandleFunc("/-/healthy", func(w of.ResponseWriter, r of.Request) {
 		w.WriteHeader(http.StatusBadGateway)
 	})

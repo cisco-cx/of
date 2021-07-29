@@ -56,7 +56,7 @@ func TestACIFaultSeverityID_Simple(t *testing.T) {
 // ACIFaultSeverityID.Raw() Test Positive-path functionality.
 func TestACIFaultSeverityID_RawPositive(t *testing.T) {
 	for _, tr := range t1 {
-		t.Run(string(tr.id), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%d", tr.id), func(t *testing.T) {
 			// Prepare to assert multiple times.
 			assert := assert.New(t)
 			// Pass in ID from table to make new instance.

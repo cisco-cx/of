@@ -41,7 +41,7 @@ func (h *Handler) Run() {
 	h.Log.Debugf("Init health check.")
 
 	// Configure HTTP server to handle various requests.
-	h.server = http.NewServer(&httpConfig, h.Config.Application)
+	h.server = http.NewServer(&httpConfig, h.Config.Application, nil)
 
 	h.server.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		h.Log.Tracef("Version endpoint accessed.")

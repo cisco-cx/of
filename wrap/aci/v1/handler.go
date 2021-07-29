@@ -105,7 +105,7 @@ func (h *Handler) Run() {
 		ReadTimeout:   h.Config.ACITimeout,
 		WriteTimeout:  h.Config.ACITimeout,
 	}
-	h.server = http.NewServer(&httpConfig, h.Config.Application)
+	h.server = http.NewServer(&httpConfig, h.Config.Application, nil)
 
 	h.server.HandleFunc("/", func(w of_v2.ResponseWriter, r of_v2.Request) {
 		fmt.Fprint(w, h.Config.Version)

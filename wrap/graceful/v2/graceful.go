@@ -42,7 +42,10 @@ func (g *Graceful) Start() error {
 
 // Callback executed by graceful to start the server.
 func (g *Graceful) start() error {
-	return g.server.ListenAndServe()
+	if len(g.server.TLSConfig.Certificates) == 0 {
+		return g.server.ListenAndServe()
+	}
+	return g.server.ListenAndServeTLS("", "")
 }
 
 // Callback to be called on SIGINT or SIGTERM.

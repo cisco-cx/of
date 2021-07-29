@@ -20,7 +20,7 @@ func TestDryRun(t *testing.T) {
 
 	hc := &of.HTTPConfig{ListenAddress: addr, ReadTimeout: timeout, WriteTimeout: timeout}
 
-	srv := http.NewServer(hc, t.Name())
+	srv := http.NewServer(hc, t.Name(), nil)
 	srv.HandleFunc("/api/v1/alerts", func(w of.ResponseWriter, r of.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	})

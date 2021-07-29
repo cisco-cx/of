@@ -99,7 +99,7 @@ func TestHealthChecker_AddCheck(t *testing.T) {
 	assert.EqualError(
 		t,
 		err,
-		"parse :foo: missing protocol scheme",
+		"parse \":foo\": missing protocol scheme",
 	)
 }
 

@@ -30,7 +30,7 @@ func TestServer(t *testing.T) {
 
 	c := &of.HTTPConfig{ListenAddress: addr}
 
-	srv := http.NewServer(c, t.Name())
+	srv := http.NewServer(c, t.Name(), nil)
 
 	err := srv.ListenAndServe()
 	require.NoError(t, err)
@@ -45,7 +45,7 @@ func TestHandleFunc(t *testing.T) {
 	addr := "localhost:64932"
 	c := &of.HTTPConfig{ListenAddress: addr}
 
-	srv := http.NewServer(c, t.Name())
+	srv := http.NewServer(c, t.Name(), nil)
 	srv.HandleFunc("/", func(w of.ResponseWriter, r of.Request) {
 		fmt.Fprint(w, response_text)
 	})
@@ -62,7 +62,7 @@ func TestHandle(t *testing.T) {
 	addr := "localhost:64933"
 	c := &of.HTTPConfig{ListenAddress: addr}
 
-	srv := http.NewServer(c, t.Name())
+	srv := http.NewServer(c, t.Name(), nil)
 	srv.Handle("/", &testHandler{})
 
 	err := srv.ListenAndServe()
